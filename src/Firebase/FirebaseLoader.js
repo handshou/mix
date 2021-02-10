@@ -1,7 +1,7 @@
-import firebaseConfig  from "./firebaseConfig";
+// import firebaseConfig  from "./firebaseConfig";
 
 var firebase = require("firebase/app");
 
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 
 export default firebase;

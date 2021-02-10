@@ -8,4 +8,4 @@ const firebaseConfig  = {
   measurementId: "G-S636RREEHZ"
 };
 
-export default firebaseConfig ;
+export default firebaseConfig;
