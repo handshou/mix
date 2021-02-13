@@ -51,7 +51,7 @@ function Layout(props) {
       <AppBar position="static" className={classes.topNavBar}>
         <Toolbar>
           <div style={{ float: "left", width: "100%" }}>
-            <Typography variant="title" color="inherit">
+            <Typography variant="h1" color="inherit">
               <div style={{ color: "#ff5138" }}>
                 <Typography variant="h3" component="h4">
                   MixTime
@@ -76,7 +76,7 @@ function Layout(props) {
           height: "calc(100vh - 3.75rem - 1px)",
           float: "left",
         }}
-        activeItemId={location.pathname}
+        activeItemId={location.pathname}        
         activeClassName={classes.sideNavBarActive}
         onSelect={({ itemId }) => {
           history.push(itemId);
