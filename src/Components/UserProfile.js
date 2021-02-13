@@ -131,7 +131,7 @@ function UserProfile(props) {
           Ping timetable
         </Button>
       </div>
- 
+
       {/* Currently displays the pulled data of all time slots, can cleanup for less mess */}
       <div style={{ marginTop: 100 }}>
         {modAndClassDetails.length > 1
@@ -156,6 +156,7 @@ function UserProfile(props) {
                                   {JSON.stringify({
                                     classNo: timetable.classNo,
                                     lessonType: timetable.lessonType,
+                                    day: timetable.day,
                                     startTime: timetable.startTime,
                                     endTime: timetable.endTime,
                                   })}
