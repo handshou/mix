@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { convertURLtoArray } from "../Functions/urlFunctions.js";
 import { getModDetails } from "../Functions/apiFunctions.js";
-import CommonCss from "./Stylesheet/Common.css";
 import { Button, Input } from "@material-ui/core";
 
 function Body(props) {
@@ -23,7 +22,6 @@ function Body(props) {
       >
         <Button
           variant="contained"
-          className={CommonCss}
           onClick={() => {
             if (props.getUsers !== undefined) {
               props.getUsers();
