@@ -4,6 +4,10 @@ import { convertURLtoArray } from "../Functions/urlFunctions.js";
 import { getModDetails } from "../Functions/apiFunctions.js";
 import { Button, Input } from "@material-ui/core";
 
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 
@@ -16,7 +20,7 @@ if (!firebase.apps.length) {
   var database = firebase.app().database();
 }
 
-function UserProfile(props) {
+function GroupTimetable(props) {
   const [userList, setUserList] = useState({});
   const [enteredURL, setEnteredURL] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -65,8 +69,36 @@ function UserProfile(props) {
     });
   };
 
+  const [studentsList, setStudentList] = useState("");
+  let getStudents = () => {
+    var studentsRef = database.ref("Students/");
+    studentsRef.once("value").then((snapshot) => {
+      snapshot.val() ? setStudentList(snapshot.val()) : console.log("missing");
+    });
+  };
+
+  const [value, setValue] = useState(2);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <Fragment>
+      {/* {getStudents()}
+      getStudents:
+      {studentsList} */}
+
+      {/* <div>
+        {studentsList && studentsList.length > 0 ? (
+          studentsList.map((val) => {
+            return <div>{JSON.stringify(val)}</div>;
+          })
+        ) : (
+          <div></div>
+        )}
+      </div> */}
+
       <div
         style={{
           display: "flex",
@@ -76,7 +108,32 @@ function UserProfile(props) {
           padding: "2%",
         }}
       >
-        User Profile
+        <div style={{ float: "right" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ width: "fit-content", float: "right" }}
+          >
+            Add Group Timetable
+          </Button>
+        </div>
+        <Paper square>
+          <Tabs
+            value={value}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={handleChange}
+            aria-label="disabled tabs example"
+          >
+            <Tab label="Group ID 1" />
+            <Tab label="Group ID 2" />
+          </Tabs>
+        </Paper>
+
+        <iframe
+          height="500px"
+          src="https://nusmods.com/timetable/sem-2/share?CS2105=TUT:05,LEC:1&GEH1049=LEC:3&IS4243=LEC:1&IS4261=LEC:1&ST2334=LEC:1,TUT:14"
+        ></iframe>
       </div>
 
       <Body getUsers={getUsers} userList={userList} />
@@ -173,4 +230,4 @@ function UserProfile(props) {
   );
 }
 
-export default UserProfile;
+export default GroupTimetable;

@@ -1,4 +1,4 @@
-import { React, Fragment } from "react";
+import { React, Fragment, useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -62,9 +62,9 @@ function Layout(props) {
               </div>
             </Typography>
           </div>
-          <div style={{ float: "right" }}>
-            <Button className={classes.buttons}>Login</Button>
-          </div>
+          {/* <div style={{ float: "right" }}>
+            <Button className={classes.buttons}>Add Group Timetable</Button>
+          </div> */}
         </Toolbar>
       </AppBar>
 
@@ -76,7 +76,7 @@ function Layout(props) {
           height: "calc(100vh - 3.75rem - 1px)",
           float: "left",
         }}
-        activeItemId={location.pathname}        
+        activeItemId={location.pathname}
         activeClassName={classes.sideNavBarActive}
         onSelect={({ itemId }) => {
           history.push(itemId);
@@ -84,30 +84,30 @@ function Layout(props) {
       >
         <MenuItem
           component={Link}
-          to="/"
-          itemId="/"
-          selected={location.pathname === "/" ? true : false}
+          to="/MyTimetable"
+          itemId="/MyTimetable"
+          selected={location.pathname === "/MyTimetable" ? true : false}
           classes={{
             root: classes.sideNavBar,
             selected: classes.sideNavBarActive,
           }}
         >
-          <HomeIcon /> &nbsp;&nbsp;
-          Home
+          <CalendarTodayIcon /> &nbsp;&nbsp; My Timetable
         </MenuItem>
+
         <MenuItem
           component={Link}
-          to="/Timetable"
-          itemId="/Timetable"
-          selected={location.pathname === "/Timetable" ? true : false}
+          to="/GroupTimetable"
+          itemId="/GroupTimetable"
+          selected={location.pathname === "/GroupTimetable" ? true : false}
           classes={{
             root: classes.sideNavBar,
             selected: classes.sideNavBarActive,
           }}
         >
-          <CalendarTodayIcon /> &nbsp;&nbsp;
-          Timetable
+          <PersonIcon /> &nbsp;&nbsp; Group Timetable
         </MenuItem>
+
         <MenuItem
           component={Link}
           to="/UserProfile"
@@ -118,8 +118,7 @@ function Layout(props) {
             selected: classes.sideNavBarActive,
           }}
         >
-          <PersonIcon /> &nbsp;&nbsp;
-          User Profile
+          <HomeIcon /> &nbsp;&nbsp; UserProfile [TEST]
         </MenuItem>
       </MenuList>
     </Fragment>
