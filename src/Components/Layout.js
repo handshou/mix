@@ -1,4 +1,4 @@
-import { React, Fragment, useState } from "react";
+import { React, Fragment } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -6,7 +6,6 @@ import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 
 import HomeIcon from "@material-ui/icons/Home";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
@@ -62,9 +61,6 @@ function Layout(props) {
               </div>
             </Typography>
           </div>
-          {/* <div style={{ float: "right" }}>
-            <Button className={classes.buttons}>Add Group Timetable</Button>
-          </div> */}
         </Toolbar>
       </AppBar>
 
@@ -73,7 +69,7 @@ function Layout(props) {
           display: "inline-table",
           width: "10%",
           boxShadow: "0 3px 5px 2px rgb(0 0 0 / 15%)",
-          height: "calc(100vh - 3.75rem - 1px)",
+          height: "100vh",
           float: "left",
         }}
         activeItemId={location.pathname}
