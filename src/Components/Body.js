@@ -1,6 +1,10 @@
-import logo from "../logo.svg";
+import { React, useState, useEffect } from "react";
+import { convertURLtoArray } from "../Functions/urlFunctions.js";
+import { getModDetails } from "../Functions/apiFunctions.js";
+import { Button, Input } from "@material-ui/core";
 
 function Body(props) {
+
   return (
     <div
       style={{
@@ -11,8 +15,13 @@ function Body(props) {
         wigth: "100%",
       }}
     >
-      <div>
-        <button
+      <div
+        style={{
+          marginTop: 50,
+        }}
+      >
+        <Button
+          variant="contained"
           onClick={() => {
             if (props.getUsers !== undefined) {
               props.getUsers();
@@ -20,7 +29,7 @@ function Body(props) {
           }}
         >
           Get user information from firebase
-        </button>
+        </Button>
       </div>
       <div>
         {props.userList && props.userList.length > 0 ? (
