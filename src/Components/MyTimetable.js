@@ -4,6 +4,7 @@ import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 
 import { Button } from "@material-ui/core";
+import { IsoOutlined } from "@material-ui/icons";
 
 //Copy line 9 to 15 when we need this "connectionString" to reach our firebase
 if (!firebase.apps.length) {
@@ -23,6 +24,8 @@ function MyTimetable(props) {
   const [studentEvents, setStudentEvents] = useState([
     { endtime: "", eventname: "", eventtype: "", starttime: "" },
   ]);
+  const [studentGroups, setStudentGroups] = useState([]);
+
   // 1. IF studentID NOT in browser memory
   // >> store studentID to browser memory (local storage) AND database
 
@@ -51,28 +54,55 @@ function MyTimetable(props) {
     console.log("***getStudentEvents():  " + JSON.stringify(studentEvents));
   };
 
-  useEffect(() => {
-    // setStudentId(0); //foor testing purpose set first
-    // localStorage.setItem("studentId", 0); //foor testing purpose set first
+  let getStudentGroups = () => {
+    var studentGroupRef = database.ref("Groups/");
+    studentGroupRef.once("value").then((snapshot) => {
+      setStudentGroups(snapshot.val());
+      snapshot.val().forEach(element => {
+        if(localStorage.getItem("studentId") != null) {
+          element.members.forEach(studID => {
+            if(studID == localStorage.getItem("studentId")) {
+              console.log("Student belongs in " +element.groupName);
+            }
+          });
 
+
+        }
+      });     
+    
+  });
+  };
+
+  const [refreshKey, setRefreshKey] = useState(0);
+  useEffect(() => {
+    // setStudentId(0); //for testing purpose set first
+    // localStorage.setItem("studentId", 0); //for testing purpose set first
+    setRefreshKey(0);
     getTotalStudents();
+    
+
     if (localStorage.getItem("studentId") == null) {
       setStudentId(totalStudentCount + 1);
       localStorage.setItem("studentId", studentId);
       console.log(
         "(1)localStorage.getItem(studentId): " +
-          localStorage.getItem("studentId")
+        localStorage.getItem("studentId")
       );
     } else {
       setStudentId(localStorage.getItem("studentId"));
       localStorage.setItem("studentId", studentId);
       console.log(
         "(2)localStorage.getItem(studentId): " +
-          localStorage.getItem("studentId")
+        localStorage.getItem("studentId")
       );
+
       getStudentEvents(localStorage.getItem("studentId"));
       localStorage.setItem("studentEvents", studentEvents);
     }
+
+    getStudentGroups();
+    localStorage.setItem("studentGroups", studentGroups);
+    //console.log("All student groups in FB" + localStorage.getItem("studentGroups"));
 
     if (!Array.isArray(studentEvents) || !studentEvents.length) {
       for (var i = 0; i < studentEvents.length; i++) {
@@ -82,18 +112,12 @@ function MyTimetable(props) {
         console.log("***starttime:  " + studentEvents[i].starttime);
       }
     }
-    // let eventsList = {};
-    // for (var key in studentEvents) {
-    //   if (studentEvents.hasOwnProperty(key)) {
-    //     console.log(key + " -> " + studentEvents[key]);
-    //     console.log(typeof studentEvents);
-    //     console.log("test!!!" + key[0]);
-    //   }
-    // }
-  }, []);
+
+
+  }, [refreshKey]);
 
   let addEvent = () => {
-    console.log("Event inserted into db!");
+
     //this event data to be taken from Panna ***
     var newEvent = {
       endtime: "1900",
@@ -103,7 +127,13 @@ function MyTimetable(props) {
     };
     // var studentsRef = database.ref(`Students/${studentId}/events/${studentEvents.length}`).push(newEvent);
     var studentsRef = database.ref(`Students/${studentId}/events`);
-    studentsRef.child(studentEvents.length).set(newEvent);
+    if (!Array.isArray(studentEvents) || !studentEvents.length) {
+      studentsRef.child(0).set(newEvent);
+    } else {
+      studentsRef.child(studentEvents.length).set(newEvent);
+    }
+    console.log("Event inserted into db!");
+    setRefreshKey(refreshKey + 1);
   };
 
   let addStudent = () => {
@@ -114,6 +144,9 @@ function MyTimetable(props) {
       .child(totalStudentCount + 1)
       .child("name")
       .set(studentName);
+    //add studentID into localStorage
+    localStorage.setItem("studentId", totalStudentCount + 1);
+    setRefreshKey(refreshKey + 1);
   };
 
   const [studentsList, setStudentList] = useState({});
@@ -135,6 +168,10 @@ function MyTimetable(props) {
           padding: "2%",
         }}
       >
+        Existing groups in Firebase are: <br></br>
+        {JSON.stringify(studentGroups)}
+        <br></br>
+        
         Student Id ({studentId}) has these events: <br></br>
         {JSON.stringify(studentEvents)}
         <Button
@@ -190,8 +227,8 @@ function MyTimetable(props) {
               );
             })
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
         </div>
       </div>
     </Fragment>
