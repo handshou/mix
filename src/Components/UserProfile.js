@@ -19,6 +19,7 @@ function UserProfile(props) {
   let getUsers = () => {
     var usersRef = database.ref("users/");
     usersRef.once("value").then((snapshot) => {
+      
       snapshot.val() ? setUserList(snapshot.val()) : console.log("missing");
     });
   };
