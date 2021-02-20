@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import { makeStyles } from "@material-ui/core/styles";
+import { ExitToApp } from "@material-ui/icons";
 
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -101,15 +102,15 @@ function MyTimetable(props) {
 
   let getStudentGroups = () => {
     setStudentGroups([]);
+
     var studentGroupRef = database.ref("Groups/");
     studentGroupRef.once("value").then((snapshot) => {
-      // setStudentGroups(snapshot.val());
       snapshot.val().forEach((element) => {
         if (localStorage.getItem("studentId") != null) {
           element.members.forEach((studID) => {
             if (studID == localStorage.getItem("studentId")) {
-              // console.log("Student belongs in " + element.groupName);
               studentGroups.push(element);
+              // console.log("Student belongs in " + element.groupName);
               // groupMembers.push(element.members);
               // getMembersInGroup(element.groupId);
               // setMembersInGroup(element.members);
@@ -119,10 +120,8 @@ function MyTimetable(props) {
         }
       });
       setStudentGroups(studentGroups);
-      // setGroupMembers(groupMembers);
       localStorage.setItem("studentGroups", studentGroups);
       console.log(studentGroups);
-      // console.log(groupMembers);
     });
   };
 
@@ -139,7 +138,27 @@ function MyTimetable(props) {
   //       return memberName;
   //   });
   // };
+
   
+  const [groupMemberName, setGroupMemName] = useState([]);
+  let getGroupMemberName = () => {
+    setGroupMemName([]);
+    var studentNameRef = database.ref("Students/");
+    studentNameRef.once("value").then((snapshot) => {
+      setGroupMemName(snapshot);
+    })
+  }
+  
+  function getGMN(studID) {
+    var name = "";
+     groupMemberName.forEach((stud) => {
+      if(stud.key == parseInt(studID)) {
+        name = stud.val().name;
+      }
+     })
+     return name; 
+  }
+
 //   let matchMemberName = (memId) => {
 //         const ref = firebase.database().ref(`Students/${memId}/name`);
 //     ref.once("value", snapshot => {
@@ -220,6 +239,7 @@ function MyTimetable(props) {
   const [refreshKey, setRefreshKey] = useState(0);
   useEffect(() => {
     setRefreshKey(0);
+    getGroupMemberName();
     if (localStorage.getItem("studentId") == null) {
       var studentName = prompt(
         "Please enter your name and we'll tag it into your timetable."
@@ -261,7 +281,9 @@ function MyTimetable(props) {
   };
 
   return (
+    
     <Fragment>
+     
       <div
         style={{
           display: "flex",
@@ -270,7 +292,7 @@ function MyTimetable(props) {
           wigth: "100%",
           padding: "2%",
         }}
-      >
+      > 
         Hi,{" "}
         <b>
           {studentName} #({studentId})!
@@ -314,7 +336,7 @@ function MyTimetable(props) {
                   {(group.members).map((memId, i) => (
                     <div>
                       {/* Student ID: {matchMemberName(memId)} */}                      
-                      Student ID: {(memId)}
+                      Student ID: {(memId)+ ", "+getGMN(memId)}
                     </div>
                   ))}
                 </CardContent>
