@@ -4,47 +4,210 @@ import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 
 import { Button } from "@material-ui/core";
-import { IsoOutlined } from "@material-ui/icons";
 
-//Copy line 9 to 15 when we need this "connectionString" to reach our firebase
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import { makeStyles } from "@material-ui/core/styles";
+
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
   var database = firebaseApp.database();
 } else {
   // If firebase is already initialized
   firebase.app();
-  var database = firebase.app().database();
+  // var database = firebase.app().database();
 }
 
+const useStyles = makeStyles({
+  root: {
+    margin: "2%",
+  },
+  media: {
+    height: 140,
+  },
+  cardColumn: {
+    padding: "10px",
+  },
+});
+
 function MyTimetable(props) {
-  // ============================= STUDENTS =============================
-  const [totalStudentCount, setTotalStudentCount] = useState(0);
+  const classes = useStyles();
+  // ========================================================== STUDENTS ==========================================================
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
-  const [student, setStudent] = useState([]);
+  const [studentName, setStudentName] = useState(
+    localStorage.getItem("studentName")
+  );
+  // Purpose: To get total student in the database [Dont delete first]
+  // const [totalStudentCount, setTotalStudentCount] = useState();
+  // let getTotalStudent = () => {
+  //      //Retrieve this to generate new studentID by +1
+  //   // var studentsRef = database.ref("Students/");
+  //   // studentsRef.once("value").then((snapshot) => {
+  //   //   console.log("***snapshot.numChildren()():  " + snapshot.numChildren());
+  //   //   // setTotalStudentCount(snapshot.numChildren());
+  //   //   setStudentId(snapshot.numChildren() + 1);
+  //   //   localStorage.setItem("studentId", snapshot.numChildren() + 1);
+  //   //   console.log("***getTotalStudents() 2 :  " + studentId);
+  //   //   console.log("***getTotalStudents() 3 :  " + localStorage.getItem("studentId"));
+  //   //   // return snapshot.numChildren();
+  //   // });
+  // }
+
+  let createStudentId = (studentName) => {
+    var query = firebase.database().ref("Students/").orderByKey();
+    query.once("value").then(function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        var key = childSnapshot.key;
+        // var childData = childSnapshot.val();
+        setStudentId(parseInt(key) + 1);
+        localStorage.setItem("studentId", parseInt(key) + 1);
+      });
+      createStudentRecord(studentName);
+    });
+  };
+
+  let createStudentRecord = (studentName) => {
+    var studentsRef = database.ref(`Students/`);
+    studentsRef
+      .child(localStorage.getItem("studentId"))
+      .child("name")
+      .set(studentName);
+    setRefreshKey(refreshKey + 1);
+    localStorage.setItem("studentName", studentName);
+  };
+
+  let getStudentName = (studentId) => {
+    var studentsRef = database.ref(`Students/${studentId}/name`);
+    studentsRef.once("value").then((snapshot) => {
+      setStudentName(snapshot.val());
+    });
+  };
+
+  // const [studentsList, setStudentList] = useState({});
+  // let getStudents = () => {
+  //   var studentsRef = database.ref("Students/");
+  //   studentsRef.once("value").then((snapshot) => {
+  //     snapshot.val() ? setStudentList(snapshot.val()) : console.log("missing");
+  //   });
+  // };
+
+  // ========================================================== GROUPS ==========================================================
+  const [studentGroups, setStudentGroups] = useState([]);
+  const [, setGroupId] = useState();
+  const [groupMembers, setGroupMembers] = useState([]);
+
+  let getStudentGroups = () => {
+    setStudentGroups([]);
+    var studentGroupRef = database.ref("Groups/");
+    studentGroupRef.once("value").then((snapshot) => {
+      // setStudentGroups(snapshot.val());
+      snapshot.val().forEach((element) => {
+        if (localStorage.getItem("studentId") != null) {
+          element.members.forEach((studID) => {
+            if (studID == localStorage.getItem("studentId")) {
+              // console.log("Student belongs in " + element.groupName);
+              studentGroups.push(element);
+              // groupMembers.push(element.members);
+              // getMembersInGroup(element.groupId);
+              // setMembersInGroup(element.members);
+              // console.log("*** members in group: " + membersInGroup);
+            }
+          });
+        }
+      });
+      setStudentGroups(studentGroups);
+      // setGroupMembers(groupMembers);
+      localStorage.setItem("studentGroups", studentGroups);
+      console.log(studentGroups);
+      // console.log(groupMembers);
+    });
+  };
+
+
+  const [memberName, setMemberName] = useState("");
+  // let matchMembersList = (listOfMembers) => {
+  //     listOfMembers.forEach((memId) =>{
+  //       var studentsRef = database.ref(`Students/${memId}/name`);
+  //       studentsRef.once("value").then((snapshot) => {      
+  //         console.log("student name is " + snapshot.val());
+  //         setMemberName(snapshot.val());
+  //         // console.log("mem name: " + memberName);
+  //       })
+  //       return memberName;
+  //   });
+  // };
+  
+//   let matchMemberName = (memId) => {
+//         const ref = firebase.database().ref(`Students/${memId}/name`);
+//     ref.once("value", snapshot => {
+//       setMemberName(snapshot.val());
+//       console.log(memberName);
+//     });
+// };
+
+  // const [membersInGroup, setMembersInGroup] = useState([]);
+  // let getMembersInGroup = (groupId) => {
+  //   var groupMembersRef = database.ref(`Groups/${groupId}`);
+  //   groupMembersRef.child("members").once("value").then((snapshot) => {
+  //     setMembersInGroup(snapshot.val());
+  //     console.log("*** members in group: " + membersInGroup);
+  //   });
+  // };
+
+
+  let createGroupId = () => {
+    var groupName = prompt("Enter group name");
+
+    var query = firebase.database().ref("Groups/").orderByKey();
+    query.once("value").then(function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        var key = childSnapshot.key;
+        // var childData = childSnapshot.val();
+        setGroupId(parseInt(key) + 1);
+        // localStorage.setItem("groupId", parseInt(key) + 1);
+      });
+      createGroup(groupName);
+    });
+  };
+
+  let createGroup = (groupName) => {
+    var noOfGroupMembers = prompt("Enter your group size");
+
+    for (var i = 0; i < noOfGroupMembers; i++) {
+      var memberId = prompt("Enter member ID");
+      groupMembers.push(memberId);
+    }
+    setGroupMembers(groupMembers);
+
+    var groupsRef = database.ref(`Groups/`);
+    groupsRef
+      .child(localStorage.getItem("groupId"))
+      .child("groupName")
+      .set(groupName);
+
+    groupsRef
+      .child(localStorage.getItem("groupId"))
+      .child("members")
+      .set(groupMembers);
+    // setRefreshKey(refreshKey + 1);
+  };
+
+  let addMemberToGroup = (groupId) => {
+    var memberId = prompt("Enter member ID");
+    groupMembers.push(parseInt(memberId));
+    setGroupMembers(groupMembers);
+
+    var groupsRef = database.ref(`Groups/${groupId}`);
+    groupsRef.child("members").set(groupMembers);
+  };
+
+  // ========================================================== EVENTS ==========================================================
   const [studentEvents, setStudentEvents] = useState([
     { endtime: "", eventname: "", eventtype: "", starttime: "" },
   ]);
-  const [studentGroups, setStudentGroups] = useState([]);
-
-  // 1. IF studentID NOT in browser memory
-  // >> store studentID to browser memory (local storage) AND database
-
-  // 2. IF there is studentID in browser memory
-  // (a) no timetable
-  // >> can means no retrieval of data because he havent import etc
-
-  // (b) have timetable in the database
-  // >> retrieval JUST THAT student record based on this studentID)
-
-  // https://yourapp.firebaseio.com/posts/[the post key]/comments?shallow=true.
-  let getTotalStudents = () => {
-    //Retrieve this to generate new studentID by +1
-    var studentsRef = database.ref("Students/");
-    studentsRef.once("value").then((snapshot) => {
-      setTotalStudentCount(snapshot.numChildren());
-    });
-    console.log("***getTotalStudents():  " + totalStudentCount);
-  };
 
   let getStudentEvents = (studentId) => {
     var studentsRef = database.ref(`Students/${studentId}/events`);
@@ -54,56 +217,20 @@ function MyTimetable(props) {
     console.log("***getStudentEvents():  " + JSON.stringify(studentEvents));
   };
 
-  let getStudentGroups = () => {
-    var studentGroupRef = database.ref("Groups/");
-    studentGroupRef.once("value").then((snapshot) => {
-      setStudentGroups(snapshot.val());
-      snapshot.val().forEach(element => {
-        if(localStorage.getItem("studentId") != null) {
-          element.members.forEach(studID => {
-            if(studID == localStorage.getItem("studentId")) {
-              console.log("Student belongs in " +element.groupName);
-            }
-          });
-
-
-        }
-      });     
-    
-  });
-  };
-
   const [refreshKey, setRefreshKey] = useState(0);
   useEffect(() => {
-    // setStudentId(0); //for testing purpose set first
-    // localStorage.setItem("studentId", 0); //for testing purpose set first
     setRefreshKey(0);
-    getTotalStudents();
-    
-
     if (localStorage.getItem("studentId") == null) {
-      setStudentId(totalStudentCount + 1);
-      localStorage.setItem("studentId", studentId);
-      console.log(
-        "(1)localStorage.getItem(studentId): " +
-        localStorage.getItem("studentId")
+      var studentName = prompt(
+        "Please enter your name and we'll tag it into your timetable."
       );
+      createStudentId(studentName);
     } else {
-      setStudentId(localStorage.getItem("studentId"));
-      localStorage.setItem("studentId", studentId);
-      console.log(
-        "(2)localStorage.getItem(studentId): " +
-        localStorage.getItem("studentId")
-      );
-
+      getStudentName(localStorage.getItem("studentId"));
       getStudentEvents(localStorage.getItem("studentId"));
       localStorage.setItem("studentEvents", studentEvents);
+      getStudentGroups();
     }
-
-    getStudentGroups();
-    localStorage.setItem("studentGroups", studentGroups);
-    //console.log("All student groups in FB" + localStorage.getItem("studentGroups"));
-
     if (!Array.isArray(studentEvents) || !studentEvents.length) {
       for (var i = 0; i < studentEvents.length; i++) {
         console.log("***eventname:  " + studentEvents[i].eventname);
@@ -112,12 +239,9 @@ function MyTimetable(props) {
         console.log("***starttime:  " + studentEvents[i].starttime);
       }
     }
-
-
   }, [refreshKey]);
 
   let addEvent = () => {
-
     //this event data to be taken from Panna ***
     var newEvent = {
       endtime: "1900",
@@ -136,27 +260,6 @@ function MyTimetable(props) {
     setRefreshKey(refreshKey + 1);
   };
 
-  let addStudent = () => {
-    console.log("Student inserted into db!");
-    let studentName = "Tom Lee";
-    var studentsRef = database.ref(`Students/`);
-    studentsRef
-      .child(totalStudentCount + 1)
-      .child("name")
-      .set(studentName);
-    //add studentID into localStorage
-    localStorage.setItem("studentId", totalStudentCount + 1);
-    setRefreshKey(refreshKey + 1);
-  };
-
-  const [studentsList, setStudentList] = useState({});
-  let getStudents = () => {
-    var studentsRef = database.ref("Students/");
-    studentsRef.once("value").then((snapshot) => {
-      snapshot.val() ? setStudentList(snapshot.val()) : console.log("missing");
-    });
-  };
-
   return (
     <Fragment>
       <div
@@ -168,11 +271,78 @@ function MyTimetable(props) {
           padding: "2%",
         }}
       >
-        Existing groups in Firebase are: <br></br>
-        {JSON.stringify(studentGroups)}
+        Hi,{" "}
+        <b>
+          {studentName} #({studentId})!
+        </b>{" "}
+        ====================== GROUPS RELATED ====================== Existing
+        groups you are currently joined: <br></br>
+        {studentGroups.length}
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ width: "fit-content" }}
+          onClick={createGroupId}
+        >
+          Create New Group
+        </Button>
+        {/* addMemberToGroup */}
+        {studentGroups.map((group, i) => (
+          <Card className={classes.root}>
+            <CardActionArea>
+              <div className="cardRow">
+                <CardContent className={classes.cardColumn}>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    style={{
+                      "background-color": "#80808026",
+                      padding: "2%",
+                      overflow: "auto",
+                      height: "100px",
+                    }}
+                  >
+                    #{group.groupId} - {group.groupName}
+                    {/* {(groupMembers).forEach((memId) => {
+                    return <li>{memId}</li>;
+                  })} */}
+                  
+                  </Typography>          
+                  Members in this group:   
+                  {/* {matchMembersList(group.members)}      */}
+                  {(group.members).map((memId, i) => (
+                    <div>
+                      {/* Student ID: {matchMemberName(memId)} */}                      
+                      Student ID: {(memId)}
+                    </div>
+                  ))}
+                </CardContent>
+                <CardActions
+                  style={{
+                    float: "left",
+                    "background-color": "#1890ff42",
+                    "margin-left": "1%",
+                    "margin-top": "0.5%",
+                    "font-weight": "bold",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ width: "fit-content" }}
+                    onClick={addMemberToGroup}
+                  >
+                    Add Member
+                  </Button>
+                </CardActions>
+              </div>
+            </CardActionArea>
+          </Card>
+        ))}
+        ================ EVENTS RELATED ============================ You have
+        these events: <br></br>
         <br></br>
-        
-        Student Id ({studentId}) has these events: <br></br>
         {JSON.stringify(studentEvents)}
         <Button
           variant="contained"
@@ -182,17 +352,9 @@ function MyTimetable(props) {
         >
           Add Event
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ width: "fit-content" }}
-          onClick={addStudent}
-        >
-          Add Student
-        </Button>
-      </div>
-
-      <div
+        <br></br>
+        <br></br>
+        {/* <div
         style={{
           textAlign: "center",
           display: "flex",
@@ -229,7 +391,7 @@ function MyTimetable(props) {
           ) : (
               <div></div>
             )}
-        </div>
+          </div> */}
       </div>
     </Fragment>
   );
