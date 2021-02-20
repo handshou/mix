@@ -82,6 +82,36 @@ export const findCorrectTimeslot = (
   return correctTimeSlots;
 };
 
+// week 1 day 1: Mon 11 Jan 2021
 export const convertWeekDayTimeToTimestamp = (weekNumber, day, time) => {
+  let basedate = new Date("Jan 11 2021 0:00 GMT+8");
+  // map accomodate for lowercase first letter as well incase of formatting issue on NUSMODs api
+  let dayMap = {
+    Monday: 0,
+    monday: 0,
+    Tuesday: 1,
+    tuesday: 1,
+    Wednesday: 2,
+    wednesday: 2,
+    Thursday: 3,
+    thursday: 3,
+    Friday: 4,
+    friday: 4,
+    Saturday: 5,
+    saturday: 5,
+    Sunday: 6,
+    sunday: 6,
+  };
+  // setting days
+  basedate.setDate(basedate.getDate() + 7 * (weekNumber - 1) + dayMap[day]);
 
-}
+  let hoursOffset = time.substring(0, 2);
+  let minutesOffset = time.substring(2, 4);
+  // convert time into minutes then find number of milliseconds total (60,000 ms/min)
+  let timeoffset =
+    (parseInt(hoursOffset) * 60 + parseInt(minutesOffset)) * 60000;
+  var calculatedDate = new Date(basedate.getTime() + timeoffset);
+
+  // console.log(calculatedDate);
+  return calculatedDate.getTime();
+};

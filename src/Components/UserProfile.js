@@ -3,6 +3,7 @@ import Body from "./Body";
 import {
   convertURLtoArray,
   findCorrectTimeslot,
+  convertWeekDayTimeToTimestamp,
 } from "../Functions/urlFunctions.js";
 import { getModDetails } from "../Functions/apiFunctions.js";
 import { Button, Input } from "@material-ui/core";
@@ -69,10 +70,10 @@ function UserProfile(props) {
     });
   };
 
-  // user modAndClassArray and modAndClassDetails to parse the timetable into events
+  // user modAndClassArray and modAndClassDetails to parse the timetable into an array of events
   const convertModsIntoEvents = () => {
     // parses for each mod
-    let eventArray = modAndClassArray.map((modAndClass) => {
+    let timeslotArray = modAndClassArray.map((modAndClass) => {
       let specificClassDetails;
       modAndClassDetails.forEach((modAndClassDetail) => {
         if (
@@ -91,10 +92,42 @@ function UserProfile(props) {
       );
       return correctTimeSlots;
     });
-    let newEventArray = [];
-    eventArray.forEach((events) => {
-      newEventArray.push(...events);
+    let newtimeslotArray = [];
+    timeslotArray.forEach((events) => {
+      newtimeslotArray.push(...events);
     });
+
+    let newEventArray = [];
+    newtimeslotArray.forEach((timeslot) => {
+      if (
+        timeslot.weeks !== undefined &&
+        timeslot.day !== undefined &&
+        timeslot.endTime !== undefined
+      ) {
+        timeslot.weeks.forEach((week) => {
+          let startTimestamp = convertWeekDayTimeToTimestamp(
+            week,
+            timeslot.day,
+            timeslot.startTime
+          );
+          let endTimestamp = convertWeekDayTimeToTimestamp(
+            week,
+            timeslot.day,
+            timeslot.endTime
+          );
+          newEventArray.push({
+            name: timeslot.moduleCode,
+            eventType: timeslot.lessonType,
+            startTime: startTimestamp,
+            endTime: endTimestamp,
+          });
+        });
+      }
+    });
+
+    // console.log(newEventArray);
+    // console.log(newtimeslotArray);
+
     setUserEventArray(newEventArray);
   };
 
