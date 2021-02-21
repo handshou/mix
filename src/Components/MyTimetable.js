@@ -3,7 +3,7 @@ import { React, Fragment, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 
-import { Button } from "@material-ui/core";
+import { Button, setRef } from "@material-ui/core";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -103,19 +103,14 @@ function MyTimetable(props) {
   let getStudentGroups = () => {
     setStudentGroups([]);
 
-    var studentGroupRef = database.ref("Groups/");
+    var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
       snapshot.val().forEach((element) => {
         if (localStorage.getItem("studentId") != null) {
-          element.members.forEach((studID) => {
-            if (studID == localStorage.getItem("studentId")) {
+          Object.values(element.members).forEach((studID) => {
+            if(studID == localStorage.getItem("studentId")) {
               studentGroups.push(element);
-              // console.log("Student belongs in " + element.groupName);
-              // groupMembers.push(element.members);
-              // getMembersInGroup(element.groupId);
-              // setMembersInGroup(element.members);
-              // console.log("*** members in group: " + membersInGroup);
-            }
+            }            
           });
         }
       });
@@ -158,25 +153,6 @@ function MyTimetable(props) {
      })
      return name; 
   }
-
-//   let matchMemberName = (memId) => {
-//         const ref = firebase.database().ref(`Students/${memId}/name`);
-//     ref.once("value", snapshot => {
-//       setMemberName(snapshot.val());
-//       console.log(memberName);
-//     });
-// };
-
-  // const [membersInGroup, setMembersInGroup] = useState([]);
-  // let getMembersInGroup = (groupId) => {
-  //   var groupMembersRef = database.ref(`Groups/${groupId}`);
-  //   groupMembersRef.child("members").once("value").then((snapshot) => {
-  //     setMembersInGroup(snapshot.val());
-  //     console.log("*** members in group: " + membersInGroup);
-  //   });
-  // };
-
-
   let createGroupId = () => {
     var groupName = prompt("Enter group name");
 
@@ -223,6 +199,20 @@ function MyTimetable(props) {
     groupsRef.child("members").set(groupMembers);
   };
 
+  let removeStudentFromGroup = (groupId, removeStudentId) => {
+    var removeStudentRef = database.ref(`Groups/${groupId}/members/`);
+    removeStudentRef.once("value").then((snapshot) => {
+      snapshot.forEach((studentID) => {
+        if(studentID.val() === removeStudentId) {
+          removeStudentRef.child(studentID.key).remove();
+          setRefreshKey(refreshKey + 1);
+          //currently, on delete, window reloads... techncially should be just component refresh but oh well :^) 
+          window.location.reload();
+        }
+      });
+    });
+  }
+
   // ========================================================== EVENTS ==========================================================
   const [studentEvents, setStudentEvents] = useState([
     { endtime: "", eventname: "", eventtype: "", starttime: "" },
@@ -249,7 +239,7 @@ function MyTimetable(props) {
       getStudentName(localStorage.getItem("studentId"));
       getStudentEvents(localStorage.getItem("studentId"));
       localStorage.setItem("studentEvents", studentEvents);
-      getStudentGroups();
+      getStudentGroups(); 
     }
     if (!Array.isArray(studentEvents) || !studentEvents.length) {
       for (var i = 0; i < studentEvents.length; i++) {
@@ -331,12 +321,25 @@ function MyTimetable(props) {
                   })} */}
                   
                   </Typography>          
-                  Members in this group:   
+                  Other Members:   
                   {/* {matchMembersList(group.members)}      */}
-                  {(group.members).map((memId, i) => (
+                  {(Object.values(group.members)).map((memId, i) => (
                     <div>
-                      {/* Student ID: {matchMemberName(memId)} */}                      
-                      Student ID: {(memId)+ ", "+getGMN(memId)}
+                      {/* Student ID: {matchMemberName(memId)} */}         
+                      { (memId != localStorage.getItem("studentId")) ?      
+                         <div>Student ID: {(memId)+ ", "+getGMN(memId)}
+                         <Button
+                         variant="contained"
+                         color="secondary"
+                         style={{width: "fit-content"}}
+                         onClick = {() => removeStudentFromGroup(group.groupId, memId)}
+                         >
+                         Remove Member
+                         </Button>
+                         </div>
+                        :
+                        <div></div>
+                     }
                     </div>
                   ))}
                 </CardContent>
