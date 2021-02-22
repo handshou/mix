@@ -61,7 +61,7 @@ function MyTimetable(props) {
   // }
 
   let createStudentId = (studentName) => {
-    var query = database().ref("Students/").orderByKey();
+    var query = database.ref("Students/").orderByKey();
     query.once("value").then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var key = childSnapshot.key;
@@ -83,8 +83,9 @@ function MyTimetable(props) {
   };
 
   let getStudentName = (studentId) => {
-    console.log("studentId: " + studentId);
-    var studentsRef = database.ref(`Students/${studentId}/name`);
+    var studentsRef = database.ref(
+      `Students/${localStorage.getItem("studentId")}/name`
+    );
     studentsRef.once("value").then((snapshot) => {
       setStudentName(snapshot.val());
     });
@@ -182,13 +183,12 @@ function MyTimetable(props) {
       var memberId = prompt("Enter member ID");
       groupMembers.push(parseInt(memberId));
     }
+    groupMembers.push(parseInt(studentId));
     setGroupMembers(groupMembers);
 
     var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
     groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
-
     groupsRef.child("groupName").set(groupName);
-
     groupsRef.child("members").set(groupMembers);
 
     toast.success(
@@ -344,9 +344,6 @@ function MyTimetable(props) {
                     }}
                   >
                     #{group.groupId} - {group.groupName}
-                    {/* {(groupMembers).forEach((memId) => {
-                    return <li>{memId}</li>;
-                  })} */}
                   </Typography>
                   Other Members:
                   {Object.values(group.members).map((memId, i) => (
@@ -356,8 +353,8 @@ function MyTimetable(props) {
                           <div style={{ float: "left" }}>
                             <PersonIcon /> Member Id:{" "}
                             {memId + ", " + getGMN(memId)}
-                          </div>
-
+                          </div>{" "}
+                          .
                           <div style={{ float: "right" }}>
                             <Button
                               variant="contained"
@@ -374,7 +371,6 @@ function MyTimetable(props) {
                               <RemoveCircleOutlineIcon />
                             </Button>
                           </div>
-
                           <div style={{ clear: "both" }}></div>
                         </div>
                       ) : (
