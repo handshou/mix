@@ -1,0 +1,98 @@
+{
+  "Groups" : {
+    "0" : {
+      "groupId" : 0,
+      "groupName" : "PabhaCreation",
+      "members" : [ 6 ]
+    },
+    "1" : {
+      "groupId" : 1,
+      "groupName" : "MiniStar",
+      "members" : [ 1, 0, 6 ]
+    },
+    "8" : {
+      "groupId" : 8,
+      "groupName" : "Chousanx",
+      "members" : [ null, 4, 0, 3, 1 ]
+    },
+    "9" : {
+      "groupId" : 9,
+      "groupName" : "KanKenGang",
+      "members" : [ 0, 4, 6 ]
+    }
+  },
+  "Students" : [ {
+    "events" : [ {
+      "endtime" : 1700,
+      "eventname" : "meeting",
+      "eventtype" : "private",
+      "starttime" : 1900
+    }, {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    }, {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    } ],
+    "name" : "Peter Huang"
+  }, {
+    "name" : "Martin Pang"
+  }, null, {
+    "name" : "Thomas Tan"
+  }, {
+    "name" : "Jason Quek"
+  }, null, {
+    "events" : [ {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    }, {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    }, {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    }, {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    }, {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    }, {
+      "endtime" : "1900",
+      "eventname" : "IS4261 meeting",
+      "eventtype" : "school",
+      "starttime" : "1700"
+    } ],
+    "name" : "Kayi Ng"
+  } ],
+  "users" : [ {
+    "password" : "test",
+    "username" : "nameeeee"
+  }, {
+    "password" : "testpassword1",
+    "username" : "name1"
+  }, {
+    "password" : "testpassword1",
+    "username" : "name2"
+  }, {
+    "password" : 1213,
+    "username" : "fsadafsf"
+  }, {
+    "password" : 1231123,
+    "username" : "name222"
+  } ]
+}

@@ -3,28 +3,31 @@ import { React, Fragment, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 
-import { Button, setRef } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import { makeStyles } from "@material-ui/core/styles";
-import { ExitToApp } from "@material-ui/icons";
+import PersonIcon from "@material-ui/icons/Person";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
   var database = firebaseApp.database();
 } else {
-  // If firebase is already initialized
   firebase.app();
-  // var database = firebase.app().database();
 }
 
 const useStyles = makeStyles({
   root: {
     margin: "2%",
+    width: "33%",
   },
   media: {
     height: 140,
@@ -58,11 +61,10 @@ function MyTimetable(props) {
   // }
 
   let createStudentId = (studentName) => {
-    var query = firebase.database().ref("Students/").orderByKey();
+    var query = database().ref("Students/").orderByKey();
     query.once("value").then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var key = childSnapshot.key;
-        // var childData = childSnapshot.val();
         setStudentId(parseInt(key) + 1);
         localStorage.setItem("studentId", parseInt(key) + 1);
       });
@@ -81,6 +83,7 @@ function MyTimetable(props) {
   };
 
   let getStudentName = (studentId) => {
+    console.log("studentId: " + studentId);
     var studentsRef = database.ref(`Students/${studentId}/name`);
     studentsRef.once("value").then((snapshot) => {
       setStudentName(snapshot.val());
@@ -97,62 +100,67 @@ function MyTimetable(props) {
 
   // ========================================================== GROUPS ==========================================================
   const [studentGroups, setStudentGroups] = useState([]);
-  const [, setGroupId] = useState();
+  const [groupId, setGroupId] = useState();
   const [groupMembers, setGroupMembers] = useState([]);
 
   let getStudentGroups = () => {
     setStudentGroups([]);
 
+    var tempStudentGroups = [];
+
+    // Note: Suddenly not working with this code after database deleted and re-added data
+    // var studentGroupRef = database.ref(`Groups/`);
+    // studentGroupRef.once("value").then((snapshot) => {
+    //   console.log("snapshot: " + JSON.stringify(snapshot));
+    //   snapshot.val().forEach((element) => {
+    //     if (localStorage.getItem("studentId") != null) {
+    //       Object.values(element.members).forEach((studID) => {
+    //         if (studID == localStorage.getItem("studentId")) {
+    //           // studentGroups.push(element);
+    //           tempStudentGroups.push(element);
+    //         }
+    //       });
+    //     }
+    //   });
+
     var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
-      snapshot.val().forEach((element) => {
+      var data = snapshot.val();
+      for (let index in data) {
+        var element = data[index];
         if (localStorage.getItem("studentId") != null) {
           Object.values(element.members).forEach((studID) => {
-            if(studID == localStorage.getItem("studentId")) {
-              studentGroups.push(element);
-            }            
+            if (studID == localStorage.getItem("studentId")) {
+              tempStudentGroups.push(element);
+            }
           });
         }
-      });
-      setStudentGroups(studentGroups);
-      localStorage.setItem("studentGroups", studentGroups);
-      console.log(studentGroups);
+      }
+
+      setStudentGroups(tempStudentGroups);
+      // localStorage.setItem("studentGroups", studentGroups);
     });
   };
 
-
-  const [memberName, setMemberName] = useState("");
-  // let matchMembersList = (listOfMembers) => {
-  //     listOfMembers.forEach((memId) =>{
-  //       var studentsRef = database.ref(`Students/${memId}/name`);
-  //       studentsRef.once("value").then((snapshot) => {      
-  //         console.log("student name is " + snapshot.val());
-  //         setMemberName(snapshot.val());
-  //         // console.log("mem name: " + memberName);
-  //       })
-  //       return memberName;
-  //   });
-  // };
-
-  
   const [groupMemberName, setGroupMemName] = useState([]);
   let getGroupMemberName = () => {
     setGroupMemName([]);
     var studentNameRef = database.ref("Students/");
     studentNameRef.once("value").then((snapshot) => {
       setGroupMemName(snapshot);
-    })
-  }
-  
-  function getGMN(studID) {
+    });
+  };
+
+  let getGMN = (studID) => {
     var name = "";
-     groupMemberName.forEach((stud) => {
-      if(stud.key == parseInt(studID)) {
+    groupMemberName.forEach((stud) => {
+      if (parseInt(stud.key) === parseInt(studID)) {
         name = stud.val().name;
       }
-     })
-     return name; 
-  }
+    });
+    return name;
+  };
+
   let createGroupId = () => {
     var groupName = prompt("Enter group name");
 
@@ -160,58 +168,79 @@ function MyTimetable(props) {
     query.once("value").then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var key = childSnapshot.key;
-        // var childData = childSnapshot.val();
+        localStorage.setItem("groupId", parseInt(key) + 1);
         setGroupId(parseInt(key) + 1);
-        // localStorage.setItem("groupId", parseInt(key) + 1);
       });
-      createGroup(groupName);
+      createGroup(groupName, localStorage.getItem("groupId"));
     });
   };
 
-  let createGroup = (groupName) => {
+  let createGroup = (groupName, groupId) => {
     var noOfGroupMembers = prompt("Enter your group size");
 
     for (var i = 0; i < noOfGroupMembers; i++) {
       var memberId = prompt("Enter member ID");
-      groupMembers.push(memberId);
+      groupMembers.push(parseInt(memberId));
     }
     setGroupMembers(groupMembers);
 
-    var groupsRef = database.ref(`Groups/`);
-    groupsRef
-      .child(localStorage.getItem("groupId"))
-      .child("groupName")
-      .set(groupName);
+    var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
+    groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
 
-    groupsRef
-      .child(localStorage.getItem("groupId"))
-      .child("members")
-      .set(groupMembers);
-    // setRefreshKey(refreshKey + 1);
+    groupsRef.child("groupName").set(groupName);
+
+    groupsRef.child("members").set(groupMembers);
+
+    toast.success(
+      "Group name: " + groupName + " has been created successfully."
+    );
+    setRefreshKey(refreshKey + 1);
   };
 
   let addMemberToGroup = (groupId) => {
-    var memberId = prompt("Enter member ID");
-    groupMembers.push(parseInt(memberId));
+    for (var i = 0; i < studentGroups.length; i++) {
+      if (studentGroups[i].groupId === groupId) {
+        var membersList = studentGroups[i].members;
+        for (var j = 0; j < membersList.length; j++) {
+          groupMembers.push(membersList[j]);
+        }
+      }
+    }
     setGroupMembers(groupMembers);
 
-    var groupsRef = database.ref(`Groups/${groupId}`);
-    groupsRef.child("members").set(groupMembers);
+    var memberId = prompt("Enter member ID");
+    groupMembers.push(parseInt(memberId));
+    database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+
+    toast.success(
+      "Member ID: " +
+        memberId +
+        " has been added to Group ID: " +
+        groupId +
+        " successfully."
+    );
+    setRefreshKey(refreshKey + 1);
   };
 
   let removeStudentFromGroup = (groupId, removeStudentId) => {
     var removeStudentRef = database.ref(`Groups/${groupId}/members/`);
     removeStudentRef.once("value").then((snapshot) => {
       snapshot.forEach((studentID) => {
-        if(studentID.val() === removeStudentId) {
+        if (studentID.val() === removeStudentId) {
           removeStudentRef.child(studentID.key).remove();
-          setRefreshKey(refreshKey + 1);
-          //currently, on delete, window reloads... techncially should be just component refresh but oh well :^) 
-          window.location.reload();
         }
       });
     });
-  }
+
+    toast.success(
+      "Member ID: " +
+        removeStudentId +
+        " has been removed from Group ID: " +
+        groupId +
+        " successfully."
+    );
+    setRefreshKey(refreshKey + 1);
+  };
 
   // ========================================================== EVENTS ==========================================================
   const [studentEvents, setStudentEvents] = useState([
@@ -225,31 +254,6 @@ function MyTimetable(props) {
     });
     console.log("***getStudentEvents():  " + JSON.stringify(studentEvents));
   };
-
-  const [refreshKey, setRefreshKey] = useState(0);
-  useEffect(() => {
-    setRefreshKey(0);
-    getGroupMemberName();
-    if (localStorage.getItem("studentId") == null) {
-      var studentName = prompt(
-        "Please enter your name and we'll tag it into your timetable."
-      );
-      createStudentId(studentName);
-    } else {
-      getStudentName(localStorage.getItem("studentId"));
-      getStudentEvents(localStorage.getItem("studentId"));
-      localStorage.setItem("studentEvents", studentEvents);
-      getStudentGroups(); 
-    }
-    if (!Array.isArray(studentEvents) || !studentEvents.length) {
-      for (var i = 0; i < studentEvents.length; i++) {
-        console.log("***eventname:  " + studentEvents[i].eventname);
-        console.log("***eventtype:  " + studentEvents[i].eventtype);
-        console.log("***endtime:  " + studentEvents[i].endtime);
-        console.log("***starttime:  " + studentEvents[i].starttime);
-      }
-    }
-  }, [refreshKey]);
 
   let addEvent = () => {
     //this event data to be taken from Panna ***
@@ -270,10 +274,34 @@ function MyTimetable(props) {
     setRefreshKey(refreshKey + 1);
   };
 
+  const [refreshKey, setRefreshKey] = useState(0);
+  useEffect(() => {
+    setRefreshKey(0);
+
+    if (localStorage.getItem("studentId") == null) {
+      var studentName = prompt(
+        "Hi! Seems like this is the first time you visited MixTime. \nPlease enter your name and we'll tag it into your timetable."
+      );
+      createStudentId(studentName);
+    } else {
+      getStudentName(localStorage.getItem("studentId"));
+      getStudentEvents(localStorage.getItem("studentId"));
+      localStorage.setItem("studentEvents", studentEvents);
+      getStudentGroups();
+      getGroupMemberName();
+    }
+    // if (!Array.isArray(studentEvents) || !studentEvents.length) {
+    //   for (var i = 0; i < studentEvents.length; i++) {
+    //     console.log("***eventname:  " + studentEvents[i].eventname);
+    //     console.log("***eventtype:  " + studentEvents[i].eventtype);
+    //     console.log("***endtime:  " + studentEvents[i].endtime);
+    //     console.log("***starttime:  " + studentEvents[i].starttime);
+    //   }
+    // }
+  }, [refreshKey]);
+
   return (
-    
     <Fragment>
-     
       <div
         style={{
           display: "flex",
@@ -282,14 +310,16 @@ function MyTimetable(props) {
           wigth: "100%",
           padding: "2%",
         }}
-      > 
+      >
         Hi,{" "}
         <b>
           {studentName} #({studentId})!
         </b>{" "}
-        ====================== GROUPS RELATED ====================== Existing
-        groups you are currently joined: <br></br>
-        {studentGroups.length}
+        ================================== GROUPS RELATED
+        ==================================
+        <br></br>
+        Total number of groups you have currently joined: &#9889;{" "}
+        {studentGroups.length} &#9889;
         <Button
           variant="contained"
           color="primary"
@@ -298,10 +328,9 @@ function MyTimetable(props) {
         >
           Create New Group
         </Button>
-        {/* addMemberToGroup */}
-        {studentGroups.map((group, i) => (
-          <Card className={classes.root}>
-            <CardActionArea>
+        <div style={{ display: "inherit" }}>
+          {studentGroups.map((group, i) => (
+            <Card className={classes.root}>
               <div className="cardRow">
                 <CardContent className={classes.cardColumn}>
                   <Typography
@@ -309,64 +338,74 @@ function MyTimetable(props) {
                     variant="h5"
                     component="h2"
                     style={{
-                      "background-color": "#80808026",
+                      backgroundColor: "#80808026",
                       padding: "2%",
                       overflow: "auto",
-                      height: "100px",
                     }}
                   >
                     #{group.groupId} - {group.groupName}
                     {/* {(groupMembers).forEach((memId) => {
                     return <li>{memId}</li>;
                   })} */}
-                  
-                  </Typography>          
-                  Other Members:   
-                  {/* {matchMembersList(group.members)}      */}
-                  {(Object.values(group.members)).map((memId, i) => (
+                  </Typography>
+                  Other Members:
+                  {Object.values(group.members).map((memId, i) => (
                     <div>
-                      {/* Student ID: {matchMemberName(memId)} */}         
-                      { (memId != localStorage.getItem("studentId")) ?      
-                         <div>Student ID: {(memId)+ ", "+getGMN(memId)}
-                         <Button
-                         variant="contained"
-                         color="secondary"
-                         style={{width: "fit-content"}}
-                         onClick = {() => removeStudentFromGroup(group.groupId, memId)}
-                         >
-                         Remove Member
-                         </Button>
-                         </div>
-                        :
+                      {memId != localStorage.getItem("studentId") ? (
+                        <div>
+                          <div style={{ float: "left" }}>
+                            <PersonIcon /> Member Id:{" "}
+                            {memId + ", " + getGMN(memId)}
+                          </div>
+
+                          <div style={{ float: "right" }}>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              style={{
+                                width: "fit-content",
+                                float: "right",
+                                display: "inline",
+                              }}
+                              onClick={() =>
+                                removeStudentFromGroup(group.groupId, memId)
+                              }
+                            >
+                              <RemoveCircleOutlineIcon />
+                            </Button>
+                          </div>
+
+                          <div style={{ clear: "both" }}></div>
+                        </div>
+                      ) : (
                         <div></div>
-                     }
+                      )}
                     </div>
                   ))}
                 </CardContent>
+
                 <CardActions
                   style={{
-                    float: "left",
-                    "background-color": "#1890ff42",
-                    "margin-left": "1%",
-                    "margin-top": "0.5%",
-                    "font-weight": "bold",
+                    float: "right",
                   }}
                 >
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ width: "fit-content" }}
-                    onClick={addMemberToGroup}
+                    onClick={() => addMemberToGroup(group.groupId)}
                   >
                     Add Member
                   </Button>
                 </CardActions>
               </div>
-            </CardActionArea>
-          </Card>
-        ))}
-        ================ EVENTS RELATED ============================ You have
-        these events: <br></br>
+            </Card>
+          ))}
+        </div>
+        ================================== EVENTS RELATED
+        ==================================
+        <br></br>
+        You have these events: <br></br>
         <br></br>
         {JSON.stringify(studentEvents)}
         <Button
