@@ -102,8 +102,12 @@ export const convertWeekDayTimeToTimestamp = (weekNumber, day, time) => {
     Sunday: 6,
     sunday: 6,
   };
-  // setting days
-  basedate.setDate(basedate.getDate() + 7 * (weekNumber - 1) + dayMap[day]);
+  // setting days, accounting for recess week
+  if (weekNumber > 6) {
+    basedate.setDate(basedate.getDate() + 7 * weekNumber + dayMap[day]);
+  } else {
+    basedate.setDate(basedate.getDate() + 7 * (weekNumber - 1) + dayMap[day]);
+  }
 
   let hoursOffset = time.substring(0, 2);
   let minutesOffset = time.substring(2, 4);
