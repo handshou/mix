@@ -27,7 +27,7 @@ if (!firebase.apps.length) {
 const useStyles = makeStyles({
   root: {
     margin: "2%",
-    width: "33%"
+    width: "20%"
   },
   media: {
     height: 140,
@@ -164,6 +164,10 @@ function MyTimetable(props) {
 
   let createGroupId = () => {
     var groupName = prompt("Enter group name");
+    if (groupName == null){
+      toast.success("The creation of group has been cancelled.");
+      return;
+    }
 
     var query = firebase.database().ref("Groups/").orderByKey();
     query.once("value").then(function (snapshot) {
@@ -178,16 +182,27 @@ function MyTimetable(props) {
 
   let createGroup = (groupName, groupId) => {
     var noOfGroupMembers = prompt("Enter your group size");
-    var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
-    groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
-    groupsRef.child("groupName").set(groupName);
+    if (noOfGroupMembers == null){
+      toast.success("The creation of group has been cancelled.");
+      return;
+    }
 
     if (parseInt(noOfGroupMembers) > 0) {
       for (var i = 0; i < noOfGroupMembers; i++) {
         var memberId = prompt("Enter member ID");
+        if (memberId == null){
+          toast.success("The creation of group has been cancelled.");
+          return;
+        }
+
         groupMembers.push(parseInt(memberId));
       }
     }
+    
+    var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
+    groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
+    groupsRef.child("groupName").set(groupName);
+
     groupMembers.push(parseInt(studentId));
     setGroupMembers(groupMembers);
     groupsRef.child("members").set(groupMembers);
@@ -210,6 +225,11 @@ function MyTimetable(props) {
     setGroupMembers(groupMembers);
 
     var memberId = prompt("Enter member ID");
+    if (memberId == null){
+      toast.success("Member additional has been cancelled.");
+      return;
+    }
+
     groupMembers.push(parseInt(memberId));
     database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
 
@@ -329,7 +349,7 @@ function MyTimetable(props) {
         >
           Create New Group
         </Button>
-        <div style={{ "display": "flex" }}>
+        <div style={{ "display": "flex", "flex-wrap":"wrap" }}>
           {studentGroups.map((group, i) => (
             <Card className={classes.root}>
               <div className="cardRow">
