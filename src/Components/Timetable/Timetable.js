@@ -60,20 +60,14 @@ function generateIntervals(startTime, endTime, minutesInterval) {
 }
 
 function convertTimeToWeeks(){
-  // const tryDate = rawData.rawData[1].startTime;
-  // console.log(tryDate);
   const baseDate = new Date("Jan 11 2021 0:00 GMT+8").getTime();
-  // console.log(basedate);
-  // const difference = tryDate - basedate;
-  // console.log(difference);
-  // console.log(Math.floor(difference/604800000));
-  
   const getRawData = [...rawData.rawData];
-  // console.log(getRawData);
-  getRawData.map((d) => Math.floor((d.startTime - baseDate)/604800000));
-  console.log(getRawData.map((a) => (new Date(a.startTime))));
-  // console.log(getRawData.map((b) => (b.startTime.getTime())));
-  
+  const weekInMilliSeconds = 604800000;
+  const weeklyData = getRawData.map((d) => Math.floor((d.startTime - baseDate)/weekInMilliSeconds));
+  console.log({weeklyData});
+  console.log(getRawData.map((a) => (new Date(a.startTime).getHours())));
+  console.log(getRawData.map((a) => (new Date(a.startTime).getMinutes())));
+
 }
 
 const days = [
