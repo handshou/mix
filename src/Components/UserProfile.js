@@ -77,29 +77,35 @@ function UserProfile(props) {
       let specificClassDetails;
       modAndClassDetails.forEach((modAndClassDetail) => {
         if (
+          JSON.stringify(modAndClassDetail.status) === "\"fulfilled\"" &&
           JSON.stringify(modAndClassDetail.value.moduleCode) ==
           JSON.stringify(modAndClass[0])
         ) {
           specificClassDetails = modAndClassDetail.value;
         }
       });
-
       // converts the unparsed data into timeslots
-      let correctTimeSlots = findCorrectTimeslot(
-        modAndClass,
-        specificClassDetails,
-        currentSemester
-      );
+      let correctTimeSlots = undefined
+      if (specificClassDetails !== undefined) {
+        correctTimeSlots = findCorrectTimeslot(
+          modAndClass,
+          specificClassDetails,
+          currentSemester
+        );
+      }
       return correctTimeSlots;
     });
+
     let newtimeslotArray = [];
     timeslotArray.forEach((events) => {
-      newtimeslotArray.push(...events);
+      if (events !== undefined) {
+        newtimeslotArray.push(...events);
+      }
     });
-
     let newEventArray = [];
     newtimeslotArray.forEach((timeslot) => {
       if (
+        timeslot !== undefined &&
         timeslot.weeks !== undefined &&
         timeslot.day !== undefined &&
         timeslot.endTime !== undefined
@@ -218,12 +224,12 @@ function UserProfile(props) {
       <div style={{ marginTop: 100 }}>
         {userEventArray && userEventArray.length > 1
           ? userEventArray.map((events) => {
-              return (
-                <div>
-                  <div>{JSON.stringify(events)}</div>
-                </div>
-              );
-            })
+            return (
+              <div>
+                <div>{JSON.stringify(events)}</div>
+              </div>
+            );
+          })
           : ""}
       </div>
     </Fragment>

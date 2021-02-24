@@ -57,28 +57,35 @@ export const findCorrectTimeslot = (
         // compares LEC with lecture
         // compares SEC with sectional
         // compares TUT with tutorial
-        // idk about lab
+        // compares LAB with laboratory
         if (
           JSON.stringify(classTimeTable.lessonType)
             .substring(1, 4)
             .toLowerCase() ==
-            JSON.stringify(typeAndSlot[0]).substring(1, 4).toLowerCase() &&
+          JSON.stringify(typeAndSlot[0]).substring(1, 4).toLowerCase() &&
           classTimeTable.classNo == typeAndSlot[1]
         ) {
-          console.log(classTimeTable);
-          correctTimeSlot = {
-            moduleCode: modAndClass[0],
-            lessonType: classTimeTable.lessonType,
-            startTime: classTimeTable.startTime,
-            endTime: classTimeTable.endTime,
-            weeks: classTimeTable.weeks,
-            day: classTimeTable.day,
-          };
+          if (classTimeTable.lessonType !== undefined &&
+            classTimeTable.startTime !== undefined &&
+            classTimeTable.endTime !== undefined &&
+            classTimeTable.weeks !== undefined && 
+            classTimeTable.day !== undefined
+          ) {
+            correctTimeSlot = {
+              moduleCode: modAndClass[0],
+              lessonType: classTimeTable.lessonType,
+              startTime: classTimeTable.startTime,
+              endTime: classTimeTable.endTime,
+              weeks: classTimeTable.weeks,
+              day: classTimeTable.day,
+            };
+          } else { }
         }
       });
     }
     return correctTimeSlot;
   });
+  //console.log(correctTimeSlots)
   return correctTimeSlots;
 };
 
