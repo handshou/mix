@@ -47,7 +47,7 @@ function generateIntervals(startTime, endTime, minutesInterval) {
     startTime = parseInt(startTime) + minutesInterval;
     
     const minutes = String(startTime).slice(-2);
-    console.log({startTime, minutes});
+    // console.log({startTime, minutes});
     if(parseInt(minutes) >= 60) {
       startTime = parseInt(startTime) - 60 + 100 + (minutes % 60)
     }
@@ -59,7 +59,22 @@ function generateIntervals(startTime, endTime, minutesInterval) {
   return result;
 }
 
-console.log({rawData});
+function convertTimeToWeeks(){
+  // const tryDate = rawData.rawData[1].startTime;
+  // console.log(tryDate);
+  const baseDate = new Date("Jan 11 2021 0:00 GMT+8").getTime();
+  // console.log(basedate);
+  // const difference = tryDate - basedate;
+  // console.log(difference);
+  // console.log(Math.floor(difference/604800000));
+  
+  const getRawData = [...rawData.rawData];
+  // console.log(getRawData);
+  getRawData.map((d) => Math.floor((d.startTime - baseDate)/604800000));
+  console.log(getRawData.map((a) => (new Date(a.startTime))));
+  // console.log(getRawData.map((b) => (b.startTime.getTime())));
+  
+}
 
 const days = [
   createDays("Monday", [{title: "CS2105", date: "1st Feb"}, {title: "IS4261", date: "1st Feb"}, {}, {}, {}, {title: "Appt", date: "1st Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},{}]),
@@ -72,6 +87,7 @@ const days = [
 export default function Timetable() {
   const classes = useStyles();
   const times = generateIntervals("0800", "2330", 30);
+  convertTimeToWeeks();
 
   return (
     <div>
@@ -104,7 +120,7 @@ export default function Timetable() {
                   <td component="th" scope="row">
                     {day.name}
                   </td>
-                  {day.modules.map((module) => <td align="center">{createModule(module)}</td>)}
+                  {day.modules.map((module) => <td key={day.title} align="center">{createModule(module)}</td>)}
                 </tr>
               ))}
             </tbody>
