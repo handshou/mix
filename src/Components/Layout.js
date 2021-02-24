@@ -116,6 +116,19 @@ function Layout(props) {
         >
           <HomeIcon /> &nbsp;&nbsp; UserProfile [TEST]
         </MenuItem>
+
+        <MenuItem
+          component={Link}
+          to="/Timetable"
+          itemId="/Timetable"
+          selected={location.pathname === "/Timetable" ? true : false}
+          classes={{
+            root: classes.sideNavBar,
+            selected: classes.sideNavBarActive,
+          }}
+        >
+          <HomeIcon /> &nbsp;&nbsp; Timetable Layout
+        </MenuItem>
       </MenuList>
     </Fragment>
   );

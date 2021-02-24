@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import MyTimetable from "../Components/MyTimetable";
 import GroupTimetable from "../Components/GroupTimetable";
 import UserProfile from "../Components/UserProfile";
+import Timetable from "../Components/Timetable/Timetable";
 
 import Layout from "../Components/Layout";
 
@@ -17,6 +18,7 @@ export default () => {
         <Route path="/MyTimetable" exact component={MyTimetable} />
         <Route path="/GroupTimetable" exact component={GroupTimetable} />
         <Route path="/UserProfile" exact component={UserProfile} />
+        <Route path="/Timetable" exact component={Timetable} />
       </Switch>
     </Router>
   );
