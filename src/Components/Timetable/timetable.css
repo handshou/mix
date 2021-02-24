@@ -1,0 +1,23 @@
+table {
+  /* border-collapse: collapse; */
+  width: 100%;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.nice-table td:hover {
+  background-color: #f9e1e0;
+}
+
+.nice-table tr:nth-of-type(odd) {
+  background-color: #d9effc;
+}
+
+.nice-table tr:nth-of-type(even) {
+  background-color: #ffffff;
+}
