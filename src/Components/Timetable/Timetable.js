@@ -1,39 +1,22 @@
-import {React} from "react";
-import {  makeStyles } from "@material-ui/core/styles";
+import {React} from 'react';
 import Button from '@material-ui/core/Button';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import './timetable.css';
 
-import rawData from "./rawData.json";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
-  },
-  input: {
-    display: 'none',
-  },
-  table: {
-    minWidth: 2500,
-  },
-  root2: {
-    textAlign: 'right',
-    padding: '10px',
-  },
-}));
+import {mock} from './mock';
 
 function createDays(name, modules) {
-  return { name, modules };
+  return {name, modules};
 }
 
-function createModule({ title, date }) {
-  return <>
-  <div>{title}</div>
-  <div>{date}</div>
-  </>
+function createModule({title, date}) {
+  return (
+    <>
+      <div>{title}</div>
+      <div>{date}</div>
+    </>
+  );
 }
 
 function generateIntervals(startTime, endTime, minutesInterval) {
@@ -41,15 +24,15 @@ function generateIntervals(startTime, endTime, minutesInterval) {
   // endTime = "2330";
   const result = [];
 
-  while(parseInt(startTime) < parseInt(endTime)) {
+  while (parseInt(startTime) < parseInt(endTime)) {
     result.push(startTime);
 
     startTime = parseInt(startTime) + minutesInterval;
-    
+
     const minutes = String(startTime).slice(-2);
     // console.log({startTime, minutes});
-    if(parseInt(minutes) >= 60) {
-      startTime = parseInt(startTime) - 60 + 100 + (minutes % 60)
+    if (parseInt(minutes) >= 60) {
+      startTime = parseInt(startTime) - 60 + 100 + (minutes % 60);
     }
 
     startTime = String(startTime).padStart(4, '0');
@@ -59,66 +42,77 @@ function generateIntervals(startTime, endTime, minutesInterval) {
   return result;
 }
 
-function convertTimeToWeeks(){
-  const baseDate = new Date("Jan 11 2021 0:00 GMT+8").getTime();
-  const getRawData = [...rawData.rawData];
-  const weekInMilliSeconds = 604800000;
-  const weeklyData = getRawData.map((d) => Math.floor((d.startTime - baseDate)/weekInMilliSeconds));
-  console.log({weeklyData});
-  console.log(getRawData.map((a) => (new Date(a.startTime).getHours())));
-  console.log(getRawData.map((a) => (new Date(a.startTime).getMinutes())));
-
+function makeDate(date) {
+  return new Date(date);
 }
 
+function getModules() {
+  const baseDate = new Date('Jan 11 2021 0:00 GMT+8').getTime();
+  const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
+
+  const weeklyData = mock.map(d => ({
+    week: Math.floor((d.startTime - baseDate) / weekInMilliSeconds) + 1,
+    title: d.name,
+    type: d.eventType,
+    startTime: String(makeDate(d.startTime).getHours())
+      .padStart(2, '0')
+      .concat(String(makeDate(d.startTime).getMinutes()).padEnd(2, '0')),
+    endTime: String(makeDate(d.endTime).getHours())
+      .padStart(2, '0')
+      .concat(String(makeDate(d.endTime).getMinutes()).padEnd(2, '0')),
+    day: makeDate(d.startTime).toLocaleString('en-us', {weekday:'long'}),
+  }));
+
+  return weeklyData;
+}
+
+const mondayModules =  getModules().filter(m => m.week === 1).filter(m => m.day === 'Monday');
+
 const days = [
-  createDays("Monday", [{title: "CS2105", date: "1st Feb"}, {title: "IS4261", date: "1st Feb"}, {}, {}, {}, {title: "Appt", date: "1st Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},{}]),
-  createDays("Tuesday", [{title: "IS4261", date: "2nd Feb"}, {title: "IS4243", date: "2nd Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},{}]),
-  createDays("Wednesday", [{title: "IS4243", date: "3rd Feb"}, {title: "IS4261", date: "3rd Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {title: "Appt", date: "3rd Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},{}]),
-  createDays("Thursday", [{title: "IS4261", date: "4th Feb"}, {title: "IS4243", date: "4th Feb"}, {}, {title: "Appt", date: "4th Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},{}]),
-  createDays("Friday", [{title: "IS4243", date: "5th Feb"}, {title: "IS4261", date: "5th Feb"}, {}, {}, {}, {}, {title: "Appt", date: "5th Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},{}]),
+    createDays('Monday', mondayModules),
 ];
 
 export default function Timetable() {
-  const classes = useStyles();
-  const times = generateIntervals("0800", "2330", 30);
-  convertTimeToWeeks();
+  const times = generateIntervals('0800', '2330', 30);
 
   return (
     <div>
-      <div className={classes.root2}>
-        <input
-            accept="image/*"
-            className={classes.input}
-            id="contained-button-file"
-            multiple
-            type="file"
-        />
-        <label htmlFor="contained-button-file">
-            <Button variant="contained" color="default" component="span" startIcon={<CloudUploadIcon />}>
-              Upload
-            </Button>
-        </label>
-        <input accept="image/*" className={classes.input} id="icon-button-file" type="file" />
-      </div>
-      <div style={{"display": "grid ", "overflow":"auto"}}>
-          <table className="nice-table" aria-label="customized table">
-            <thead>
-              <tr>
-                <td>Day/Time</td>
-                {times.map(time => <td align="center">{time}</td>)}
-              </tr>
-            </thead>
-            <tbody>
-              {days.map((day) => (
-                <tr key={day.name}>
-                  <td component="th" scope="row">
-                    {day.name}
-                  </td>
-                  {day.modules.map((module) => <td key={day.title} align="center">{createModule(module)}</td>)}
-                </tr>
+      <input accept="image/*" id="contained-button-file" multiple type="file" />
+      <label htmlFor="contained-button-file">
+        <Button
+          variant="contained"
+          color="default"
+          component="span"
+          startIcon={<CloudUploadIcon />}>
+          Upload
+        </Button>
+      </label>
+      <input accept="image/*" id="icon-button-file" type="file" />
+      <div style={{display: 'grid ', overflow: 'auto'}}>
+        <table className="nice-table" aria-label="customized table">
+          <thead>
+            <tr>
+              <td>Day/Time</td>
+              {times.map(time => (
+                <td align="center">{time}</td>
               ))}
-            </tbody>
-          </table>
+            </tr>
+          </thead>
+          <tbody>
+            {days.map((day, i) => (
+              <tr key={i}>
+                <td>
+                  {day.name}
+                </td>
+                {day.modules.map((module, j) => (
+                  <td key={j} align="center">
+                    {createModule(module)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
