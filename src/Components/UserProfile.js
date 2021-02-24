@@ -223,15 +223,17 @@ function UserProfile(props) {
 
       {/* Currently displays the pulled data of all time slots, can cleanup for less mess */}
       <div style={{ marginTop: 100 }}>
+        [
         {userEventArray && userEventArray.length > 1
           ? userEventArray.map((events) => {
             return (
               <div>
-                <div>{JSON.stringify(events)}</div>
+                <div>{JSON.stringify(events)},</div>
               </div>
             );
           })
           : ""}
+        ]
       </div>
     </Fragment>
   );
