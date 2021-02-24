@@ -1,6 +1,10 @@
 import { React, Fragment, useState, useEffect } from "react";
 import Body from "./Body";
-import { convertURLtoArray } from "../Functions/urlFunctions.js";
+import {
+  convertURLtoArray,
+  findCorrectTimeslot,
+  convertWeekDayTimeToTimestamp,
+} from "../Functions/urlFunctions.js";
 import { getModDetails } from "../Functions/apiFunctions.js";
 import { Button, Input } from "@material-ui/core";
 
@@ -30,10 +34,18 @@ function UserProfile(props) {
   // Array which contains resolved promises with either details of the module in .value or error message in .reason
   const [modAndClassDetails, setModAndClassDetails] = useState([]);
 
+  // Contains user event array
+  const [userEventArray, setUserEventArray] = useState([]);
+
+  // hard coded  value until we find a way to properly implement semester recording
+  const [currentSemester, setCurrentSemester] = useState(2);
+
   // checker to see if api is set, can be removed later on
   useEffect(() => {
-    console.log(modAndClassDetails);
-  }, [modAndClassDetails]);
+    // console.log(modAndClassArray);
+    // console.log(modAndClassDetails);
+    // console.log(userEventArray);
+  }, [modAndClassDetails, userEventArray]);
 
   // waits for response and sets
   const getModuleDetails = async () => {
@@ -56,6 +68,73 @@ function UserProfile(props) {
     Promise.allSettled(apiPromises).then((details) => {
       setModAndClassDetails(details);
     });
+  };
+
+  // user modAndClassArray and modAndClassDetails to parse the timetable into an array of events
+  const convertModsIntoEvents = () => {
+    // parses for each mod
+    let timeslotArray = modAndClassArray.map((modAndClass) => {
+      let specificClassDetails;
+      modAndClassDetails.forEach((modAndClassDetail) => {
+        if (
+          JSON.stringify(modAndClassDetail.status) === "\"fulfilled\"" &&
+          JSON.stringify(modAndClassDetail.value.moduleCode) ==
+          JSON.stringify(modAndClass[0])
+        ) {
+          specificClassDetails = modAndClassDetail.value;
+        }
+      });
+      // converts the unparsed data into timeslots
+      let correctTimeSlots = undefined
+      if (specificClassDetails !== undefined) {
+        correctTimeSlots = findCorrectTimeslot(
+          modAndClass,
+          specificClassDetails,
+          currentSemester
+        );
+      }
+      return correctTimeSlots;
+    });
+
+    let newtimeslotArray = [];
+    timeslotArray.forEach((events) => {
+      if (events !== undefined) {
+        newtimeslotArray.push(...events);
+      }
+    });
+    let newEventArray = [];
+    newtimeslotArray.forEach((timeslot) => {
+      if (
+        timeslot !== undefined &&
+        timeslot.weeks !== undefined &&
+        timeslot.day !== undefined &&
+        timeslot.endTime !== undefined
+      ) {
+        timeslot.weeks.forEach((week) => {
+          let startTimestamp = convertWeekDayTimeToTimestamp(
+            week,
+            timeslot.day,
+            timeslot.startTime
+          );
+          let endTimestamp = convertWeekDayTimeToTimestamp(
+            week,
+            timeslot.day,
+            timeslot.endTime
+          );
+          newEventArray.push({
+            name: timeslot.moduleCode,
+            eventType: timeslot.lessonType,
+            startTime: startTimestamp,
+            endTime: endTimestamp,
+          });
+        });
+      }
+    });
+
+    // console.log(newEventArray);
+    // console.log(newtimeslotArray);
+
+    setUserEventArray(newEventArray);
   };
 
   let getUsers = () => {
@@ -126,47 +205,31 @@ function UserProfile(props) {
         >
           Ping timetable
         </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            // catches invalid URLs
+            try {
+              convertModsIntoEvents();
+            } catch (error) {
+              setErrorMessage(error);
+            }
+          }}
+        >
+          Find occupied time
+        </Button>
       </div>
 
       {/* Currently displays the pulled data of all time slots, can cleanup for less mess */}
       <div style={{ marginTop: 100 }}>
-        {modAndClassDetails.length > 1
-          ? modAndClassDetails.map((modAndClassDetail) => {
-              if (modAndClassDetail.value)
-                return (
-                  <div>
-                    <div style={{ marginTop: 30 }}>
-                      Module Code{" "}
-                      {JSON.stringify(modAndClassDetail.value.moduleCode)}
-                    </div>
-                    {modAndClassDetail.value.semesterData.map((semData) => {
-                      let semester = semData.semester;
-
-                      return (
-                        <div>
-                          <div> Semester: {semester} </div>
-                          <div>
-                            {semData.timetable.map((timetable) => {
-                              return (
-                                <div>
-                                  {JSON.stringify({
-                                    classNo: timetable.classNo,
-                                    lessonType: timetable.lessonType,
-                                    day: timetable.day,
-                                    startTime: timetable.startTime,
-                                    endTime: timetable.endTime,
-                                  })}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              else return "";
-            })
+        {userEventArray && userEventArray.length > 1
+          ? userEventArray.map((events) => {
+            return (
+              <div>
+                <div>{JSON.stringify(events)}</div>
+              </div>
+            );
+          })
           : ""}
       </div>
     </Fragment>
