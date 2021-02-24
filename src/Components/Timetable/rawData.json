@@ -1,4 +1,4 @@
-[
+{ "rawData": [
     {"name":"CFG1002","eventType":"Lecture","startTime":1610402400000,"endTime":1610409600000},
     {"name":"CFG1002","eventType":"Lecture","startTime":1611007200000,"endTime":1611014400000},
     {"name":"CFG1002","eventType":"Lecture","startTime":1611612000000,"endTime":1611619200000},
@@ -80,5 +80,6 @@
     {"name":"ST2334","eventType":"Tutorial","startTime":1616479200000,"endTime":1616482800000},
     {"name":"ST2334","eventType":"Tutorial","startTime":1617084000000,"endTime":1617087600000},
     {"name":"ST2334","eventType":"Tutorial","startTime":1617688800000,"endTime":1617692400000},
-    {"name":"ST2334","eventType":"Tutorial","startTime":1618293600000,"endTime":1618297200000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1618293600000,"endTime":1618297200000}
     ]
+}

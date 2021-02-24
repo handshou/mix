@@ -5,40 +5,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import './timetable.css';
 
-// const TableCell = withStyles((theme) => ({
-//   // head: {
-//   //   backgroundColor: theme.palette.common.black,
-//   //   color: theme.palette.common.white,
-//   // },
-//   // body: {
-//   //   fontSize: 14,
-//   // },
-  
-//     head: {
-//       backgroundColor: '#5e96ae',
-//       color: '#ffffff',
-//     },
-//     body: {
-//       fontSize: 14,
-//     }
-// }))(td);
-
-// const TableRow = withStyles((theme) => ({
-//   root: {
-//     "&:nth-of-type(odd)": {
-//       // backgroundColor: theme.palette.action.hover,
-//       backgroundColor: '#d9effc',
-//     },
-//     "&:nth-of-type(even)": {
-//       // backgroundColor: theme.palette.action.hover,
-//       backgroundColor: '#ffffff',
-//     },
-//     "&:hover": {
-//       // backgroundColor: theme.palette.action.hover,
-//       backgroundColor: '#f9e1e0',
-//     },
-//   },
-// }))(TableRow);
+import rawData from "./rawData.json";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,6 +58,8 @@ function generateIntervals(startTime, endTime, minutesInterval) {
   // ["0800", "0830", "0900", ..., "2330"]
   return result;
 }
+
+console.log({rawData});
 
 const days = [
   createDays("Monday", [{title: "CS2105", date: "1st Feb"}, {title: "IS4261", date: "1st Feb"}, {}, {}, {}, {title: "Appt", date: "1st Feb"}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},{}]),
