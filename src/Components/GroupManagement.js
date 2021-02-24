@@ -27,7 +27,7 @@ if (!firebase.apps.length) {
 const useStyles = makeStyles({
   root: {
     margin: "2%",
-    width: "33%",
+    width: "20%"
   },
   media: {
     height: 140,
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   },
 });
 
-function MyTimetable(props) {
+function GroupManagement(props) {
   const classes = useStyles();
   // ========================================================== STUDENTS ==========================================================
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
@@ -164,6 +164,10 @@ function MyTimetable(props) {
 
   let createGroupId = () => {
     var groupName = prompt("Enter group name");
+    if (groupName == null){
+      toast.success("The creation of group has been cancelled.");
+      return;
+    }
 
     var query = firebase.database().ref("Groups/").orderByKey();
     query.once("value").then(function (snapshot) {
@@ -178,17 +182,34 @@ function MyTimetable(props) {
 
   let createGroup = (groupName, groupId) => {
     var noOfGroupMembers = prompt("Enter your group size");
-
-    for (var i = 0; i < noOfGroupMembers; i++) {
-      var memberId = prompt("Enter member ID");
-      groupMembers.push(parseInt(memberId));
+    if (noOfGroupMembers == null){
+      toast.success("The creation of group has been cancelled.");
+      return;
     }
-    groupMembers.push(parseInt(studentId));
-    setGroupMembers(groupMembers);
 
+    if (parseInt(noOfGroupMembers) > 0) {
+      for (var i = 0; i < noOfGroupMembers; i++) {
+        var memberId = prompt("Enter member ID");
+        if (memberId == null){
+          toast.success("The creation of group has been cancelled.");
+          return;
+        }
+
+        if (parseInt(memberId) == parseInt(studentId)){
+          toast.success("You are not allowed to add your own Student ID.");
+          return;
+        }
+
+        groupMembers.push(parseInt(memberId));
+      }
+    }
+    
     var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
     groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
     groupsRef.child("groupName").set(groupName);
+
+    groupMembers.push(parseInt(studentId));
+    setGroupMembers(groupMembers);
     groupsRef.child("members").set(groupMembers);
 
     toast.success(
@@ -209,6 +230,16 @@ function MyTimetable(props) {
     setGroupMembers(groupMembers);
 
     var memberId = prompt("Enter member ID");
+    if (memberId == null){
+      toast.success("Member addition has been cancelled.");
+      return;
+    } 
+    
+    if (parseInt(memberId) == parseInt(studentId)){
+      toast.success("You are not allowed to add your own Student ID");
+      return;
+    }
+
     groupMembers.push(parseInt(memberId));
     database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
 
@@ -328,7 +359,7 @@ function MyTimetable(props) {
         >
           Create New Group
         </Button>
-        <div style={{ display: "inherit" }}>
+        <div style={{ "display": "flex", "flex-wrap":"wrap" }}>
           {studentGroups.map((group, i) => (
             <Card className={classes.root}>
               <div className="cardRow">
@@ -351,10 +382,10 @@ function MyTimetable(props) {
                       {memId != localStorage.getItem("studentId") ? (
                         <div>
                           <div style={{ float: "left" }}>
-                            <PersonIcon /> Member Id:{" "}
+                            <PersonIcon /> #
                             {memId + ", " + getGMN(memId)}
-                          </div>{" "}
-                          .
+                          </div>{"      "}
+                          
                           <div style={{ float: "right" }}>
                             <Button
                               variant="contained"
@@ -457,4 +488,4 @@ function MyTimetable(props) {
   );
 }
 
-export default MyTimetable;
+export default GroupManagement;
