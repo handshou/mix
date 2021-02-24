@@ -80,9 +80,9 @@ function Layout(props) {
       >
         <MenuItem
           component={Link}
-          to="/MyTimetable"
-          itemId="/MyTimetable"
-          selected={location.pathname === "/MyTimetable" ? true : false}
+          to="/Timetable"
+          itemId="/Timetable"
+          selected={location.pathname === "/Timetable" ? true : false}
           classes={{
             root: classes.sideNavBar,
             selected: classes.sideNavBarActive,
@@ -119,15 +119,15 @@ function Layout(props) {
 
         <MenuItem
           component={Link}
-          to="/Timetable"
-          itemId="/Timetable"
-          selected={location.pathname === "/Timetable" ? true : false}
+          to="/GroupManagement"
+          itemId="/GroupManagement"
+          selected={location.pathname === "/GroupManagement" ? true : false}
           classes={{
             root: classes.sideNavBar,
             selected: classes.sideNavBarActive,
           }}
         >
-          <HomeIcon /> &nbsp;&nbsp; Timetable Layout
+          <HomeIcon /> &nbsp;&nbsp; Manage Groups
         </MenuItem>
       </MenuList>
     </Fragment>

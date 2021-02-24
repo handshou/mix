@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   },
 });
 
-function MyTimetable(props) {
+function GroupManagement(props) {
   const classes = useStyles();
   // ========================================================== STUDENTS ==========================================================
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
@@ -195,6 +195,11 @@ function MyTimetable(props) {
           return;
         }
 
+        if (parseInt(memberId) == parseInt(studentId)){
+          toast.success("You are not allowed to add your own Student ID.");
+          return;
+        }
+
         groupMembers.push(parseInt(memberId));
       }
     }
@@ -226,7 +231,12 @@ function MyTimetable(props) {
 
     var memberId = prompt("Enter member ID");
     if (memberId == null){
-      toast.success("Member additional has been cancelled.");
+      toast.success("Member addition has been cancelled.");
+      return;
+    } 
+    
+    if (parseInt(memberId) == parseInt(studentId)){
+      toast.success("You are not allowed to add your own Student ID");
       return;
     }
 
@@ -478,4 +488,4 @@ function MyTimetable(props) {
   );
 }
 
-export default MyTimetable;
+export default GroupManagement;

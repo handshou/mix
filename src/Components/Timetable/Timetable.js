@@ -1,4 +1,4 @@
-import React from "react";
+import {React} from "react";
 import {  makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -121,7 +121,7 @@ export default function Timetable() {
         </label>
         <input accept="image/*" className={classes.input} id="icon-button-file" type="file" />
       </div>
-      <div>
+      <div style={{"display": "grid ", "overflow":"auto"}}>
           <table className="nice-table" aria-label="customized table">
             <thead>
               <tr>
