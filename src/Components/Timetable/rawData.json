@@ -1,82 +1,84 @@
-{"name":"CFG1002","eventType":"Lecture","startTime":1610402400000,"endTime":1610409600000}
-{"name":"CFG1002","eventType":"Lecture","startTime":1611007200000,"endTime":1611014400000}
-{"name":"CFG1002","eventType":"Lecture","startTime":1611612000000,"endTime":1611619200000}
-{"name":"CFG1002","eventType":"Lecture","startTime":1612216800000,"endTime":1612224000000}
-{"name":"CFG1002","eventType":"Lecture","startTime":1612821600000,"endTime":1612828800000}
-{"name":"CFG1002","eventType":"Lecture","startTime":1613426400000,"endTime":1613433600000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1611637200000,"endTime":1611640800000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1612242000000,"endTime":1612245600000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1612846800000,"endTime":1612850400000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1613451600000,"endTime":1613455200000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1614661200000,"endTime":1614664800000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1615266000000,"endTime":1615269600000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1615870800000,"endTime":1615874400000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1616475600000,"endTime":1616479200000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1617080400000,"endTime":1617084000000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1617685200000,"endTime":1617688800000}
-{"name":"CS2105","eventType":"Tutorial","startTime":1618290000000,"endTime":1618293600000}
-{"name":"CS2105","eventType":"Lecture","startTime":1610611200000,"endTime":1610618400000}
-{"name":"CS2105","eventType":"Lecture","startTime":1611216000000,"endTime":1611223200000}
-{"name":"CS2105","eventType":"Lecture","startTime":1611820800000,"endTime":1611828000000}
-{"name":"CS2105","eventType":"Lecture","startTime":1612425600000,"endTime":1612432800000}
-{"name":"CS2105","eventType":"Lecture","startTime":1613030400000,"endTime":1613037600000}
-{"name":"CS2105","eventType":"Lecture","startTime":1613635200000,"endTime":1613642400000}
-{"name":"CS2105","eventType":"Lecture","startTime":1614844800000,"endTime":1614852000000}
-{"name":"CS2105","eventType":"Lecture","startTime":1615449600000,"endTime":1615456800000}
-{"name":"CS2105","eventType":"Lecture","startTime":1616054400000,"endTime":1616061600000}
-{"name":"CS2105","eventType":"Lecture","startTime":1616659200000,"endTime":1616666400000}
-{"name":"CS2105","eventType":"Lecture","startTime":1617264000000,"endTime":1617271200000}
-{"name":"CS2105","eventType":"Lecture","startTime":1617868800000,"endTime":1617876000000}
-{"name":"CS2105","eventType":"Lecture","startTime":1618473600000,"endTime":1618480800000}
-{"name":"IS4243","eventType":"Lecture","startTime":1610409600000,"endTime":1610420400000}
-{"name":"IS4243","eventType":"Lecture","startTime":1611014400000,"endTime":1611025200000}
-{"name":"IS4243","eventType":"Lecture","startTime":1611619200000,"endTime":1611630000000}
-{"name":"IS4243","eventType":"Lecture","startTime":1612224000000,"endTime":1612234800000}
-{"name":"IS4243","eventType":"Lecture","startTime":1612828800000,"endTime":1612839600000}
-{"name":"IS4243","eventType":"Lecture","startTime":1613433600000,"endTime":1613444400000}
-{"name":"IS4243","eventType":"Lecture","startTime":1614643200000,"endTime":1614654000000}
-{"name":"IS4243","eventType":"Lecture","startTime":1615248000000,"endTime":1615258800000}
-{"name":"IS4243","eventType":"Lecture","startTime":1615852800000,"endTime":1615863600000}
-{"name":"IS4243","eventType":"Lecture","startTime":1616457600000,"endTime":1616468400000}
-{"name":"IS4243","eventType":"Lecture","startTime":1617062400000,"endTime":1617073200000}
-{"name":"IS4243","eventType":"Lecture","startTime":1617667200000,"endTime":1617678000000}
-{"name":"IS4243","eventType":"Lecture","startTime":1618272000000,"endTime":1618282800000}
-{"name":"IS4261","eventType":"Lecture","startTime":1610326800000,"endTime":1610337600000}
-{"name":"IS4261","eventType":"Lecture","startTime":1610931600000,"endTime":1610942400000}
-{"name":"IS4261","eventType":"Lecture","startTime":1611536400000,"endTime":1611547200000}
-{"name":"IS4261","eventType":"Lecture","startTime":1612141200000,"endTime":1612152000000}
-{"name":"IS4261","eventType":"Lecture","startTime":1612746000000,"endTime":1612756800000}
-{"name":"IS4261","eventType":"Lecture","startTime":1613350800000,"endTime":1613361600000}
-{"name":"IS4261","eventType":"Lecture","startTime":1614560400000,"endTime":1614571200000}
-{"name":"IS4261","eventType":"Lecture","startTime":1615165200000,"endTime":1615176000000}
-{"name":"IS4261","eventType":"Lecture","startTime":1615770000000,"endTime":1615780800000}
-{"name":"IS4261","eventType":"Lecture","startTime":1616374800000,"endTime":1616385600000}
-{"name":"IS4261","eventType":"Lecture","startTime":1616979600000,"endTime":1616990400000}
-{"name":"IS4261","eventType":"Lecture","startTime":1617584400000,"endTime":1617595200000}
-{"name":"IS4261","eventType":"Lecture","startTime":1618189200000,"endTime":1618200000000}
-{"name":"ST2334","eventType":"Lecture","startTime":1610337600000,"endTime":1610344800000}
-{"name":"ST2334","eventType":"Lecture","startTime":1610942400000,"endTime":1610949600000}
-{"name":"ST2334","eventType":"Lecture","startTime":1611547200000,"endTime":1611554400000}
-{"name":"ST2334","eventType":"Lecture","startTime":1612152000000,"endTime":1612159200000}
-{"name":"ST2334","eventType":"Lecture","startTime":1612756800000,"endTime":1612764000000}
-{"name":"ST2334","eventType":"Lecture","startTime":1613361600000,"endTime":1613368800000}
-{"name":"ST2334","eventType":"Lecture","startTime":1614571200000,"endTime":1614578400000}
-{"name":"ST2334","eventType":"Lecture","startTime":1615176000000,"endTime":1615183200000}
-{"name":"ST2334","eventType":"Lecture","startTime":1615780800000,"endTime":1615788000000}
-{"name":"ST2334","eventType":"Lecture","startTime":1616385600000,"endTime":1616392800000}
-{"name":"ST2334","eventType":"Lecture","startTime":1616990400000,"endTime":1616997600000}
-{"name":"ST2334","eventType":"Lecture","startTime":1617595200000,"endTime":1617602400000}
-{"name":"ST2334","eventType":"Lecture","startTime":1618200000000,"endTime":1618207200000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1610431200000,"endTime":1610434800000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1611036000000,"endTime":1611039600000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1611640800000,"endTime":1611644400000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1612245600000,"endTime":1612249200000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1612850400000,"endTime":1612854000000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1613455200000,"endTime":1613458800000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1614664800000,"endTime":1614668400000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1615269600000,"endTime":1615273200000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1615874400000,"endTime":1615878000000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1616479200000,"endTime":1616482800000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1617084000000,"endTime":1617087600000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1617688800000,"endTime":1617692400000}
-{"name":"ST2334","eventType":"Tutorial","startTime":1618293600000,"endTime":1618297200000}
+[
+    {"name":"CFG1002","eventType":"Lecture","startTime":1610402400000,"endTime":1610409600000},
+    {"name":"CFG1002","eventType":"Lecture","startTime":1611007200000,"endTime":1611014400000},
+    {"name":"CFG1002","eventType":"Lecture","startTime":1611612000000,"endTime":1611619200000},
+    {"name":"CFG1002","eventType":"Lecture","startTime":1612216800000,"endTime":1612224000000},
+    {"name":"CFG1002","eventType":"Lecture","startTime":1612821600000,"endTime":1612828800000},
+    {"name":"CFG1002","eventType":"Lecture","startTime":1613426400000,"endTime":1613433600000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1611637200000,"endTime":1611640800000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1612242000000,"endTime":1612245600000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1612846800000,"endTime":1612850400000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1613451600000,"endTime":1613455200000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1614661200000,"endTime":1614664800000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1615266000000,"endTime":1615269600000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1615870800000,"endTime":1615874400000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1616475600000,"endTime":1616479200000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1617080400000,"endTime":1617084000000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1617685200000,"endTime":1617688800000},
+    {"name":"CS2105","eventType":"Tutorial","startTime":1618290000000,"endTime":1618293600000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1610611200000,"endTime":1610618400000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1611216000000,"endTime":1611223200000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1611820800000,"endTime":1611828000000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1612425600000,"endTime":1612432800000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1613030400000,"endTime":1613037600000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1613635200000,"endTime":1613642400000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1614844800000,"endTime":1614852000000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1615449600000,"endTime":1615456800000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1616054400000,"endTime":1616061600000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1616659200000,"endTime":1616666400000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1617264000000,"endTime":1617271200000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1617868800000,"endTime":1617876000000},
+    {"name":"CS2105","eventType":"Lecture","startTime":1618473600000,"endTime":1618480800000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1610409600000,"endTime":1610420400000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1611014400000,"endTime":1611025200000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1611619200000,"endTime":1611630000000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1612224000000,"endTime":1612234800000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1612828800000,"endTime":1612839600000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1613433600000,"endTime":1613444400000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1614643200000,"endTime":1614654000000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1615248000000,"endTime":1615258800000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1615852800000,"endTime":1615863600000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1616457600000,"endTime":1616468400000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1617062400000,"endTime":1617073200000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1617667200000,"endTime":1617678000000},
+    {"name":"IS4243","eventType":"Lecture","startTime":1618272000000,"endTime":1618282800000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1610326800000,"endTime":1610337600000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1610931600000,"endTime":1610942400000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1611536400000,"endTime":1611547200000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1612141200000,"endTime":1612152000000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1612746000000,"endTime":1612756800000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1613350800000,"endTime":1613361600000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1614560400000,"endTime":1614571200000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1615165200000,"endTime":1615176000000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1615770000000,"endTime":1615780800000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1616374800000,"endTime":1616385600000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1616979600000,"endTime":1616990400000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1617584400000,"endTime":1617595200000},
+    {"name":"IS4261","eventType":"Lecture","startTime":1618189200000,"endTime":1618200000000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1610337600000,"endTime":1610344800000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1610942400000,"endTime":1610949600000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1611547200000,"endTime":1611554400000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1612152000000,"endTime":1612159200000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1612756800000,"endTime":1612764000000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1613361600000,"endTime":1613368800000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1614571200000,"endTime":1614578400000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1615176000000,"endTime":1615183200000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1615780800000,"endTime":1615788000000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1616385600000,"endTime":1616392800000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1616990400000,"endTime":1616997600000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1617595200000,"endTime":1617602400000},
+    {"name":"ST2334","eventType":"Lecture","startTime":1618200000000,"endTime":1618207200000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1610431200000,"endTime":1610434800000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1611036000000,"endTime":1611039600000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1611640800000,"endTime":1611644400000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1612245600000,"endTime":1612249200000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1612850400000,"endTime":1612854000000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1613455200000,"endTime":1613458800000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1614664800000,"endTime":1614668400000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1615269600000,"endTime":1615273200000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1615874400000,"endTime":1615878000000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1616479200000,"endTime":1616482800000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1617084000000,"endTime":1617087600000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1617688800000,"endTime":1617692400000},
+    {"name":"ST2334","eventType":"Tutorial","startTime":1618293600000,"endTime":1618297200000},
+    ]
