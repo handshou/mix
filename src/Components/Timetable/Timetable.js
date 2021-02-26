@@ -12,7 +12,7 @@ import {mock} from './mock';
 
 // tasks tonight
 // 1 create row representing modules with time intervals separation - ...
-// 1.1 create function for finding earliest, latest modules each week
+// 1.1 create function for finding earliest, latest modules each week - ok
 // 2 refactoring components into smaller files - ...
 // 3 create a store to remember which week we are on (or check current day) - ..
 // 4 create weekly timetables by week number - ...
@@ -55,46 +55,59 @@ const fridayModules = getModules(mock)
   .filter(m => m.week === 1)
   .filter(m => m.day === 'Friday');
 
-const days = [
-  createDay('Monday', mondayModules),
-  createDay('Tuesday', tuesdayModules),
-  createDay('Wednesday', wednesdayModules),
-  createDay('Thursday', thursdayModules),
-  createDay('Friday', fridayModules),
-];
-
 function createDay(name, modules) {
   return {name, modules};
 }
 
-function createModule(data) {
-  console.log({data});
-  const {title, type} = data;
-  return (
-    <>
-      <div>{title}</div>
-      <div>{type}</div>
-    </>
-  );
+function createModules(data) {
+  return data.map(module => {
+    const {title, type} = module;
+    return (
+      <>
+        <div>{title}</div>
+        <div>{type}</div>
+      </>
+    );
+  });
 }
 
-function generateRows(startTime, endTime, minutesInterval) {
+function isStartTimeSlot(currentTime, moduleStartTime) {
+  return currentTime === moduleStartTime;
+}
+
+function isMidTimeSlot(currentTime, moduleStartTime, moduleEndTime) {
+  return currentTime > moduleStartTime && currentTime < moduleEndTime;
+}
+
+function generateRows(startTime, endTime, minutesInterval, modules) {
   // startTime = "0800";
   // endTime = "2330";
   let result = [];
+  let modules_result = [];
   let minutes = '';
+
   while (parseInt(startTime) < parseInt(endTime)) {
     result.push(startTime);
+    if (modules) {
+      // condition to check if module should be pushed
+      const suitableModules = modules.filter(
+        m =>
+          isStartTimeSlot(startTime, m.startTime) ||
+          isMidTimeSlot(startTime, m.startTime, m.endTime),
+      );
+      modules_result.push(suitableModules);
+    }
     startTime = parseInt(startTime) + minutesInterval;
     minutes = String(startTime).slice(-2);
-    // console.log({startTime, minutes});
     if (parseInt(minutes) >= 60) {
       startTime = parseInt(startTime) - 60 + 100 + (minutes % 60);
     }
     startTime = String(startTime).padStart(4, '0');
   }
-  // ["0800", "0830", "0900", ..., "2330"]
-  return result;
+  if (modules == null)
+    // ["0800", "0830", "0900", ..., "2330"]
+    return result;
+  if (modules) return modules_result;
 }
 
 function getStartEndTimeByWeek(allModules, weekNumber) {
@@ -104,10 +117,8 @@ function getStartEndTimeByWeek(allModules, weekNumber) {
   const weekModules = allModules.filter(
     module => parseInt(module.week) === parseInt(weekNumber),
   );
-  console.log(weekModules);
-  weekModules.map(module => {
+  weekModules.forEach(module => {
     if (parseInt(module.startTime) < parseInt(startTime)) {
-      console.log(module.title + "'s startTime:  " + module.startTime);
       startTime = module.startTime;
     }
     if (parseInt(module.endTime) > parseInt(endTime)) {
@@ -118,11 +129,50 @@ function getStartEndTimeByWeek(allModules, weekNumber) {
 }
 
 export default function Timetable() {
-  const times = generateRows('0800', '2330', 30);
-  // 1.1 use function for finding earliest, latest modules each week
   const modules = getModules(mock);
-  const filteredModules = getStartEndTimeByWeek(modules, '1');
-  console.log(filteredModules);
+  console.log({modules});
+  const weekTime = getStartEndTimeByWeek(modules, '6');
+  const times = generateRows(weekTime.startTime, weekTime.endTime, 30, null);
+
+  const mondayArray = generateRows(
+    weekTime.startTime,
+    weekTime.endTime,
+    30,
+    mondayModules,
+  );
+  const tuesdayArray = generateRows(
+    weekTime.startTime,
+    weekTime.endTime,
+    30,
+    tuesdayModules,
+  );
+  const wednesdayArray = generateRows(
+    weekTime.startTime,
+    weekTime.endTime,
+    30,
+    wednesdayModules,
+  );
+  const thursdayArray = generateRows(
+    weekTime.startTime,
+    weekTime.endTime,
+    30,
+    thursdayModules,
+  );
+  const fridayArray = generateRows(
+    weekTime.startTime,
+    weekTime.endTime,
+    30,
+    fridayModules,
+  );
+
+  const days = [
+    createDay('Monday', mondayArray),
+    createDay('Tuesday', tuesdayArray),
+    createDay('Wednesday', wednesdayArray),
+    createDay('Thursday', thursdayArray),
+    createDay('Friday', fridayArray),
+  ];
+
   return (
     <div>
       <input accept="image/*" id="contained-button-file" multiple type="file" />
@@ -150,9 +200,9 @@ export default function Timetable() {
             {days.map((day, i) => (
               <tr key={i}>
                 <td>{day.name}</td>
-                {day.modules.map((module, j) => (
+                {day.modules.map((cell, j) => (
                   <td key={j} align="center">
-                    {createModule(module)}
+                    {createModules(cell)}
                   </td>
                 ))}
               </tr>
