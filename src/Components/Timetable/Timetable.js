@@ -17,10 +17,10 @@ import {mock} from './mock';
 // 3 create a store to remember which week we are on (or check current day) - ..
 // 4 create weekly timetables by week number - ...
 
-function getModules() {
+function getModules(data) {
   const baseDate = new Date('Jan 11 2021 0:00 GMT+8').getTime();
   const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
-  const weeklyData = mock.map(d => ({
+  const weeklyData = data.map(d => ({
     week: Math.floor((d.startTime - baseDate) / weekInMilliSeconds) + 1,
     title: d.name,
     type: d.eventType,
@@ -39,19 +39,19 @@ function makeDate(date) {
   return new Date(date);
 }
 
-const mondayModules = getModules()
+const mondayModules = getModules(mock)
   .filter(m => m.week === 1)
   .filter(m => m.day === 'Monday');
-const tuesdayModules = getModules()
+const tuesdayModules = getModules(mock)
   .filter(m => m.week === 1)
   .filter(m => m.day === 'Tuesday');
-const wednesdayModules = getModules()
+const wednesdayModules = getModules(mock)
   .filter(m => m.week === 1)
   .filter(m => m.day === 'Wednesday');
-const thursdayModules = getModules()
+const thursdayModules = getModules(mock)
   .filter(m => m.week === 1)
   .filter(m => m.day === 'Thursday');
-const fridayModules = getModules()
+const fridayModules = getModules(mock)
   .filter(m => m.week === 1)
   .filter(m => m.day === 'Friday');
 
@@ -97,8 +97,32 @@ function generateRows(startTime, endTime, minutesInterval) {
   return result;
 }
 
+function getStartEndTimeByWeek(allModules, weekNumber) {
+  // default timings
+  let startTime = '0800';
+  let endTime = '1800';
+  const weekModules = allModules.filter(
+    module => parseInt(module.week) === parseInt(weekNumber),
+  );
+  console.log(weekModules);
+  weekModules.map(module => {
+    if (parseInt(module.startTime) < parseInt(startTime)) {
+      console.log(module.title + "'s startTime:  " + module.startTime);
+      startTime = module.startTime;
+    }
+    if (parseInt(module.endTime) > parseInt(endTime)) {
+      endTime = module.endTime;
+    }
+  });
+  return {startTime, endTime};
+}
+
 export default function Timetable() {
   const times = generateRows('0800', '2330', 30);
+  // 1.1 use function for finding earliest, latest modules each week
+  const modules = getModules(mock);
+  const filteredModules = getStartEndTimeByWeek(modules, '1');
+  console.log(filteredModules);
   return (
     <div>
       <input accept="image/*" id="contained-button-file" multiple type="file" />
