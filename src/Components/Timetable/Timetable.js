@@ -5,6 +5,17 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import './timetable.css';
 import {mock} from './mock';
 
+// create time intervals (top row) - ok
+// create row representing day - ok
+// get mock data from api - ok
+// filter mock data by week, and by day - ok
+
+// tasks tonight
+// 1 create row representing modules with time intervals separation - ...
+// 2 refactoring components into smaller files - ...
+// 3 create a store to remember which week we are on (or check current day) - ..
+// 4 create weekly timetables by week number - ...
+
 function createDay(name, modules) {
   return {name, modules};
 }
