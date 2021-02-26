@@ -40,19 +40,19 @@ function makeDate(date) {
 }
 
 const mondayModules = getModules(mock)
-  .filter(m => m.week === 1)
+  .filter(m => m.week === 6)
   .filter(m => m.day === 'Monday');
 const tuesdayModules = getModules(mock)
-  .filter(m => m.week === 1)
+  .filter(m => m.week === 6)
   .filter(m => m.day === 'Tuesday');
 const wednesdayModules = getModules(mock)
-  .filter(m => m.week === 1)
+  .filter(m => m.week === 6)
   .filter(m => m.day === 'Wednesday');
 const thursdayModules = getModules(mock)
-  .filter(m => m.week === 1)
+  .filter(m => m.week === 6)
   .filter(m => m.day === 'Thursday');
 const fridayModules = getModules(mock)
-  .filter(m => m.week === 1)
+  .filter(m => m.week === 6)
   .filter(m => m.day === 'Friday');
 
 function createDay(name, modules) {
@@ -88,6 +88,14 @@ function generateRows(startTime, endTime, minutesInterval, modules) {
 
   while (parseInt(startTime) < parseInt(endTime)) {
     result.push(startTime);
+
+    startTime = parseInt(startTime) + minutesInterval;
+    minutes = String(startTime).slice(-2);
+    if (parseInt(minutes) >= 60) {
+      startTime = parseInt(startTime) - 60 + 100 + (minutes % 60);
+    }
+    startTime = String(startTime).padStart(4, '0');
+
     if (modules) {
       // condition to check if module should be pushed
       const suitableModules = modules.filter(
@@ -97,12 +105,6 @@ function generateRows(startTime, endTime, minutesInterval, modules) {
       );
       modules_result.push(suitableModules);
     }
-    startTime = parseInt(startTime) + minutesInterval;
-    minutes = String(startTime).slice(-2);
-    if (parseInt(minutes) >= 60) {
-      startTime = parseInt(startTime) - 60 + 100 + (minutes % 60);
-    }
-    startTime = String(startTime).padStart(4, '0');
   }
   if (modules == null)
     // ["0800", "0830", "0900", ..., "2330"]
