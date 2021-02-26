@@ -79,23 +79,23 @@ function isMidTimeSlot(currentTime, moduleStartTime, moduleEndTime) {
   return currentTime > moduleStartTime && currentTime < moduleEndTime;
 }
 
+function getNextStartTime(currentTime, minutesInterval) {
+  currentTime = parseInt(currentTime) + minutesInterval;
+  let minutes = String(currentTime).slice(-2);
+  if (parseInt(minutes) >= 60) {
+    currentTime = parseInt(currentTime) - 60 + 100 + (minutes % 60);
+  }
+  return String(currentTime).padStart(4, '0');
+}
+
 function generateRows(startTime, endTime, minutesInterval, modules) {
   // startTime = "0800";
   // endTime = "2330";
   let result = [];
   let modules_result = [];
-  let minutes = '';
 
   while (parseInt(startTime) < parseInt(endTime)) {
     result.push(startTime);
-
-    startTime = parseInt(startTime) + minutesInterval;
-    minutes = String(startTime).slice(-2);
-    if (parseInt(minutes) >= 60) {
-      startTime = parseInt(startTime) - 60 + 100 + (minutes % 60);
-    }
-    startTime = String(startTime).padStart(4, '0');
-
     if (modules) {
       // condition to check if module should be pushed
       const suitableModules = modules.filter(
@@ -105,6 +105,7 @@ function generateRows(startTime, endTime, minutesInterval, modules) {
       );
       modules_result.push(suitableModules);
     }
+    startTime = getNextStartTime(startTime, minutesInterval);
   }
   if (modules == null)
     // ["0800", "0830", "0900", ..., "2330"]
