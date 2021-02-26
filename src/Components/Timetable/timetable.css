@@ -1,24 +1,45 @@
 table {
   /* border-collapse: collapse; */
   width: 100%;
-  font-size: 0.5em;
+  font-size: 0.4em;
 }
 
+table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 1em;
+}
+
+table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 1em;
+}
+
+table thead tr:last-child td:first-child {
+  border-top-left-radius: 1em;
+}
+
+table thead tr:last-child td:last-child {
+  border-top-right-radius: 1em;
+}
 th,
 td {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  min-width: 50px;
 }
 
-.nice-table td:hover {
+.nice-table>thead, .tdays {
+  font-weight: bold;
+  background-color: #ccc;
+}
+
+.nice-table tbody td:hover {
   background-color: #f9e1e0;
 }
 
-.nice-table tr:nth-of-type(odd) {
+.nice-table tbody tr:nth-of-type(odd) {
   background-color: #d9effc;
 }
 
-.nice-table tr:nth-of-type(even) {
+.nice-table tbody tr:nth-of-type(even) {
   background-color: #ffffff;
 }

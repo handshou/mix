@@ -202,7 +202,7 @@ export default function Timetable() {
           <tbody>
             {days.map((day, i) => (
               <tr key={i}>
-                <td>{day.name}</td>
+                <td className="tdays">{day.name}</td>
                 {day.modules.map((cell, j) => (
                   <td key={j} align="center">
                     {createModules(cell)}
