@@ -1,4 +1,4 @@
-import {React} from "react";
+import { React } from "react";
 
 import "./timetable.css";
 
@@ -18,7 +18,7 @@ function getModules(data) {
         endTime: String(makeDate(d.endTime).getHours())
           .padStart(2, "0")
           .concat(String(makeDate(d.endTime).getMinutes()).padEnd(2, "0")),
-        day: makeDate(d.startTime).toLocaleString("en-us", {weekday: "long"}),
+        day: makeDate(d.startTime).toLocaleString("en-us", { weekday: "long" }),
       }));
     return [];
   } catch (error) {
@@ -31,12 +31,12 @@ function makeDate(date) {
 }
 
 function createDay(name, modules) {
-  return {name, modules};
+  return { name, modules };
 }
 
 function createModules(data) {
   return data.map(module => {
-    const {id, title, type} = module;
+    const { id, title, type } = module;
     return (
       <div key={id}>
         <div>{title}</div>
@@ -101,11 +101,11 @@ function getStartEndTimeByWeek(allModules, weekNumber) {
       endTime = module.endTime;
     }
   });
-  return {startTime, endTime};
+  return { startTime, endTime };
 }
 
 export default function Timetable(props) {
-  let {weekNumber = 1, timetableData} = props;
+  let { weekNumber = 1, timetableData } = props;
   weekNumber = parseInt(weekNumber);
 
   const modules = getModules(timetableData);
@@ -168,7 +168,7 @@ export default function Timetable(props) {
   ];
 
   return (
-    <div style={{display: "grid ", overflow: "auto"}}>
+    <div style={{ display: "grid ", overflow: "auto" }}>
       <table className="nice-table" aria-label="customized table">
         <thead>
           <tr>
