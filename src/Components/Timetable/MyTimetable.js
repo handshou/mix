@@ -11,14 +11,14 @@ import {mock} from './mock';
 // filter mock data by week, and by day - ok
 
 // tasks tonight
-// 1 create row representing modules with time intervals separation - ...
+// 1 create row representing modules with time intervals separation - ok
 // 1.1 create function for finding earliest, latest modules each week - ok
 // 2 refactoring components into smaller files - ...
 // 3 create a store to remember which week we are on (or check current day) - ..
 // 4 create weekly timetables by week number - ...
 
 function getModules(data) {
-  const baseDate = new Date('Jan 11 2021 0:00 GMT+8').getTime();
+  const baseDate = makeDate('Jan 11 2021 0:00 GMT+8').getTime();
   const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
   const weeklyData = data.map(d => ({
     week: Math.floor((d.startTime - baseDate) / weekInMilliSeconds) + 1,
@@ -38,22 +38,6 @@ function getModules(data) {
 function makeDate(date) {
   return new Date(date);
 }
-
-const mondayModules = getModules(mock)
-  .filter(m => m.week === 6)
-  .filter(m => m.day === 'Monday');
-const tuesdayModules = getModules(mock)
-  .filter(m => m.week === 6)
-  .filter(m => m.day === 'Tuesday');
-const wednesdayModules = getModules(mock)
-  .filter(m => m.week === 6)
-  .filter(m => m.day === 'Wednesday');
-const thursdayModules = getModules(mock)
-  .filter(m => m.week === 6)
-  .filter(m => m.day === 'Thursday');
-const fridayModules = getModules(mock)
-  .filter(m => m.week === 6)
-  .filter(m => m.day === 'Friday');
 
 function createDay(name, modules) {
   return {name, modules};
@@ -131,11 +115,28 @@ function getStartEndTimeByWeek(allModules, weekNumber) {
   return {startTime, endTime};
 }
 
-export default function Timetable() {
+export default function MyTimetable(props) {
+  const {weekNumber = 1} = props;
   const modules = getModules(mock);
   console.log({modules});
-  const weekTime = getStartEndTimeByWeek(modules, '6');
+  const weekTime = getStartEndTimeByWeek(modules, weekNumber);
   const times = generateRows(weekTime.startTime, weekTime.endTime, 30, null);
+
+  const mondayModules = getModules(mock)
+    .filter(m => m.week === weekNumber)
+    .filter(m => m.day === 'Monday');
+  const tuesdayModules = getModules(mock)
+    .filter(m => m.week === weekNumber)
+    .filter(m => m.day === 'Tuesday');
+  const wednesdayModules = getModules(mock)
+    .filter(m => m.week === weekNumber)
+    .filter(m => m.day === 'Wednesday');
+  const thursdayModules = getModules(mock)
+    .filter(m => m.week === weekNumber)
+    .filter(m => m.day === 'Thursday');
+  const fridayModules = getModules(mock)
+    .filter(m => m.week === weekNumber)
+    .filter(m => m.day === 'Friday');
 
   const mondayArray = generateRows(
     weekTime.startTime,
