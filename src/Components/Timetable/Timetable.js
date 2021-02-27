@@ -1,10 +1,10 @@
-import {React} from 'react';
+import {React} from "react";
 
-import './timetable.css';
+import "./timetable.css";
 
 function getModules(data) {
   try {
-    const baseDate = makeDate('Jan 11 2021 0:00 GMT+8').getTime();
+    const baseDate = makeDate("Jan 11 2021 0:00 GMT+8").getTime();
     const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
     if (data)
       return data.map(d => ({
@@ -13,12 +13,12 @@ function getModules(data) {
         title: d.eventName,
         type: d.eventType,
         startTime: String(makeDate(d.startTime).getHours())
-          .padStart(2, '0')
-          .concat(String(makeDate(d.startTime).getMinutes()).padEnd(2, '0')),
+          .padStart(2, "0")
+          .concat(String(makeDate(d.startTime).getMinutes()).padEnd(2, "0")),
         endTime: String(makeDate(d.endTime).getHours())
-          .padStart(2, '0')
-          .concat(String(makeDate(d.endTime).getMinutes()).padEnd(2, '0')),
-        day: makeDate(d.startTime).toLocaleString('en-us', {weekday: 'long'}),
+          .padStart(2, "0")
+          .concat(String(makeDate(d.endTime).getMinutes()).padEnd(2, "0")),
+        day: makeDate(d.startTime).toLocaleString("en-us", {weekday: "long"}),
       }));
     return [];
   } catch (error) {
@@ -52,7 +52,7 @@ function getNextStartTime(currentTime, minutesInterval) {
   if (parseInt(minutes) >= 60) {
     currentTime = parseInt(currentTime) - 60 + 100 + (minutes % 60);
   }
-  return String(currentTime).padStart(4, '0');
+  return String(currentTime).padStart(4, "0");
 }
 
 function generateRows(startTime, endTime, minutesInterval, modules) {
@@ -88,8 +88,8 @@ function generateRows(startTime, endTime, minutesInterval, modules) {
 
 function getStartEndTimeByWeek(allModules, weekNumber) {
   // default timings
-  let startTime = '0800';
-  let endTime = '1800';
+  let startTime = "0800";
+  let endTime = "1800";
   const weekModules = allModules.filter(
     module => parseInt(module.week) === parseInt(weekNumber),
   );
@@ -114,19 +114,19 @@ export default function Timetable(props) {
 
   const mondayModules = getModules(timetableData)
     .filter(m => m.week === weekNumber)
-    .filter(m => m.day === 'Monday');
+    .filter(m => m.day === "Monday");
   const tuesdayModules = getModules(timetableData)
     .filter(m => m.week === weekNumber)
-    .filter(m => m.day === 'Tuesday');
+    .filter(m => m.day === "Tuesday");
   const wednesdayModules = getModules(timetableData)
     .filter(m => m.week === weekNumber)
-    .filter(m => m.day === 'Wednesday');
+    .filter(m => m.day === "Wednesday");
   const thursdayModules = getModules(timetableData)
     .filter(m => m.week === weekNumber)
-    .filter(m => m.day === 'Thursday');
+    .filter(m => m.day === "Thursday");
   const fridayModules = getModules(timetableData)
     .filter(m => m.week === weekNumber)
-    .filter(m => m.day === 'Friday');
+    .filter(m => m.day === "Friday");
 
   const mondayArray = generateRows(
     weekTime.startTime,
@@ -160,29 +160,33 @@ export default function Timetable(props) {
   );
 
   const days = [
-    createDay('Monday', mondayArray),
-    createDay('Tuesday', tuesdayArray),
-    createDay('Wednesday', wednesdayArray),
-    createDay('Thursday', thursdayArray),
-    createDay('Friday', fridayArray),
+    createDay("Monday", mondayArray),
+    createDay("Tuesday", tuesdayArray),
+    createDay("Wednesday", wednesdayArray),
+    createDay("Thursday", thursdayArray),
+    createDay("Friday", fridayArray),
   ];
 
   return (
-    <div style={{display: 'grid ', overflow: 'auto'}}>
+    <div style={{display: "grid ", overflow: "auto"}}>
       <table className="nice-table" aria-label="customized table">
         <thead>
           <tr>
             <th>Day/Time</th>
-            {times.map((time) => (
-              <th align="center" key={time}>{time}</th>
+            {times.map(time => (
+              <th align="center" key={time}>
+                {time}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {days.map((day) => (
+          {days.map(day => (
             <tr key={`${day.name}-tr`}>
-              <th key ={`${day.name}-th`} className="tdays">{day.name}</th>
-              {day.modules.map((cell,i) => (
+              <th key={`${day.name}-th`} className="tdays">
+                {day.name}
+              </th>
+              {day.modules.map((cell, i) => (
                 <td key={`${cell.id}-${i}`} align="center">
                   {createModules(cell)}
                 </td>
