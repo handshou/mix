@@ -1,15 +1,14 @@
 import { React, Fragment, useState, useEffect } from "react";
-import Body from "./Body";
+import firebase from "firebase";
+import firebaseConfig from "../../Firebase/firebaseConfig";
 import {
   convertURLtoArray,
   findCorrectTimeslot,
   convertWeekDayTimeToTimestamp,
-} from "../Functions/urlFunctions.js";
-import { getModDetails } from "../Functions/apiFunctions.js";
+} from "../../Functions/urlFunctions.js";
+import { getModDetails, addStudentEventsToDB } from "../../Functions/apiFunctions.js";
 import { Button, Input } from "@material-ui/core";
-
-import firebase from "firebase";
-import firebaseConfig from "../Firebase/firebaseConfig";
+import './timetable.css';
 
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -20,8 +19,66 @@ if (!firebase.apps.length) {
   var database = firebase.app().database();
 }
 
-function UserProfile(props) {
-  const [userList, setUserList] = useState({});
+export function EnterURL() {
+
+  // handle new user
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [studentName, setStudentName] = useState(
+    localStorage.getItem("studentName")
+  );
+  const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
+
+  let getStudentName = (studentId) => {
+    var studentsRef = database.ref(
+      `Students/${localStorage.getItem("studentId")}/name`
+    );
+    studentsRef.once("value").then((snapshot) => {
+      setStudentName(snapshot.val());
+    });
+  };
+
+  let createStudentId = (studentName) => {
+
+    console.log("studentName: " + studentName);
+    var query = database.ref("Students/").orderByKey();
+
+    console.log("1: " + query);
+    query.once("value").then(function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        var key = childSnapshot.key;
+        setStudentId(parseInt(key) + 1);
+        localStorage.setItem("studentId", parseInt(key) + 1);
+      });
+      createStudentRecord(studentName);
+    });
+
+  };
+
+  let createStudentRecord = (studentName) => {
+    var studentsRef = database.ref(`Students/`);
+    studentsRef
+      .child(localStorage.getItem("studentId"))
+      .child("name")
+      .set(studentName);
+    setRefreshKey(refreshKey + 1);
+    localStorage.setItem("studentName", studentName);
+  };
+
+  useEffect(() => {
+    setRefreshKey(0);
+    if (localStorage.getItem("studentId") == null) {
+      var studentName = prompt(
+        "Hi! Seems like this is the first time you visited MixTime. \nPlease enter your name and we'll tag it into your timetable."
+      );
+      createStudentId(studentName);
+    } else {
+      getStudentName(localStorage.getItem("studentId"));
+    }
+  }, [refreshKey]);
+
+
+
+  // handle URL
   const [enteredURL, setEnteredURL] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   // Array which contains array of classes and slots occupied for the module
@@ -34,7 +91,9 @@ function UserProfile(props) {
   // Array which contains resolved promises with either details of the module in .value or error message in .reason
   const [modAndClassDetails, setModAndClassDetails] = useState([]);
 
-  // Contains user event array
+  // Contains user's existing event array
+  const [existingEvents, setExistingEvents] = useState([]);
+  // Contains new user event array
   const [userEventArray, setUserEventArray] = useState([]);
 
   // hard coded  value until we find a way to properly implement semester recording
@@ -42,10 +101,51 @@ function UserProfile(props) {
 
   // checker to see if api is set, can be removed later on
   useEffect(() => {
-    // console.log(modAndClassArray);
-    // console.log(modAndClassDetails);
-    // console.log(userEventArray);
+    console.log(modAndClassArray);
+    console.log(modAndClassDetails);
+    console.log(userEventArray);
   }, [modAndClassDetails, userEventArray]);
+
+  useEffect(() => {
+    // catches api catastrophic api errors, though it should never be triggered as there promise.allSettled helps handle Errors
+    try {
+      getModuleDetails();
+    } catch (error) {
+      setErrorMessage(error);
+    }
+  }, [modAndClassArray]);
+
+  useEffect(() => {
+    console.log("RUNONLAUNCH");
+    var studentsRef = database.ref(`Students/${studentId}/events`);
+    studentsRef.once("value").then((snapshot) => {
+
+      console.log("snapshots");
+      setExistingEvents(snapshot.val());
+    });
+  }, [userEventArray]);
+
+  useEffect(() => {
+    console.log("Existing events changed");
+    console.log(existingEvents);
+  }, [existingEvents]);
+
+
+  useEffect(() => {
+    // catches invalid URLs
+    try {
+      convertModsIntoEvents();
+    } catch (error) {
+      setErrorMessage(error);
+    }
+  }, [modAndClassDetails]);
+
+
+  useEffect(() => {
+    if (userEventArray && userEventArray.length > 0)
+      addStudentEventsToDB(studentId, userEventArray, existingEvents, database);
+  }, [userEventArray]);
+
 
   // waits for response and sets
   const getModuleDetails = async () => {
@@ -122,7 +222,7 @@ function UserProfile(props) {
             timeslot.endTime
           );
           newEventArray.push({
-            name: timeslot.moduleCode,
+            eventName: timeslot.moduleCode,
             eventType: timeslot.lessonType,
             startTime: startTimestamp,
             endTime: endTimestamp,
@@ -137,106 +237,38 @@ function UserProfile(props) {
     setUserEventArray(newEventArray);
   };
 
-  let getUsers = () => {
-    var usersRef = database.ref("users/");
-    usersRef.once("value").then((snapshot) => {
-
-      snapshot.val() ? setUserList(snapshot.val()) : console.log("missing");
-    });
-  };
-
   return (
-    <Fragment>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          wigth: "100%",
-          padding: "2%",
-        }}
-      >
-        User Profile
-      </div>
-
-      <Body getUsers={getUsers} userList={userList} />
-
-      <div>entered URL : {enteredURL}</div>
-      <div
-        style={{
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "row",
-          marginTop: 50,
-        }}
-      >
-        <div>
-          Enter URL:
+    <div style={{ display: "flex", flexDirection: "row", color: "red" }}>
+      <div>
+        Enter URL:
         </div>
-        <div style={{ color: "red" }}>{errorMessage}</div>
-        <Input
-          style={{ width: 300 }}
-          value={enteredURL}
-          onChange={(e) => {
-            setEnteredURL(e.target.value);
-            setErrorMessage("");
-          }}
-        ></Input>
-        <Button
-          variant="contained"
-          onClick={() => {
-            // catches invalid URLs
-            try {
-              setModAndClassArray(convertURLtoArray(enteredURL));
-            } catch (error) {
-              setErrorMessage(error);
-            }
-          }}
-        >
-          parse timetable
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => {
-            // catches api catastrophic api errors, though it should never be triggered as there promise.allSettled helps handle Errors
-            try {
-              getModuleDetails();
-            } catch (error) {
-              setErrorMessage(error);
-            }
-          }}
-        >
-          Ping timetable
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => {
-            // catches invalid URLs
-            try {
-              convertModsIntoEvents();
-            } catch (error) {
-              setErrorMessage(error);
-            }
-          }}
-        >
-          Find occupied time
-        </Button>
+      <div style={{ color: "red" }}>
+        {errorMessage}
       </div>
-
-      {/* Currently displays the pulled data of all time slots, can cleanup for less mess */}
-      <div style={{ marginTop: 100 }}>
-        {userEventArray && userEventArray.length > 1
-          ? userEventArray.map((events) => {
-            return (
-              <div>
-                <div>{JSON.stringify(events)}</div>
-              </div>
-            );
-          })
-          : ""}
-      </div>
-    </Fragment>
+      <Input
+        style={{ width: 500 }}
+        onChange={(e) => {
+          setEnteredURL(e.target.value);
+          setErrorMessage("");
+        }}
+      >
+      </Input>
+      <Button
+        variant="contained"
+        onClick={() => {
+          console.log("hih");
+          // catches invalid URLs
+          try {
+            setModAndClassArray(convertURLtoArray(enteredURL));
+          } catch (error) {
+            setErrorMessage(error);
+          }
+        }}
+      >
+        Update Timetable
+      </Button>
+    </div>
   );
 }
 
-export default UserProfile;
+export default EnterURL;

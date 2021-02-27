@@ -321,14 +321,6 @@ function GroupManagement(props) {
       getStudentGroups();
       getGroupMemberName();
     }
-    // if (!Array.isArray(studentEvents) || !studentEvents.length) {
-    //   for (var i = 0; i < studentEvents.length; i++) {
-    //     console.log("***eventname:  " + studentEvents[i].eventname);
-    //     console.log("***eventtype:  " + studentEvents[i].eventtype);
-    //     console.log("***endtime:  " + studentEvents[i].endtime);
-    //     console.log("***starttime:  " + studentEvents[i].starttime);
-    //   }
-    // }
   }, [refreshKey]);
 
   return (
