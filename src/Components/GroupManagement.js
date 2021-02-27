@@ -329,7 +329,6 @@ function GroupManagement(props) {
       getStudentGroups();
       getGroupMemberName();
     }
-
   }, [refreshKey]);
 
   return (
