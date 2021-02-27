@@ -11,13 +11,15 @@ import Tab from "@material-ui/core/Tab";
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 
+var database;
+
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
-  var database = firebaseApp.database();
+  database = firebaseApp.database();
 } else {
   // If firebase is already initialized
   firebase.app();
-  var database = firebase.app().database();
+  database = firebase.app().database();
 }
 
 function GroupTimetable(props) {
@@ -52,6 +54,7 @@ function GroupTimetable(props) {
         return getModDetails(modAndClasses[0]);
       } else {
         console.log("no timetable loaded");
+        return null;
       }
     });
     // .allSettled() used instead of .all()
@@ -69,13 +72,13 @@ function GroupTimetable(props) {
     });
   };
 
-  const [studentsList, setStudentList] = useState("");
-  let getStudents = () => {
-    var studentsRef = database.ref("Students/");
-    studentsRef.once("value").then((snapshot) => {
-      snapshot.val() ? setStudentList(snapshot.val()) : console.log("missing");
-    });
-  };
+  //const [, setStudentList] = useState("");
+  //let getStudents = () => {
+  //  var studentsRef = database.ref("Students/");
+  //  studentsRef.once("value").then((snapshot) => {
+  //    snapshot.val() ? setStudentList(snapshot.val()) : console.log("missing");
+  //  });
+  //};
 
   const [value, setValue] = useState(2);
 
@@ -129,11 +132,6 @@ function GroupTimetable(props) {
             <Tab label="Group ID 2" />
           </Tabs>
         </Paper>
-
-        <iframe
-          height="500px"
-          src="https://nusmods.com/timetable/sem-2/share?CS2105=TUT:05,LEC:1&GEH1049=LEC:3&IS4243=LEC:1&IS4261=LEC:1&ST2334=LEC:1,TUT:14"
-        ></iframe>
       </div>
 
       <Body getUsers={getUsers} userList={userList} />
