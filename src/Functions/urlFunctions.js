@@ -18,10 +18,10 @@ export const convertURLtoArray = (URL) => {
     // 03: (3) ["IS4234", "TUT:2", "LEC:1"]
     // 04: (2) ["IS4261", "LEC:1"]
     return modsArray.map((mod) => {
-      return mod.split(/=|\,/);
+      return mod.split(/=|,/);
     });
   } else {
-    throw "Invalid URL entered";
+    throw new Error("Invalid URL entered");
   }
 };
 
@@ -41,7 +41,7 @@ export const findCorrectTimeslot = (
 
     specificClassDetails.semesterData.forEach((semesterData) => {
       // check data for correct semester information
-      if (semesterData.semester == semester) {
+      if (semesterData.semester === semester) {
         semesterSpecificTimetable = semesterData.timetable;
       }
     });
@@ -61,9 +61,9 @@ export const findCorrectTimeslot = (
         if (
           JSON.stringify(classTimeTable.lessonType)
             .substring(1, 4)
-            .toLowerCase() ==
+            .toLowerCase() ===
           JSON.stringify(typeAndSlot[0]).substring(1, 4).toLowerCase() &&
-          classTimeTable.classNo == typeAndSlot[1]
+          classTimeTable.classNo === typeAndSlot[1]
         ) {
           if (classTimeTable.lessonType !== undefined &&
             classTimeTable.startTime !== undefined &&
