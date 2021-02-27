@@ -6,9 +6,12 @@ import {
   findCorrectTimeslot,
   convertWeekDayTimeToTimestamp,
 } from "../../Functions/urlFunctions.js";
-import { getModDetails, addStudentEventsToDB } from "../../Functions/apiFunctions.js";
+import {
+  getModDetails,
+  addStudentEventsToDB,
+} from "../../Functions/apiFunctions.js";
 import { Button, Input } from "@material-ui/core";
-import './timetable.css';
+import "./timetable.css";
 
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -20,7 +23,6 @@ if (!firebase.apps.length) {
 }
 
 export function EnterURL() {
-
   // handle new user
   const [refreshKey, setRefreshKey] = useState(0);
   const [studentName, setStudentName] = useState(
@@ -38,7 +40,6 @@ export function EnterURL() {
   };
 
   let createStudentId = (studentName) => {
-
     console.log("studentName: " + studentName);
     var query = database.ref("Students/").orderByKey();
 
@@ -51,7 +52,6 @@ export function EnterURL() {
       });
       createStudentRecord(studentName);
     });
-
   };
 
   let createStudentRecord = (studentName) => {
@@ -76,8 +76,6 @@ export function EnterURL() {
     }
   }, [refreshKey]);
 
-
-
   // handle URL
   const [enteredURL, setEnteredURL] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -101,9 +99,9 @@ export function EnterURL() {
 
   // checker to see if api is set, can be removed later on
   useEffect(() => {
-    console.log(modAndClassArray);
-    console.log(modAndClassDetails);
-    console.log(userEventArray);
+    // console.log(modAndClassArray);
+    // console.log(modAndClassDetails);
+    // console.log(userEventArray);
   }, [modAndClassDetails, userEventArray]);
 
   useEffect(() => {
@@ -116,20 +114,11 @@ export function EnterURL() {
   }, [modAndClassArray]);
 
   useEffect(() => {
-    console.log("RUNONLAUNCH");
     var studentsRef = database.ref(`Students/${studentId}/events`);
     studentsRef.once("value").then((snapshot) => {
-
-      console.log("snapshots");
       setExistingEvents(snapshot.val());
     });
   }, [userEventArray]);
-
-  useEffect(() => {
-    console.log("Existing events changed");
-    console.log(existingEvents);
-  }, [existingEvents]);
-
 
   useEffect(() => {
     // catches invalid URLs
@@ -140,12 +129,10 @@ export function EnterURL() {
     }
   }, [modAndClassDetails]);
 
-
   useEffect(() => {
     if (userEventArray && userEventArray.length > 0)
       addStudentEventsToDB(studentId, userEventArray, existingEvents, database);
   }, [userEventArray]);
-
 
   // waits for response and sets
   const getModuleDetails = async () => {
@@ -177,15 +164,15 @@ export function EnterURL() {
       let specificClassDetails;
       modAndClassDetails.forEach((modAndClassDetail) => {
         if (
-          JSON.stringify(modAndClassDetail.status) === "\"fulfilled\"" &&
+          JSON.stringify(modAndClassDetail.status) === '"fulfilled"' &&
           JSON.stringify(modAndClassDetail.value.moduleCode) ==
-          JSON.stringify(modAndClass[0])
+            JSON.stringify(modAndClass[0])
         ) {
           specificClassDetails = modAndClassDetail.value;
         }
       });
       // converts the unparsed data into timeslots
-      let correctTimeSlots = undefined
+      let correctTimeSlots = undefined;
       if (specificClassDetails !== undefined) {
         correctTimeSlots = findCorrectTimeslot(
           modAndClass,
@@ -239,20 +226,15 @@ export function EnterURL() {
 
   return (
     <div style={{ display: "flex", flexDirection: "row", color: "red" }}>
-      <div>
-        Enter URL:
-        </div>
-      <div style={{ color: "red" }}>
-        {errorMessage}
-      </div>
+      <div>Enter URL:</div>
+      <div style={{ color: "red" }}>{errorMessage}</div>
       <Input
         style={{ width: 500 }}
         onChange={(e) => {
           setEnteredURL(e.target.value);
           setErrorMessage("");
         }}
-      >
-      </Input>
+      ></Input>
       <Button
         variant="contained"
         onClick={() => {
