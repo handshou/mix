@@ -1,29 +1,31 @@
-import { React, Fragment, useState, useEffect } from "react";
-import Body from "./Body";
+import {React, Fragment, useState, useEffect} from 'react';
+import Body from './Body';
 import {
   convertURLtoArray,
   findCorrectTimeslot,
   convertWeekDayTimeToTimestamp,
-} from "../Functions/urlFunctions.js";
-import { getModDetails } from "../Functions/apiFunctions.js";
-import { Button, Input } from "@material-ui/core";
+} from '../Functions/urlFunctions.js';
+import {getModDetails} from '../Functions/apiFunctions.js';
+import {Button, Input} from '@material-ui/core';
 
-import firebase from "firebase";
-import firebaseConfig from "../Firebase/firebaseConfig";
+import firebase from 'firebase';
+import firebaseConfig from '../Firebase/firebaseConfig';
+
+var database;
 
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
-  var database = firebaseApp.database();
+  database = firebaseApp.database();
 } else {
   // If firebase is already initialized
   firebase.app();
-  var database = firebase.app().database();
+  database = firebase.app().database();
 }
 
 function UserProfile(props) {
   const [userList, setUserList] = useState({});
-  const [enteredURL, setEnteredURL] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [enteredURL, setEnteredURL] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   // Array which contains array of classes and slots occupied for the module
   // 00: (2) ["ACC3619", "SEC:A3"]
   // 01: (3) ["GES1041", "TUT:D6", "LEC:1"]
@@ -38,7 +40,7 @@ function UserProfile(props) {
   const [userEventArray, setUserEventArray] = useState([]);
 
   // hard coded  value until we find a way to properly implement semester recording
-  const [currentSemester, setCurrentSemester] = useState(2);
+  const [currentSemester] = useState(2);
 
   // checker to see if api is set, can be removed later on
   useEffect(() => {
@@ -49,7 +51,7 @@ function UserProfile(props) {
 
   // waits for response and sets
   const getModuleDetails = async () => {
-    let apiPromises = modAndClassArray.map((modAndClasses) => {
+    let apiPromises = modAndClassArray.map(modAndClasses => {
       // only need module code for api to ping details
       // safeguard for button
       if (
@@ -59,13 +61,14 @@ function UserProfile(props) {
       ) {
         return getModDetails(modAndClasses[0]);
       } else {
-        console.log("no timetable loaded");
+        console.log('no timetable loaded');
+        return null;
       }
     });
     // .allSettled() used instead of .all()
     // allowed failed requests to go through but prevents immediate failure
     // additional implmentation to catch errors is required
-    Promise.allSettled(apiPromises).then((details) => {
+    Promise.allSettled(apiPromises).then(details => {
       setModAndClassDetails(details);
     });
   };
@@ -73,53 +76,53 @@ function UserProfile(props) {
   // user modAndClassArray and modAndClassDetails to parse the timetable into an array of events
   const convertModsIntoEvents = () => {
     // parses for each mod
-    let timeslotArray = modAndClassArray.map((modAndClass) => {
+    let timeslotArray = modAndClassArray.map(modAndClass => {
       let specificClassDetails;
-      modAndClassDetails.forEach((modAndClassDetail) => {
+      modAndClassDetails.forEach(modAndClassDetail => {
         if (
-          JSON.stringify(modAndClassDetail.status) === "\"fulfilled\"" &&
-          JSON.stringify(modAndClassDetail.value.moduleCode) ==
-          JSON.stringify(modAndClass[0])
+          JSON.stringify(modAndClassDetail.status) === '"fulfilled"' &&
+          JSON.stringify(modAndClassDetail.value.moduleCode) ===
+            JSON.stringify(modAndClass[0])
         ) {
           specificClassDetails = modAndClassDetail.value;
         }
       });
       // converts the unparsed data into timeslots
-      let correctTimeSlots = undefined
+      let correctTimeSlots = undefined;
       if (specificClassDetails !== undefined) {
         correctTimeSlots = findCorrectTimeslot(
           modAndClass,
           specificClassDetails,
-          currentSemester
+          currentSemester,
         );
       }
       return correctTimeSlots;
     });
 
     let newtimeslotArray = [];
-    timeslotArray.forEach((events) => {
+    timeslotArray.forEach(events => {
       if (events !== undefined) {
         newtimeslotArray.push(...events);
       }
     });
     let newEventArray = [];
-    newtimeslotArray.forEach((timeslot) => {
+    newtimeslotArray.forEach(timeslot => {
       if (
         timeslot !== undefined &&
         timeslot.weeks !== undefined &&
         timeslot.day !== undefined &&
         timeslot.endTime !== undefined
       ) {
-        timeslot.weeks.forEach((week) => {
+        timeslot.weeks.forEach(week => {
           let startTimestamp = convertWeekDayTimeToTimestamp(
             week,
             timeslot.day,
-            timeslot.startTime
+            timeslot.startTime,
           );
           let endTimestamp = convertWeekDayTimeToTimestamp(
             week,
             timeslot.day,
-            timeslot.endTime
+            timeslot.endTime,
           );
           newEventArray.push({
             name: timeslot.moduleCode,
@@ -138,10 +141,9 @@ function UserProfile(props) {
   };
 
   let getUsers = () => {
-    var usersRef = database.ref("users/");
-    usersRef.once("value").then((snapshot) => {
-      
-      snapshot.val() ? setUserList(snapshot.val()) : console.log("missing");
+    var usersRef = database.ref('users/');
+    usersRef.once('value').then(snapshot => {
+      snapshot.val() ? setUserList(snapshot.val()) : console.log('missing');
     });
   };
 
@@ -149,13 +151,12 @@ function UserProfile(props) {
     <Fragment>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          wigth: "100%",
-          padding: "2%",
-        }}
-      >
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          wigth: '100%',
+          padding: '2%',
+        }}>
         User Profile
       </div>
 
@@ -164,22 +165,20 @@ function UserProfile(props) {
       <div>entered URL : {enteredURL}</div>
       <div
         style={{
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "row",
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'row',
           marginTop: 50,
-        }}
-      >
+        }}>
         Enter URL:
-        <div style={{ color: "red" }}>{errorMessage}</div>
+        <div style={{color: 'red'}}>{errorMessage}</div>
         <Input
-          style={{ width: 300 }}
+          style={{width: 300}}
           value={enteredURL}
-          onChange={(e) => {
+          onChange={e => {
             setEnteredURL(e.target.value);
-            setErrorMessage("");
-          }}
-        ></Input>
+            setErrorMessage('');
+          }}></Input>
         <Button
           variant="contained"
           onClick={() => {
@@ -189,8 +188,7 @@ function UserProfile(props) {
             } catch (error) {
               setErrorMessage(error);
             }
-          }}
-        >
+          }}>
           parse timetable
         </Button>
         <Button
@@ -202,8 +200,7 @@ function UserProfile(props) {
             } catch (error) {
               setErrorMessage(error);
             }
-          }}
-        >
+          }}>
           Ping timetable
         </Button>
         <Button
@@ -215,23 +212,24 @@ function UserProfile(props) {
             } catch (error) {
               setErrorMessage(error);
             }
-          }}
-        >
+          }}>
           Find occupied time
         </Button>
       </div>
 
       {/* Currently displays the pulled data of all time slots, can cleanup for less mess */}
-      <div style={{ marginTop: 100 }}>
+      <div style={{marginTop: 100}}>
+        [
         {userEventArray && userEventArray.length > 1
-          ? userEventArray.map((events) => {
-            return (
-              <div>
-                <div>{JSON.stringify(events)}</div>
-              </div>
-            );
-          })
-          : ""}
+          ? userEventArray.map(events => {
+              return (
+                <div>
+                  <div>{JSON.stringify(events)},</div>
+                </div>
+              );
+            })
+          : ''}
+        ]
       </div>
     </Fragment>
   );

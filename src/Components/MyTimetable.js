@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   },
 });
 
-function GroupManagement(props) {
+function MyTimetable(props) {
   const classes = useStyles();
   // ========================================================== STUDENTS ==========================================================
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
@@ -195,11 +195,6 @@ function GroupManagement(props) {
           return;
         }
 
-        if (parseInt(memberId) == parseInt(studentId)){
-          toast.success("You are not allowed to add your own Student ID.");
-          return;
-        }
-
         groupMembers.push(parseInt(memberId));
       }
     }
@@ -231,12 +226,7 @@ function GroupManagement(props) {
 
     var memberId = prompt("Enter member ID");
     if (memberId == null){
-      toast.success("Member addition has been cancelled.");
-      return;
-    } 
-    
-    if (parseInt(memberId) == parseInt(studentId)){
-      toast.success("You are not allowed to add your own Student ID");
+      toast.success("Member additional has been cancelled.");
       return;
     }
 
@@ -260,7 +250,6 @@ function GroupManagement(props) {
         if (studentID.val() === removeStudentId) {
           removeStudentRef.child(studentID.key).remove();
         }
-        console.log(JSON.stringify(studentID.val()) + ", " + JSON.stringify(removeStudentId));
       });
     });
 
@@ -322,7 +311,14 @@ function GroupManagement(props) {
       getStudentGroups();
       getGroupMemberName();
     }
-
+    // if (!Array.isArray(studentEvents) || !studentEvents.length) {
+    //   for (var i = 0; i < studentEvents.length; i++) {
+    //     console.log("***eventname:  " + studentEvents[i].eventname);
+    //     console.log("***eventtype:  " + studentEvents[i].eventtype);
+    //     console.log("***endtime:  " + studentEvents[i].endtime);
+    //     console.log("***starttime:  " + studentEvents[i].starttime);
+    //   }
+    // }
   }, [refreshKey]);
 
   return (
@@ -482,4 +478,4 @@ function GroupManagement(props) {
   );
 }
 
-export default GroupManagement;
+export default MyTimetable;
