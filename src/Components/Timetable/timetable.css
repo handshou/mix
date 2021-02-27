@@ -4,22 +4,29 @@ table {
   font-size: 0.8em;
 }
 
-table tbody tr:last-child td:first-child {
+table tbody tr:last-child th:first-child {
   border-bottom-left-radius: 1em;
 }
 
-table tbody tr:last-child td:last-child {
+table tbody tr:last-child th:last-child {
   border-bottom-right-radius: 1em;
 }
 
-table thead tr:last-child td:first-child {
+table thead tr:last-child th:first-child {
   border-top-left-radius: 1em;
 }
 
-table thead tr:last-child td:last-child {
+table thead tr:last-child th:last-child {
   border-top-right-radius: 1em;
 }
-th,
+
+th{
+  background-color: #5e96ae;
+  color: #ffffff;
+  padding: 10px;
+  font-weight: normal;
+}
+
 td {
   padding: 8px;
   text-align: left;
@@ -28,8 +35,10 @@ td {
 }
 
 .nice-table>thead, .tdays {
-  font-weight: bold;
-  background-color: #ccc;
+  background-color: #5e96ae;
+  color: #ffffff;
+  padding: 10px;
+  font-weight: normal;
 }
 
 .nice-table tbody td:hover {

@@ -23,7 +23,7 @@ export default function MyTimetable(props) {
 
   return (
     <div>
-      <input accept="image/*" id="contained-button-file" multiple type="file" />
+      {/* <input accept="image/*" id="contained-button-file" multiple type="file" />
       <label htmlFor="contained-button-file">
         <Button
           variant="contained"
@@ -33,10 +33,11 @@ export default function MyTimetable(props) {
           Upload
         </Button>
       </label>
-      <input accept="image/*" id="icon-button-file" type="file" />
-
+      <input accept="image/*" id="icon-button-file" type="file" /> */}
+      <br></br>
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <div className={classes.root}>
+          <div style={{display: 'flex', justifyContent: 'center'}}>Week Number</div>
           <Pagination
             count={13}
             page={week}
@@ -44,8 +45,8 @@ export default function MyTimetable(props) {
             onChange={handleChange}
           />
         </div>
-
       </div>
+      <br></br>
         <Timetable weekNumber={week} />
 
     </div>

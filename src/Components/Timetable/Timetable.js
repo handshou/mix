@@ -182,16 +182,16 @@ export default function Timetable(props) {
       <table className="nice-table" aria-label="customized table">
         <thead>
           <tr>
-            <td>Day/Time</td>
+            <th>Day/Time</th>
             {times.map(time => (
-              <td align="center">{time}</td>
+              <th align="center">{time}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {days.map((day, i) => (
             <tr key={i}>
-              <td className="tdays">{day.name}</td>
+              <th className="tdays">{day.name}</th>
               {day.modules.map((cell, j) => (
                 <td key={j} align="center">
                   {createModules(cell)}
