@@ -2,8 +2,8 @@ import { React, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 
-import Button from "@material-ui/core/Button";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+// import Button from "@material-ui/core/Button";
+// import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { makeStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
 import EnterURL from "./EnterURL";
@@ -57,7 +57,6 @@ export default function MyTimetable(props) {
 
   return (
     <div>
-      <EnterURL />
       {/* <input accept="image/*" id="contained-button-file" multiple type="file" />
       <label htmlFor="contained-button-file">
         <Button
@@ -85,6 +84,10 @@ export default function MyTimetable(props) {
       </div>
       <br></br>
       <Timetable weekNumber={week} timetableData={timetableData} />
+      <br></br>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <EnterURL />
+      </div>
     </div>
   );
 }
