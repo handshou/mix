@@ -309,7 +309,7 @@ function GroupManagement(props) {
             </Button>
           </div>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", margin: "auto" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", margin: "auto", marginLeft: "10%"}}>
           {studentGroups.map((group, i) => (
             <Card className={classes.root}>
               <div className="cardRow">
