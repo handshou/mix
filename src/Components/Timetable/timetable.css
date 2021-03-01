@@ -21,7 +21,8 @@ table thead tr:last-child th:last-child {
 }
 
 th{
-  background-color: #5e96ae;
+  /* background-color: #5e96ae; */
+  background-color: #ff5138;
   color: #ffffff;
   padding: 10px;
   font-weight: normal;
@@ -32,12 +33,13 @@ td {
   text-align: left;
   border-bottom: 1px solid #ddd;
   min-width: 50px;
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 60px;
+  max-height: 60px;
+  text-align: center;
 }
 
 .nice-table>thead, .tdays {
-  background-color: #5e96ae;
+  background-color: #ff5138;
   color: #ffffff;
   padding: 10px;
   font-weight: normal;
@@ -48,7 +50,8 @@ td {
 }
 
 .nice-table tbody tr:nth-of-type(odd) {
-  background-color: #d9effc;
+  /* background-color: #d9effc; */
+  background-color: #F8F8F8;
 }
 
 .nice-table tbody tr:nth-of-type(even) {
