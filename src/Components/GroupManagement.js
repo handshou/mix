@@ -27,7 +27,7 @@ if (!firebase.apps.length) {
 const useStyles = makeStyles({
   root: {
     margin: "2%",
-    width: "25%",
+    //width: "25%",
     display: "inline"
   },
   media: {
@@ -92,40 +92,32 @@ function GroupManagement(props) {
 
     var tempStudentGroups = [];
 
-    // if (!firebase.apps.length) {
     var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
       var data = snapshot.val();
-      for (let index in data) {
+      for (var index in data) {
         var element = data[index];
         if (localStorage.getItem("studentId") != null) {
+          if(element !== undefined && element.members !== undefined) {
           Object.values(element.members).forEach((studID) => {
             if (studID == localStorage.getItem("studentId")) {
               tempStudentGroups.push(element);
             }
           });
         }
+        }
       }
       setStudentGroups(tempStudentGroups);
     });
-    // }else {
-    //   firebase.app();
-    //   var database = firebase.app().database();
-    // }
   };
 
   const [groupMemberName, setGroupMemName] = useState([]);
   let getGroupMemberName = () => {
-    // if (!firebase.apps.length) {
     setGroupMemName([]);
     var studentNameRef = database.ref("Students/");
     studentNameRef.once("value").then((snapshot) => {
       setGroupMemName(snapshot);
     });
-    // }else {
-    //   firebase.app();
-    //   var database = firebase.app().database();
-    // }
   };
 
   let getGMN = (studID) => {
@@ -309,7 +301,7 @@ function GroupManagement(props) {
             </Button>
           </div>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", margin: "auto" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", margin: "auto", marginLeft: "10%"}}>
           {studentGroups.map((group, i) => (
             <Card className={classes.root}>
               <div className="cardRow">
