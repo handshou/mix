@@ -1,4 +1,4 @@
-import { React, Fragment, useState, useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 import {
@@ -10,7 +10,7 @@ import {
   getModDetails,
   addStudentEventsToDB,
 } from "../../Functions/apiFunctions.js";
-import { Button, Input } from "@material-ui/core";
+import { Button, OutlinedInput } from "@material-ui/core";
 import "./timetable.css";
 
 if (!firebase.apps.length) {
@@ -22,7 +22,7 @@ if (!firebase.apps.length) {
   var database = firebase.app().database();
 }
 
-export function EnterURL() {
+export function EnterURL(props) {
   // handle new user
   const [refreshKey, setRefreshKey] = useState(0);
   const [studentName, setStudentName] = useState(
@@ -62,6 +62,9 @@ export function EnterURL() {
       .set(studentName);
     setRefreshKey(refreshKey + 1);
     localStorage.setItem("studentName", studentName);
+    if (props.triggerLayoutForceRefresh !== undefined) {
+      props.triggerLayoutForceRefresh();
+    }
   };
 
   useEffect(() => {
@@ -117,6 +120,9 @@ export function EnterURL() {
     var studentsRef = database.ref(`Students/${studentId}/events`);
     studentsRef.once("value").then((snapshot) => {
       setExistingEvents(snapshot.val());
+      if (props.triggerMyTimetableForceRefresh !== undefined) {
+        props.triggerMyTimetableForceRefresh();
+      }
     });
   }, [userEventArray]);
 
@@ -225,16 +231,24 @@ export function EnterURL() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", color: "red" }}>
-      <div>Enter URL:</div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        color: "red",
+        alignItems: "center",
+      }}
+    >
+      <div>Enter NUSMODs Sharing URL:</div>
       <div style={{ color: "red" }}>{errorMessage}</div>
-      <Input
-        style={{ width: 500 }}
+      <OutlinedInput
+        placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
+        style={{ width: 500, marginLeft: 30, marginRight: 30 }}
         onChange={(e) => {
           setEnteredURL(e.target.value);
           setErrorMessage("");
         }}
-      ></Input>
+      ></OutlinedInput>
       <Button
         variant="contained"
         onClick={() => {

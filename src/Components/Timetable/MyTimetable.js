@@ -23,7 +23,14 @@ export default function MyTimetable(props) {
   const [week, setWeek] = useState(1);
   const [timetableData, setTimetableData] = useState([]);
 
-  useEffect(() => {
+  let triggerLayoutForceRefresh = () => {};
+  if (props.triggerLayoutForceRefresh !== undefined) {
+    triggerLayoutForceRefresh = () => {
+      props.triggerLayoutForceRefresh();
+    };
+  }
+
+  let loadTimetable = () => {
     // ensure database is initialised first
     if (!firebase.apps.length) {
       let studentId = localStorage.getItem("studentId");
@@ -44,6 +51,13 @@ export default function MyTimetable(props) {
         });
       }
     }
+  };
+  let triggerMyTimetableForceRefresh = () => {
+    loadTimetable();
+  };
+
+  useEffect(() => {
+    loadTimetable();
   }, []);
 
   useEffect(() => {
@@ -86,7 +100,14 @@ export default function MyTimetable(props) {
       <Timetable weekNumber={week} timetableData={timetableData} />
       <br></br>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <EnterURL />
+        <EnterURL
+          triggerLayoutForceRefresh={() => {
+            triggerLayoutForceRefresh();
+          }}
+          triggerMyTimetableForceRefresh={() => {
+            triggerMyTimetableForceRefresh();
+          }}
+        />
       </div>
     </div>
   );
