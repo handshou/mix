@@ -27,8 +27,12 @@ if (!firebase.apps.length) {
 const useStyles = makeStyles({
   root: {
     margin: "2%",
+<<<<<<< Updated upstream
     //width: "25%",
     display: "inline"
+=======
+    width: "20%"
+>>>>>>> Stashed changes
   },
   media: {
     height: 140,
@@ -45,6 +49,21 @@ function GroupManagement(props) {
   const [studentName, setStudentName] = useState(
     localStorage.getItem("studentName")
   );
+  // Purpose: To get total student in the database [Dont delete first]
+  // const [totalStudentCount, setTotalStudentCount] = useState();
+  // let getTotalStudent = () => {
+  //      //Retrieve this to generate new studentID by +1
+  //   // var studentsRef = database.ref("Students/");
+  //   // studentsRef.once("value").then((snapshot) => {
+  //   //   console.log("***snapshot.numChildren()():  " + snapshot.numChildren());
+  //   //   // setTotalStudentCount(snapshot.numChildren());
+  //   //   setStudentId(snapshot.numChildren() + 1);
+  //   //   localStorage.setItem("studentId", snapshot.numChildren() + 1);
+  //   //   console.log("***getTotalStudents() 2 :  " + studentId);
+  //   //   console.log("***getTotalStudents() 3 :  " + localStorage.getItem("studentId"));
+  //   //   // return snapshot.numChildren();
+  //   // });
+  // }
 
   let createStudentId = (studentName) => {
     var query = database.ref("Students/").orderByKey();
@@ -69,22 +88,25 @@ function GroupManagement(props) {
   };
 
   let getStudentName = (studentId) => {
-    if (!firebase.apps.length) {
-      var studentsRef = database.ref(
-        `Students/${localStorage.getItem("studentId")}/name`
-      );
-      studentsRef.once("value").then((snapshot) => {
-        setStudentName(snapshot.val());
-      });
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
+    var studentsRef = database.ref(
+      `Students/${localStorage.getItem("studentId")}/name`
+    );
+    studentsRef.once("value").then((snapshot) => {
+      setStudentName(snapshot.val());
+    });
   };
+
+  // const [studentsList, setStudentList] = useState({});
+  // let getStudents = () => {
+  //   var studentsRef = database.ref("Students/");
+  //   studentsRef.once("value").then((snapshot) => {
+  //     snapshot.val() ? setStudentList(snapshot.val()) : console.log("missing");
+  //   });
+  // };
 
   // ========================================================== GROUPS ==========================================================
   const [studentGroups, setStudentGroups] = useState([]);
-  const [, setGroupId] = useState();
+  const [groupId, setGroupId] = useState();
   const [groupMembers, setGroupMembers] = useState([]);
 
   let getStudentGroups = () => {
@@ -92,6 +114,24 @@ function GroupManagement(props) {
 
     var tempStudentGroups = [];
 
+<<<<<<< Updated upstream
+=======
+    // Note: Suddenly not working with this code after database deleted and re-added data
+    // var studentGroupRef = database.ref(`Groups/`);
+    // studentGroupRef.once("value").then((snapshot) => {
+    //   console.log("snapshot: " + JSON.stringify(snapshot));
+    //   snapshot.val().forEach((element) => {
+    //     if (localStorage.getItem("studentId") != null) {
+    //       Object.values(element.members).forEach((studID) => {
+    //         if (studID == localStorage.getItem("studentId")) {
+    //           // studentGroups.push(element);
+    //           tempStudentGroups.push(element);
+    //         }
+    //       });
+    //     }
+    //   });
+
+>>>>>>> Stashed changes
     var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
       var data = snapshot.val();
@@ -107,7 +147,9 @@ function GroupManagement(props) {
         }
         }
       }
+
       setStudentGroups(tempStudentGroups);
+      // localStorage.setItem("studentGroups", studentGroups);
     });
   };
 
@@ -132,7 +174,7 @@ function GroupManagement(props) {
 
   let createGroupId = () => {
     var groupName = prompt("Enter group name");
-    if (groupName == null) {
+    if (groupName == null){
       toast.success("The creation of group has been cancelled.");
       return;
     }
@@ -149,21 +191,21 @@ function GroupManagement(props) {
   };
 
   let createGroup = (groupName, groupId) => {
-    var noOfGroupMembers = prompt("Enter the number of members you want to add");
-    if (noOfGroupMembers == null) {
+    var noOfGroupMembers = prompt("Enter your group size");
+    if (noOfGroupMembers == null){
       toast.success("The creation of group has been cancelled.");
       return;
     }
 
     if (parseInt(noOfGroupMembers) > 0) {
       for (var i = 0; i < noOfGroupMembers; i++) {
-        var memberId = prompt("Enter member ID for member " + (i+1));
-        if (memberId == null) {
+        var memberId = prompt("Enter member ID");
+        if (memberId == null){
           toast.success("The creation of group has been cancelled.");
           return;
         }
 
-        if (parseInt(memberId) == parseInt(studentId)) {
+        if (parseInt(memberId) == parseInt(studentId)){
           toast.success("You are not allowed to add your own Student ID.");
           return;
         }
@@ -171,7 +213,7 @@ function GroupManagement(props) {
         groupMembers.push(parseInt(memberId));
       }
     }
-
+    
     var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
     groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
     groupsRef.child("groupName").set(groupName);
@@ -198,12 +240,12 @@ function GroupManagement(props) {
     setGroupMembers(groupMembers);
 
     var memberId = prompt("Enter member ID");
-    if (memberId == null) {
+    if (memberId == null){
       toast.success("Member addition has been cancelled.");
       return;
-    }
-
-    if (parseInt(memberId) == parseInt(studentId)) {
+    } 
+    
+    if (parseInt(memberId) == parseInt(studentId)){
       toast.success("You are not allowed to add your own Student ID");
       return;
     }
@@ -225,34 +267,52 @@ function GroupManagement(props) {
     var removeStudentRef = database.ref(`Groups/${groupId}/members/`);
     removeStudentRef.once("value").then((snapshot) => {
       snapshot.forEach((studentID) => {
-        console.log("studentID : " + studentID.val());
-        console.log("removeStudentId : " + removeStudentId);
-        if (studentID.val() == removeStudentId) {
+        if (studentID.val() === removeStudentId) {
           removeStudentRef.child(studentID.key).remove();
         }
       });
     });
 
-    if (parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId")))
-    {
-      toast.success(
-        "You have left group" +
-          groupId +
-          " successfully."
-      );
-    }
-    else {
-      toast.success(
-        "Member ID: " +
-          removeStudentId +
-          " has been removed from Group ID: " +
-          groupId +
-          " successfully."
-      );
-    }
-    
+    toast.success(
+      "Member ID: " +
+        removeStudentId +
+        " has been removed from Group ID: " +
+        groupId +
+        " successfully."
+    );
     setRefreshKey(refreshKey + 1);
-    
+  };
+
+  // ========================================================== EVENTS ==========================================================
+  const [studentEvents, setStudentEvents] = useState([
+    { endtime: "", eventname: "", eventtype: "", starttime: "" },
+  ]);
+
+  let getStudentEvents = (studentId) => {
+    var studentsRef = database.ref(`Students/${studentId}/events`);
+    studentsRef.once("value").then((snapshot) => {
+      setStudentEvents(snapshot.val());
+    });
+    console.log("***getStudentEvents():  " + JSON.stringify(studentEvents));
+  };
+
+  let addEvent = () => {
+    //this event data to be taken from Panna ***
+    var newEvent = {
+      endtime: "1900",
+      eventname: "IS4261 meeting",
+      eventtype: "school",
+      starttime: "1700",
+    };
+    // var studentsRef = database.ref(`Students/${studentId}/events/${studentEvents.length}`).push(newEvent);
+    var studentsRef = database.ref(`Students/${studentId}/events`);
+    if (!Array.isArray(studentEvents) || !studentEvents.length) {
+      studentsRef.child(0).set(newEvent);
+    } else {
+      studentsRef.child(studentEvents.length).set(newEvent);
+    }
+    console.log("Event inserted into db!");
+    setRefreshKey(refreshKey + 1);
   };
 
   const [refreshKey, setRefreshKey] = useState(0);
@@ -266,6 +326,8 @@ function GroupManagement(props) {
       createStudentId(studentName);
     } else {
       getStudentName(localStorage.getItem("studentId"));
+      getStudentEvents(localStorage.getItem("studentId"));
+      localStorage.setItem("studentEvents", studentEvents);
       getStudentGroups();
       getGroupMemberName();
     }
@@ -282,6 +344,7 @@ function GroupManagement(props) {
           padding: "2%",
         }}
       >
+<<<<<<< Updated upstream
         <div>
           <div style={{ float: "left" }}>
             You are currently enrolled in {studentGroups.length} groups.
@@ -302,6 +365,26 @@ function GroupManagement(props) {
           </div>
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", margin: "auto", marginLeft: "10%"}}>
+=======
+        Hi,{" "}
+        <b>
+          {studentName} #({studentId})!
+        </b>{" "}
+        ================================== GROUPS RELATED
+        ==================================
+        <br></br>
+        Total number of groups you have currently joined: &#9889;{" "}
+        {studentGroups.length} &#9889;
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ width: "fit-content" }}
+          onClick={createGroupId}
+        >
+          Create New Group
+        </Button>
+        <div style={{ "display": "flex", "flex-wrap":"wrap" }}>
+>>>>>>> Stashed changes
           {studentGroups.map((group, i) => (
             <Card className={classes.root}>
               <div className="cardRow">
@@ -324,10 +407,10 @@ function GroupManagement(props) {
                       {memId != localStorage.getItem("studentId") ? (
                         <div>
                           <div style={{ float: "left" }}>
-                            <PersonIcon /> #{memId + ", " + getGMN(memId)}
-                          </div>
-                          {"      "}
-
+                            <PersonIcon /> #
+                            {memId + ", " + getGMN(memId)}
+                          </div>{"      "}
+                          
                           <div style={{ float: "right" }}>
                             <Button
                               variant="contained"
@@ -362,20 +445,6 @@ function GroupManagement(props) {
                     variant="contained"
                     color="primary"
                     style={{ width: "fit-content" }}
-                    onClick={() =>
-                      removeStudentFromGroup(
-                        group.groupId,
-                        localStorage.getItem("studentId")
-                      )
-                    }
-                  >
-                    Leave Group
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ width: "fit-content" }}
                     onClick={() => addMemberToGroup(group.groupId)}
                   >
                     Add Member
@@ -385,6 +454,60 @@ function GroupManagement(props) {
             </Card>
           ))}
         </div>
+        ================================== EVENTS RELATED
+        ==================================
+        <br></br>
+        You have these events: <br></br>
+        <br></br>
+        {JSON.stringify(studentEvents)}
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ width: "fit-content" }}
+          onClick={addEvent}
+        >
+          Add Event
+        </Button>
+        <br></br>
+        <br></br>
+        {/* <div
+        style={{
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          wigth: "100%",
+        }}
+      >
+        <div
+          style={{
+            marginTop: 50,
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (getStudents() !== undefined) {
+                getStudents();
+              } else console.log("lmao it didnt work");
+            }}
+          >
+            Get ALL student information from firebase
+          </Button>
+        </div>
+        <div>
+          {studentsList && studentsList.length > 0 ? (
+            studentsList.map((val) => {
+              return (
+                <div>
+                  {JSON.stringify(val)} <br></br>
+                </div>
+              );
+            })
+          ) : (
+              <div></div>
+            )}
+          </div> */}
       </div>
     </Fragment>
   );
