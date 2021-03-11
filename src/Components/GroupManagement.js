@@ -1,4 +1,5 @@
 import { React, Fragment, useState, useEffect } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
@@ -16,6 +17,8 @@ import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
+
+
 
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -301,7 +304,14 @@ function GroupManagement(props) {
             </Button>
           </div>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", margin: "auto", marginLeft: "10%"}}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            margin: "auto",
+            marginLeft: "10%",
+          }}
+        >
           {studentGroups.map((group, i) => (
             <Card className={classes.root}>
               <div className="cardRow">

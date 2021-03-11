@@ -6,6 +6,8 @@ import {
   findCorrectTimeslot,
   convertWeekDayTimeToTimestamp,
 } from "../../Functions/urlFunctions.js";
+import Modal from "react-bootstrap/Modal";
+import "bootstrap/dist/css/bootstrap.min.css";
 import {
   getModDetails,
   addStudentEventsToDB,
@@ -67,13 +69,67 @@ export function EnterURL(props) {
     }
   };
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  function MyVerticallyCenteredModal() {
+    return (
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Welcome to MixTime!
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            It seems like this is the first time you visited MixTime. Please
+            enter your name to begin.
+          </p>
+          <div>
+            Enter Your Name:
+            <OutlinedInput
+              placeholder={"John Doe"}
+              style={{
+                width: 300,
+                marginLeft: 30,
+                marginRight: 30,
+                marginTop: 20,
+              }}
+              onChange={(name) => {
+                localStorage.setItem("inputName", name.target.value);
+              }}
+            ></OutlinedInput>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="success"
+            onClick={() => {
+              createStudentId(localStorage.getItem("inputName"));
+              handleClose();
+            }}
+          >
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   useEffect(() => {
     setRefreshKey(0);
     if (localStorage.getItem("studentId") == null) {
-      var studentName = prompt(
-        "Hi! Seems like this is the first time you visited MixTime. \nPlease enter your name and we'll tag it into your timetable."
-      );
-      createStudentId(studentName);
+      handleShow();
     } else {
       getStudentName(localStorage.getItem("studentId"));
     }
@@ -239,6 +295,8 @@ export function EnterURL(props) {
         alignItems: "center",
       }}
     >
+      <div>{MyVerticallyCenteredModal()}</div>
+
       <div>Enter NUSMODs Sharing URL:</div>
       <div style={{ color: "red" }}>{errorMessage}</div>
       <OutlinedInput
