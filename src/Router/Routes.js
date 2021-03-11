@@ -7,6 +7,7 @@ import UserProfile from "../Components/UserProfile";
 import MyTimetable from "../Components/Timetable/MyTimetable";
 
 import Layout from "../Components/Layout";
+import JoinGroup from "../Components/JoinGroup";
 
 export default () => {
   const [forceRefresh, setForceRefresh] = useState(0);
@@ -38,6 +39,13 @@ export default () => {
         <Route path="/UserProfile" exact component={UserProfile} />
         <Route path="/Timetable" exact>
           <MyTimetable
+            triggerLayoutForceRefresh={() => {
+              triggerLayoutForceRefresh();
+            }}
+          />
+        </Route>
+        <Route path="/JoinGroup">
+          <JoinGroup
             triggerLayoutForceRefresh={() => {
               triggerLayoutForceRefresh();
             }}
