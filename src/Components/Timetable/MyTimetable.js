@@ -79,6 +79,9 @@ export default function MyTimetable(props) {
             page={week}
             siblingCount={0}
             onChange={handleChange}
+            variant="outlined"
+            shape="rounded"
+            boundaryCount={2}
           />
         </div>
       </div>

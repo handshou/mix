@@ -7,7 +7,7 @@ function getModules(data) {
     const baseDate = makeDate("Jan 11 2021 0:00 GMT+8").getTime();
     const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
     if (data)
-      return data.map(d => ({
+      return data.map((d) => ({
         id: d.startTime,
         week: Math.floor((d.startTime - baseDate) / weekInMilliSeconds) + 1,
         title: d.eventName,
@@ -35,7 +35,7 @@ function createDay(name, modules) {
 }
 
 function createModules(data) {
-  return data.map(module => {
+  return data.map((module) => {
     const { id, title, type } = module;
     return (
       <div key={id}>
@@ -72,9 +72,9 @@ function generateRows(startTime, endTime, minutesInterval, modules) {
     if (modules) {
       // condition to check if module should be pushed
       let suitableModules = modules.filter(
-        m =>
+        (m) =>
           isStartTimeSlot(startTime, m.startTime) ||
-          isMidTimeSlot(startTime, m.startTime, m.endTime),
+          isMidTimeSlot(startTime, m.startTime, m.endTime)
       );
       modules_result.push(suitableModules);
     }
@@ -91,9 +91,9 @@ function getStartEndTimeByWeek(allModules, weekNumber) {
   let startTime = "0800";
   let endTime = "1800";
   const weekModules = allModules.filter(
-    module => parseInt(module.week) === parseInt(weekNumber),
+    (module) => parseInt(module.week) === parseInt(weekNumber)
   );
-  weekModules.forEach(module => {
+  weekModules.forEach((module) => {
     if (parseInt(module.startTime) < parseInt(startTime)) {
       startTime = module.startTime;
     }
@@ -102,6 +102,31 @@ function getStartEndTimeByWeek(allModules, weekNumber) {
     }
   });
   return { startTime, endTime };
+}
+
+let TypeofEvents = [];
+TypeofEvents.push("Testing");
+
+function pickColour(data) {
+  let colors = ["#00d5ff", "#008cff", "#00ffe5", "#00fbff"];
+  // let random_color = colors[Math.floor(Math.random() * colors.length)];
+  let setColor = "#FFFFFF";
+
+  data.forEach((module) => {
+    const { type } = module;
+
+    if (type.includes("Lecture")) {
+      setColor = colors[0];
+    } else if (type.includes("Tutorial")) {
+      setColor = colors[1];
+    } else if (type == "Private") {
+      setColor = colors[2];
+    } else {
+      setColor = colors[3];
+    }
+  });
+
+  return setColor;
 }
 
 export default function Timetable(props) {
@@ -113,50 +138,50 @@ export default function Timetable(props) {
   const times = generateRows(weekTime.startTime, weekTime.endTime, 30, null);
 
   const mondayModules = getModules(timetableData)
-    .filter(m => m.week === weekNumber)
-    .filter(m => m.day === "Monday");
+    .filter((m) => m.week === weekNumber)
+    .filter((m) => m.day === "Monday");
   const tuesdayModules = getModules(timetableData)
-    .filter(m => m.week === weekNumber)
-    .filter(m => m.day === "Tuesday");
+    .filter((m) => m.week === weekNumber)
+    .filter((m) => m.day === "Tuesday");
   const wednesdayModules = getModules(timetableData)
-    .filter(m => m.week === weekNumber)
-    .filter(m => m.day === "Wednesday");
+    .filter((m) => m.week === weekNumber)
+    .filter((m) => m.day === "Wednesday");
   const thursdayModules = getModules(timetableData)
-    .filter(m => m.week === weekNumber)
-    .filter(m => m.day === "Thursday");
+    .filter((m) => m.week === weekNumber)
+    .filter((m) => m.day === "Thursday");
   const fridayModules = getModules(timetableData)
-    .filter(m => m.week === weekNumber)
-    .filter(m => m.day === "Friday");
+    .filter((m) => m.week === weekNumber)
+    .filter((m) => m.day === "Friday");
 
   const mondayArray = generateRows(
     weekTime.startTime,
     weekTime.endTime,
     30,
-    mondayModules,
+    mondayModules
   );
   const tuesdayArray = generateRows(
     weekTime.startTime,
     weekTime.endTime,
     30,
-    tuesdayModules,
+    tuesdayModules
   );
   const wednesdayArray = generateRows(
     weekTime.startTime,
     weekTime.endTime,
     30,
-    wednesdayModules,
+    wednesdayModules
   );
   const thursdayArray = generateRows(
     weekTime.startTime,
     weekTime.endTime,
     30,
-    thursdayModules,
+    thursdayModules
   );
   const fridayArray = generateRows(
     weekTime.startTime,
     weekTime.endTime,
     30,
-    fridayModules,
+    fridayModules
   );
 
   const days = [
@@ -173,7 +198,7 @@ export default function Timetable(props) {
         <thead>
           <tr>
             <th>Day/Time</th>
-            {times.map(time => (
+            {times.map((time) => (
               <th align="center" key={time}>
                 {time}
               </th>
@@ -181,13 +206,17 @@ export default function Timetable(props) {
           </tr>
         </thead>
         <tbody>
-          {days.map(day => (
+          {days.map((day) => (
             <tr key={`${day.name}-tr`}>
               <th key={`${day.name}-th`} className="tdays">
                 {day.name}
               </th>
               {day.modules.map((cell, i) => (
-                <td key={`${cell.id}-${i}`} align="center">
+                <td
+                  key={`${cell.id}-${i}`}
+                  align="center"
+                  style={{ backgroundColor: pickColour(cell) }}
+                >
                   {createModules(cell)}
                 </td>
               ))}
