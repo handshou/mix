@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import GroupManagement from "../Components/GroupManagement";
@@ -7,18 +7,50 @@ import UserProfile from "../Components/UserProfile";
 import MyTimetable from "../Components/Timetable/MyTimetable";
 
 import Layout from "../Components/Layout";
+import JoinGroup from "../Components/JoinGroup";
 
 export default () => {
+  const [forceRefresh, setForceRefresh] = useState(0);
+  useEffect(() => {
+    console.log("forceRefresh");
+    console.log(forceRefresh);
+  }, [forceRefresh]);
+
+  let triggerLayoutForceRefresh = () => {
+    setForceRefresh(forceRefresh + 1);
+  };
+
   return (
     <Router>
-      <Layout></Layout>
-      
+      <Layout forceRefresh={forceRefresh} />
+
       <Switch>
-        <Route path="/" exact component={MyTimetable} />
-        <Route path="/GroupManagement" exact component={GroupManagement} />
+        <Route path="/" exact>
+          <MyTimetable
+            triggerLayoutForceRefresh={() => {
+              triggerLayoutForceRefresh();
+            }}
+          />
+        </Route>
+        <Route path="/GroupManagement" exact>
+          <GroupManagement />
+        </Route>
         <Route path="/GroupTimetable" exact component={GroupTimetable} />
         <Route path="/UserProfile" exact component={UserProfile} />
-        <Route path="/Timetable" exact component={MyTimetable} />
+        <Route path="/Timetable" exact>
+          <MyTimetable
+            triggerLayoutForceRefresh={() => {
+              triggerLayoutForceRefresh();
+            }}
+          />
+        </Route>
+        <Route path="/JoinGroup">
+          <JoinGroup
+            triggerLayoutForceRefresh={() => {
+              triggerLayoutForceRefresh();
+            }}
+          />
+        </Route>
       </Switch>
     </Router>
   );
