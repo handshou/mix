@@ -108,8 +108,9 @@ let TypeofEvents = [];
 TypeofEvents.push("Testing");
 
 function pickColour(data) {
-  let colors = ["#00d5ff", "#008cff", "#00ffe5", "#00fbff"];
+  // let colors = ["#00d5ff", "#008cff", "#00ffe5", "#00fbff"];
   // let random_color = colors[Math.floor(Math.random() * colors.length)];
+  let colors = ["#FDDFDF", "#F0DEFD", "#DEFDE0", "#DEF3FD", "#FCF7DE"];
   let setColor = "#FFFFFF";
 
   data.forEach((module) => {

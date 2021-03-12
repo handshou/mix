@@ -7,9 +7,9 @@ import firebaseConfig from "../../Firebase/firebaseConfig";
 import { makeStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
 import EnterURL from "./EnterURL";
-import { shadows } from "@material-ui/system";
 
 import Timetable from "./Timetable";
+import CreatePersonalEvent from "./CreatePersonalEvent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,25 +84,44 @@ export default function MyTimetable(props) {
         </Button>
       </label>
       <input accept="image/*" id="icon-button-file" type="file" /> */}
-      <div style={{ justifyContent: "left", padding: "0px 10px 0px 10px", textAlign: "center", position: "absolute", bottom: "480px"}}>
-        <h3 style={{ left: "1220px", padding: "15px"}}>Colour Legend</h3>
-        <table style={{ display: "flex"}}>
+      <div
+        style={{
+          justifyContent: "left",
+          padding: "0px 10px 0px 10px",
+          textAlign: "center",
+          position: "absolute",
+          bottom: "475px",
+        }}
+      >
+        <h3 style={{ padding: "5px" }}>Colour Legend</h3>
+        <table style={{ display: "flex" }}>
           <tr>
-            <th style={{background:'#00d5ff', color:'#000000'}}>Lecture</th>
-            <th style={{background:'#008cff', color:'#000000'}}>Tutorial</th>
-            <th style={{background:'#00ffe5', color:'#000000'}}>Private</th>
-            <th style={{background:'#00fbff', color:'#000000'}}>Others</th>
-            <th style={{background:'#FFFFFF', color:'#000000'}}>Available</th>
+            <th style={{ background: "#FDDFDF", color: "#000000" }}>Lecture</th>
+            <th style={{ background: "#F0DEFD", color: "#000000" }}>
+              Tutorial
+            </th>
+            <th style={{ background: "#DEFDE0", color: "#000000" }}>Private</th>
+            <th style={{ background: "#DEF3FD", color: "#000000" }}>Others</th>
+            <th style={{ background: "#FFFFFF", color: "#000000" }}>
+              Available
+            </th>
           </tr>
         </table>
       </div>
 
       <br></br>
-      <div style={{ display: "flex", justifyContent: "center"}}>
-        <div className={classes.root}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+          >
             Week Number
           </div>
+
           <Pagination
             count={13}
             page={week}
@@ -127,6 +146,9 @@ export default function MyTimetable(props) {
           }}
         />
       </div>
+
+      <br></br>
+      <CreatePersonalEvent timetableData={timetableData} />
     </div>
   );
 }

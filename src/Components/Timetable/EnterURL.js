@@ -1,6 +1,11 @@
 import { React, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
+
+import Tooltip from '@material-ui/core/Tooltip';
+import HelpIcon from '@material-ui/icons/Help';
+import IconButton from '@material-ui/core/IconButton';
+
 import {
   convertURLtoArray,
   findCorrectTimeslot,
@@ -239,7 +244,15 @@ export function EnterURL(props) {
         alignItems: "center",
       }}
     >
-      <div>Enter NUSMODs Sharing URL:</div>
+      <div>Enter NUSMODs Sharing URL:
+      <Tooltip title={
+          <em>{"Step1: Go to your NUSMODS page. Step 2: Click on 'Share/Sync' and copy the link into MixTime."}</em>
+        }>
+        <IconButton aria-label="delete">
+          <HelpIcon fontSize="small"/>
+        </IconButton>
+      </Tooltip>
+      </div>
       <div style={{ color: "red" }}>{errorMessage}</div>
       <OutlinedInput
         placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
@@ -249,6 +262,7 @@ export function EnterURL(props) {
           setErrorMessage("");
         }}
       ></OutlinedInput>
+      <Tooltip title={<em>{"Click here to update your personal timetable"}</em>}>
       <Button
         variant="contained"
         onClick={() => {
@@ -263,6 +277,7 @@ export function EnterURL(props) {
       >
         Update Timetable
       </Button>
+      </Tooltip>
     </div>
   );
 }
