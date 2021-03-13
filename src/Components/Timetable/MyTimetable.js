@@ -148,7 +148,12 @@ export default function MyTimetable(props) {
       </div>
 
       <br></br>
-      <CreatePersonalEvent timetableData={timetableData} />
+      <CreatePersonalEvent
+        timetableData={timetableData}
+        triggerMyTimetableForceRefresh={() => {
+          triggerMyTimetableForceRefresh();
+        }}
+      />
     </div>
   );
 }

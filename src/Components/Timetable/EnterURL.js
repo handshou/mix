@@ -246,7 +246,7 @@ export function EnterURL(props) {
     >
       <div>Enter NUSMODs Sharing URL:
       <Tooltip title={
-          <em>{"Step1: Go to your NUSMODS page. Step 2: Click on 'Share/Sync' and copy the link into MixTime."}</em>
+          <em>{"Step1: Go to your NUSMODS page & Click on 'Share/Sync' button. Step 2: Copy the link and paste it on the textbox to import your personal timetable into MixTime."}</em>
         }>
         <IconButton aria-label="delete">
           <HelpIcon fontSize="small"/>

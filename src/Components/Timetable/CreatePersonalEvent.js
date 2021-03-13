@@ -1,6 +1,5 @@
 import { React, Fragment, useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 
@@ -9,23 +8,11 @@ import firebaseConfig from "../../Firebase/firebaseConfig";
 
 import { overrideStudentEventsToDB } from "../../Functions/apiFunctions";
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
   return {
-    // position: "Absolute",
-    // left: "500px",
-    // top: "300px",
-    // backgroundColor: "#F5F5DC",
-    // width: "500px",
-    // padding: "20px",
-
     padding: "50px",
     background: "#f9f9f9",
-    border: "5px solid #c1c1c1",
-    marginTop: "2rem",
+    marginTop: "3rem",
     maxWidth: "700px",
     marginLeft: "auto",
     marginRight: "auto",
@@ -33,6 +20,8 @@ function getModalStyle() {
 }
 
 export default function CreatePersonalEvent(props) {
+  const [refreshKey, setRefreshKey] = useState(0);
+
   let localTimetableData = [];
   if (props !== undefined && props.timetableData !== undefined) {
     localTimetableData = props.timetableData;
@@ -78,7 +67,18 @@ export default function CreatePersonalEvent(props) {
       newTimetableData,
       database
     );
+
+    setRefreshKey(refreshKey + 1);
+    setOpen(false);
   };
+
+  useEffect(() => {
+    setRefreshKey(0);
+
+    if (props.triggerMyTimetableForceRefresh !== undefined) {
+      props.triggerMyTimetableForceRefresh();
+    }
+  }, [refreshKey]);
 
   const [open, setOpen] = useState(false);
 
@@ -92,8 +92,7 @@ export default function CreatePersonalEvent(props) {
 
   const body = (
     <div style={modalStyle}>
-      <b>Add A New Event</b>
-      {/* <div className="form-group"> */}
+      <p style={{ fontSize: "25px", color: "#ff5138" }}>Add A New Event</p>
       <form>
         <label
           for="eventName"
@@ -113,14 +112,15 @@ export default function CreatePersonalEvent(props) {
           value={module.eventName}
           onChange={handleInputChange}
           name="eventName"
+          placeholder="IS4261 6UGs Submission"
           style={{
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid gold",
+            outline: "3px solid #ff5138",
+            boxShadow: "5px 5px #ff5138",
           }}
         />
-
         <br></br>
         <label
           for="eventType"
@@ -135,12 +135,14 @@ export default function CreatePersonalEvent(props) {
         <select
           name="eventType"
           id="eventType"
+          required
           onChange={handleInputChange}
           style={{
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid gold",
+            outline: "3px solid #ff5138",
+            boxShadow: "5px 5px #ff5138",
           }}
         >
           <option selected hidden>
@@ -150,7 +152,6 @@ export default function CreatePersonalEvent(props) {
           <option value="Others">Others</option>
         </select>
         <br></br>
-
         <label
           for="startTime"
           style={{
@@ -174,7 +175,8 @@ export default function CreatePersonalEvent(props) {
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid gold",
+            outline: "3px solid #ff5138",
+            boxShadow: "5px 5px #ff5138",
           }}
         />
         <br></br>
@@ -197,18 +199,23 @@ export default function CreatePersonalEvent(props) {
           value={module.endTime}
           onChange={handleInputChange}
           name="endTime"
+          requiredPattern="[0-9]{2}:[0-9]{2}"
           style={{
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid gold",
+            outline: "3px solid #ff5138",
+            boxShadow: "5px 5px #ff5138",
           }}
         />
-        {/* </div> */}
         <br></br>
         <br></br>
-        <Button onClick={saveModule} setOpen = "false" variant="contained">
+        <Button onClick={saveModule} setOpen="false" variant="contained">
           Submit
+        </Button>
+        &nbsp;
+        <Button onClick={handleClose} variant="contained">
+          Cancel
         </Button>
       </form>
     </div>
