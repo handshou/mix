@@ -1,13 +1,14 @@
 import { React, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
+import UserLogin from "../UserLogin";
+
 import {
   convertURLtoArray,
   findCorrectTimeslot,
   convertWeekDayTimeToTimestamp,
 } from "../../Functions/urlFunctions.js";
-import Modal from "react-bootstrap/Modal";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 import {
   getModDetails,
   addStudentEventsToDB,
@@ -31,109 +32,6 @@ export function EnterURL(props) {
     localStorage.getItem("studentName")
   );
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
-
-  let getStudentName = (studentId) => {
-    var studentsRef = database.ref(
-      `Students/${localStorage.getItem("studentId")}/name`
-    );
-    studentsRef.once("value").then((snapshot) => {
-      setStudentName(snapshot.val());
-    });
-  };
-
-  let createStudentId = (studentName) => {
-    console.log("studentName: " + studentName);
-    var query = database.ref("Students/").orderByKey();
-
-    console.log("1: " + query);
-    query.once("value").then(function (snapshot) {
-      snapshot.forEach(function (childSnapshot) {
-        var key = childSnapshot.key;
-        setStudentId(parseInt(key) + 1);
-        localStorage.setItem("studentId", parseInt(key) + 1);
-      });
-      createStudentRecord(studentName);
-    });
-  };
-
-  let createStudentRecord = (studentName) => {
-    var studentsRef = database.ref(`Students/`);
-    studentsRef
-      .child(localStorage.getItem("studentId"))
-      .child("name")
-      .set(studentName);
-    setRefreshKey(refreshKey + 1);
-    localStorage.setItem("studentName", studentName);
-    if (props.triggerLayoutForceRefresh !== undefined) {
-      props.triggerLayoutForceRefresh();
-    }
-  };
-
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  function MyVerticallyCenteredModal() {
-    return (
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-        {...props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Welcome to MixTime!
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            It seems like this is the first time you visited MixTime. Please
-            enter your name to begin.
-          </p>
-          <div>
-            Enter Your Name:
-            <OutlinedInput
-              placeholder={"John Doe"}
-              style={{
-                width: 300,
-                marginLeft: 30,
-                marginRight: 30,
-                marginTop: 20,
-              }}
-              onChange={(name) => {
-                localStorage.setItem("inputName", name.target.value);
-              }}
-            ></OutlinedInput>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="success"
-            onClick={() => {
-              createStudentId(localStorage.getItem("inputName"));
-              handleClose();
-            }}
-          >
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-
-  useEffect(() => {
-    setRefreshKey(0);
-    if (localStorage.getItem("studentId") == null) {
-      handleShow();
-    } else {
-      getStudentName(localStorage.getItem("studentId"));
-    }
-  }, [refreshKey]);
 
   // handle URL
   const [enteredURL, setEnteredURL] = useState("");
@@ -193,7 +91,7 @@ export function EnterURL(props) {
 
   useEffect(() => {
     if (userEventArray && userEventArray.length > 0)
-      addStudentEventsToDB(studentId, userEventArray, existingEvents, database);
+      addStudentEventsToDB(localStorage.getItem("studentId"), userEventArray, existingEvents, database);
   }, [userEventArray]);
 
   // waits for response and sets
@@ -286,6 +184,14 @@ export function EnterURL(props) {
     setUserEventArray(newEventArray);
   };
 
+  let triggerNameRefresh = () => {};
+
+  if (props.triggerLayoutForceRefresh !== undefined) {
+    triggerNameRefresh = () => {
+      props.triggerLayoutForceRefresh();
+    };
+  }
+
   return (
     <div
       style={{
@@ -295,7 +201,11 @@ export function EnterURL(props) {
         alignItems: "center",
       }}
     >
-      <div>{MyVerticallyCenteredModal()}</div>
+      <UserLogin
+        triggerNameRefresh={() => {
+          triggerNameRefresh();
+        }}
+      ></UserLogin>
 
       <div>Enter NUSMODs Sharing URL:</div>
       <div style={{ color: "red" }}>{errorMessage}</div>
