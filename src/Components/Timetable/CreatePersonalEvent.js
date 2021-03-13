@@ -98,7 +98,7 @@ export default function CreatePersonalEvent(props) {
   const body = (
     <div style={modalStyle}>
       <p style={{ fontSize: "25px", color: "#ff5138" }}>Add A New Event</p>
-      <form>
+      <form onSubmit={saveModule}>
         <label
           for="eventName"
           style={{
@@ -113,8 +113,8 @@ export default function CreatePersonalEvent(props) {
           type="text"
           className="form-control"
           id="eventName"
-          required
-          // value={module.eventName}
+          required="required"
+          value={module.eventName}
           onChange={handleInputChange}
           name="eventName"
           placeholder="IS4261 6UGs Submission"
@@ -140,7 +140,7 @@ export default function CreatePersonalEvent(props) {
         <select
           name="eventType"
           id="eventType"
-          required
+          required="required"
           onChange={handleInputChange}
           style={{
             width: "100%",
@@ -151,7 +151,7 @@ export default function CreatePersonalEvent(props) {
           }}
         >
           <option selected hidden>
-            Choose here
+            Choose Here!
           </option>
           <option value="Private">Personal Event</option>
           <option value="Others">Others</option>
@@ -172,8 +172,8 @@ export default function CreatePersonalEvent(props) {
           step="1800"
           className="form-control"
           id="startTime"
-          required
-          // value={module.startTime}
+          required={true}
+          value={module.startTime}
           onChange={handleInputChange}
           name="startTime"
           min="2021-01-10T00:00"
@@ -202,8 +202,8 @@ export default function CreatePersonalEvent(props) {
           step="1800"
           className="form-control"
           id="endTime"
-          required
-          // value={module.endTime}
+          required={true}
+          value={module.endTime}
           onChange={handleInputChange}
           name="endTime"
           min="2021-01-10T00:00"
@@ -218,9 +218,15 @@ export default function CreatePersonalEvent(props) {
         />
         <br></br>
         <br></br>
-        <Button onClick={saveModule} setOpen="false" variant="contained">
+        {/* <Button onClick={saveModule} setOpen="false" variant="contained">
           Submit
+        </Button> */}
+        <Button variant="contained">
+        {/* <input type="submit" value="SUBMIT" style={{background: "#e7e7e7", padding: "8px", borderRadius: "5px"}}> */}
+        <input type="submit" value="SUBMIT" style={{background: "none"}}>
+        </input>
         </Button>
+
         &nbsp;
         <Button onClick={handleClose} variant="contained">
           Cancel
@@ -251,8 +257,6 @@ export default function CreatePersonalEvent(props) {
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
       >
         {body}
       </Modal>
