@@ -311,6 +311,7 @@ video {
 .w-full {
   width: 100%;
 }
+
 @-webkit-keyframes spin {
   to {
     transform: rotate(1turn);

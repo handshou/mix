@@ -1,7 +1,10 @@
 import { React, useState, useEffect } from "react";
+import Tooltip from "react-png-tooltip";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 import UserLogin from "../UserLogin";
+
+import importURL from '../tutorialGIFs/ImportURL.mp4'
 
 import {
   convertURLtoArray,
@@ -91,7 +94,12 @@ export function EnterURL(props) {
 
   useEffect(() => {
     if (userEventArray && userEventArray.length > 0)
-      addStudentEventsToDB(localStorage.getItem("studentId"), userEventArray, existingEvents, database);
+      addStudentEventsToDB(
+        localStorage.getItem("studentId"),
+        userEventArray,
+        existingEvents,
+        database
+      );
   }, [userEventArray]);
 
   // waits for response and sets
@@ -218,6 +226,7 @@ export function EnterURL(props) {
         }}
       ></OutlinedInput>
       <Button
+        style={{ marginRight: 10 }}
         variant="contained"
         onClick={() => {
           console.log("hih");
@@ -231,6 +240,12 @@ export function EnterURL(props) {
       >
         Update Timetable
       </Button>
+
+      <Tooltip className="OrangeTooltip" background="#ff7043">
+        <video autoPlay loop muted> 
+          <source src={importURL} type="video/mp4"></source>
+        </video>
+      </Tooltip>
     </div>
   );
 }
