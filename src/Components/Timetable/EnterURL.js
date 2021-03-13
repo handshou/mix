@@ -2,9 +2,9 @@ import { React, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 
-import Tooltip from '@material-ui/core/Tooltip';
-import HelpIcon from '@material-ui/icons/Help';
-import IconButton from '@material-ui/core/IconButton';
+import Tooltip from "@material-ui/core/Tooltip";
+import HelpIcon from "@material-ui/icons/Help";
+import IconButton from "@material-ui/core/IconButton";
 
 import {
   convertURLtoArray,
@@ -244,14 +244,21 @@ export function EnterURL(props) {
         alignItems: "center",
       }}
     >
-      <div>Enter NUSMODs Sharing URL:
-      <Tooltip title={
-          <em>{"Step1: Go to your NUSMODS page & Click on 'Share/Sync' button. Step 2: Copy the link and paste it on the textbox to import your personal timetable into MixTime."}</em>
-        }>
-        <IconButton aria-label="delete">
-          <HelpIcon fontSize="small"/>
-        </IconButton>
-      </Tooltip>
+      <div>
+        Enter NUSMODs Sharing URL:
+        <Tooltip
+          title={
+            <em>
+              {
+                "Step1: Go to your NUSMODS page & Click on 'Share/Sync' button. Step 2: Copy the link and paste it on the textbox to import your personal timetable into MixTime."
+              }
+            </em>
+          }
+        >
+          <IconButton aria-label="delete">
+            <HelpIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </div>
       <div style={{ color: "red" }}>{errorMessage}</div>
       <OutlinedInput
@@ -262,21 +269,24 @@ export function EnterURL(props) {
           setErrorMessage("");
         }}
       ></OutlinedInput>
-      <Tooltip title={<em>{"Click here to update your personal timetable"}</em>}>
-      <Button
-        variant="contained"
-        onClick={() => {
-          console.log("hih");
-          // catches invalid URLs
-          try {
-            setModAndClassArray(convertURLtoArray(enteredURL));
-          } catch (error) {
-            setErrorMessage(error);
-          }
-        }}
+      <Tooltip
+        title={<em>{"Click here to update your personal timetable"}</em>}
       >
-        Update Timetable
-      </Button>
+        <Button
+          style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          variant="contained"
+          onClick={() => {
+            console.log("hih");
+            // catches invalid URLs
+            try {
+              setModAndClassArray(convertURLtoArray(enteredURL));
+            } catch (error) {
+              setErrorMessage(error);
+            }
+          }}
+        >
+          Update Timetable
+        </Button>
       </Tooltip>
     </div>
   );

@@ -171,6 +171,8 @@ export default function CreatePersonalEvent(props) {
           value={module.startTime}
           onChange={handleInputChange}
           name="startTime"
+          min="2021-01-10T00:00"
+          max="2021-12-31T00:00"
           style={{
             width: "100%",
             padding: "0.7em",
@@ -199,7 +201,8 @@ export default function CreatePersonalEvent(props) {
           value={module.endTime}
           onChange={handleInputChange}
           name="endTime"
-          requiredPattern="[0-9]{2}:[0-9]{2}"
+          min="2021-01-10T00:00"
+          max="2021-12-31T00:00"
           style={{
             width: "100%",
             padding: "0.7em",
@@ -231,7 +234,11 @@ export default function CreatePersonalEvent(props) {
             </em>
           }
         >
-          <Button onClick={handleOpen} variant="contained">
+          <Button
+            onClick={handleOpen}
+            variant="contained"
+            style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          >
             Add New Event
           </Button>
         </Tooltip>
