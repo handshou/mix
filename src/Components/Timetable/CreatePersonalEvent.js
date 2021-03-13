@@ -5,8 +5,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
-
 import { overrideStudentEventsToDB } from "../../Functions/apiFunctions";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 function getModalStyle() {
   return {
@@ -70,6 +73,8 @@ export default function CreatePersonalEvent(props) {
 
     setRefreshKey(refreshKey + 1);
     setOpen(false);
+
+    toast.success("A new event has been sucessfully added.");
   };
 
   useEffect(() => {
@@ -109,7 +114,7 @@ export default function CreatePersonalEvent(props) {
           className="form-control"
           id="eventName"
           required
-          value={module.eventName}
+          // value={module.eventName}
           onChange={handleInputChange}
           name="eventName"
           placeholder="IS4261 6UGs Submission"
@@ -168,7 +173,7 @@ export default function CreatePersonalEvent(props) {
           className="form-control"
           id="startTime"
           required
-          value={module.startTime}
+          // value={module.startTime}
           onChange={handleInputChange}
           name="startTime"
           min="2021-01-10T00:00"
@@ -198,7 +203,7 @@ export default function CreatePersonalEvent(props) {
           className="form-control"
           id="endTime"
           required
-          value={module.endTime}
+          // value={module.endTime}
           onChange={handleInputChange}
           name="endTime"
           min="2021-01-10T00:00"

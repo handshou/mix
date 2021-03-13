@@ -2,8 +2,9 @@ import { React, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 
-// import Button from "@material-ui/core/Button";
-// import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import HelpIcon from "@material-ui/icons/Help";
 import { makeStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
 import EnterURL from "./EnterURL";
@@ -93,7 +94,22 @@ export default function MyTimetable(props) {
           bottom: "475px",
         }}
       >
-        <h3 style={{ padding: "5px" }}>Colour Legend</h3>
+        <h3 style={{ padding: "5px" }}>
+          Colour Legend
+          <Tooltip
+            title={
+              <em>
+                {
+                  "Each timeblock in your personal timetable will have their respective colour representation depending on the type of event."
+                }
+              </em>
+            }
+          >
+            <IconButton aria-label="delete">
+              <HelpIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </h3>
         <table style={{ display: "flex" }}>
           <tr>
             <th style={{ background: "#FDDFDF", color: "#000000" }}>Lecture</th>

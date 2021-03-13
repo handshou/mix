@@ -153,6 +153,12 @@ export default function Timetable(props) {
   const fridayModules = getModules(timetableData)
     .filter((m) => m.week === weekNumber)
     .filter((m) => m.day === "Friday");
+  const saturdayModules = getModules(timetableData)
+    .filter((m) => m.week === weekNumber)
+    .filter((m) => m.day === "Saturday");
+  const sundayModules = getModules(timetableData)
+    .filter((m) => m.week === weekNumber)
+    .filter((m) => m.day === "Sunday");
 
   const mondayArray = generateRows(
     weekTime.startTime,
@@ -184,6 +190,18 @@ export default function Timetable(props) {
     30,
     fridayModules
   );
+  const saturdayArray = generateRows(
+    weekTime.startTime,
+    weekTime.endTime,
+    30,
+    saturdayModules
+  );
+  const sundayArray = generateRows(
+    weekTime.startTime,
+    weekTime.endTime,
+    30,
+    sundayModules
+  );
 
   const days = [
     createDay("Monday", mondayArray),
@@ -191,6 +209,8 @@ export default function Timetable(props) {
     createDay("Wednesday", wednesdayArray),
     createDay("Thursday", thursdayArray),
     createDay("Friday", fridayArray),
+    createDay("Saturday", saturdayArray),
+    createDay("Sunday", sundayArray),
   ];
 
   return (
