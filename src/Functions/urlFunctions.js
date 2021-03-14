@@ -3,9 +3,16 @@ export const convertURLtoArray = (URL) => {
   // very basic validation for URL to ensure its the right URL
   if (
     URL.includes("https://nusmods.com/timetable/") &&
-    URL.includes("/share?")
+    URL.includes("/share?") &&
+    URL.split("?")[1] !== undefined
   ) {
-    let mods = URL.split("?")[1];
+    let split = URL.split("?")[1];
+    console.log("split");
+    console.log(split);
+    if (!split) {
+      return [];
+    }
+    let mods = split[1];
 
     // formats url into array of module codes and slots into a single string
     // ["ACC3619=SEC:A3", "GES1041=TUT:D6,LEC:1", "IS4100=TUT:2,LEC:1", "IS4234=TUT:2,LEC:1", "IS4261=LEC:1"]
@@ -21,7 +28,8 @@ export const convertURLtoArray = (URL) => {
       return mod.split(/=|,/);
     });
   } else {
-    throw new Error("Invalid URL entered");
+    console.log("Invalid URL entered");
+    return [];
   }
 };
 
@@ -62,13 +70,14 @@ export const findCorrectTimeslot = (
           JSON.stringify(classTimeTable.lessonType)
             .substring(1, 4)
             .toLowerCase() ===
-          JSON.stringify(typeAndSlot[0]).substring(1, 4).toLowerCase() &&
+            JSON.stringify(typeAndSlot[0]).substring(1, 4).toLowerCase() &&
           classTimeTable.classNo === typeAndSlot[1]
         ) {
-          if (classTimeTable.lessonType !== undefined &&
+          if (
+            classTimeTable.lessonType !== undefined &&
             classTimeTable.startTime !== undefined &&
             classTimeTable.endTime !== undefined &&
-            classTimeTable.weeks !== undefined && 
+            classTimeTable.weeks !== undefined &&
             classTimeTable.day !== undefined
           ) {
             correctTimeSlot = {
@@ -79,7 +88,7 @@ export const findCorrectTimeslot = (
               weeks: classTimeTable.weeks,
               day: classTimeTable.day,
             };
-          } else { }
+          }
         }
       });
     }

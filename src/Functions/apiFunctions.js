@@ -44,16 +44,22 @@ export const getModDetails = async (moduleCode) => {
   return await response;
 };
 
-
 // (studentID, newEventArray, OldEventArray, firebaseDBObject)
-export const addStudentEventsToDB = (studentId, eventArray, existingEvents, database) => {
-
+export const addStudentEventsToDB = (
+  studentId,
+  eventArray,
+  existingEvents,
+  database
+) => {
   // merge event lists
-  var mergedArray = []
-  if (existingEvents !== undefined && existingEvents !== null && existingEvents.length > 0) {
+  var mergedArray = [];
+  if (
+    existingEvents !== undefined &&
+    existingEvents !== null &&
+    existingEvents.length > 0
+  ) {
     var mergedArray = [...eventArray, ...existingEvents];
-  }
-  else {
+  } else {
     mergedArray = eventArray;
   }
   let uniqueArray = [];
@@ -67,7 +73,7 @@ export const addStudentEventsToDB = (studentId, eventArray, existingEvents, data
         break;
       }
     }
-  })
+  });
 
   var studentsRef = database.ref(`Students/${studentId}/events`);
   studentsRef.set(uniqueArray);
@@ -78,4 +84,57 @@ export const addStudentEventsToDB = (studentId, eventArray, existingEvents, data
 export const overrideStudentEventsToDB = (studentId, eventArray, database) => {
   var studentsRef = database.ref(`Students/${studentId}/events`);
   studentsRef.set(eventArray);
+};
+
+// takes in a studentId,
+// returns an array of all the student's groups.
+export const getStudentGroups = async (studentId, database) => {
+  var tempStudentGroups = [];
+  var studentGroupRef = database.ref(`Groups/`);
+
+  await studentGroupRef.once("value").then((snapshot) => {
+    var data = snapshot.val();
+    for (var index in data) {
+      var element = data[index];
+      if (studentId !== null) {
+        if (element !== undefined && element.members !== undefined) {
+          Object.values(element.members).forEach((studID) => {
+            if (studID == studentId) {
+              tempStudentGroups.push(element);
+            }
+          });
+        }
+      }
+    }
+  });
+  return tempStudentGroups;
+};
+
+// Takes in a group ID to get the details of the group
+// returns a group members of the group
+export const getGroupMembersOfGroup = async (groupId, database) => {
+  var studentGroupRef = database.ref(`Groups/`);
+  let listofMembers = await studentGroupRef.once("value").then((snapshot) => {
+    var data = snapshot.val();
+    for (var index in data) {
+      var element = data[index];
+      if (localStorage.getItem("studentId") != null) {
+        if (element !== undefined && element.members !== undefined) {
+          if (element.groupId == groupId) {
+            return element;
+          }
+        }
+      }
+    }
+  });
+  return listofMembers;
+};
+
+export const getStudentEvents = async (studentId, database) => {
+  if (studentId !== null) {
+    var studentsRef = database.ref(`Students/${studentId}/events`);
+    return studentsRef.once("value").then((snapshot) => {
+      return snapshot.val();
+    });
+  }
 };
