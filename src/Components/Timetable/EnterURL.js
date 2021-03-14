@@ -250,7 +250,7 @@ export function EnterURL(props) {
           title={
             <em>
               {
-                "Step1: Go to your NUSMODS page & Click on 'Share/Sync' button. Step 2: Copy the link and paste it on the textbox to import your personal timetable into MixTime."
+                "What is this? Using the shared link on NUSMods, you can import in your modules into MixTime"
               }
             </em>
           }

@@ -100,7 +100,7 @@ export default function MyTimetable(props) {
             title={
               <em>
                 {
-                  "Each timeblock in your personal timetable will have their respective colour representation depending on the type of event."
+                  "What is this? Each timeblock in your personal timetable will have their respective colour representation depending on the type of event."
                 }
               </em>
             }
