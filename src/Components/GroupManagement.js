@@ -1,5 +1,4 @@
 import { React, Fragment, useState, useEffect } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";

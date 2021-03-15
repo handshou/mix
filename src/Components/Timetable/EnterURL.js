@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import Tooltip from "react-png-tooltip";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 import UserLogin from "../UserLogin";
@@ -223,34 +222,8 @@ export function EnterURL(props) {
         }}
       ></UserLogin>
 
-      <div>Enter NUSMODs Sharing URL:</div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <OutlinedInput
-          placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
-          style={{ width: 500, marginLeft: 30, marginRight: 30 }}
-          onChange={(e) => {
-            setEnteredURL(e.target.value);
-            setErrorMessage("");
-          }}
-        ></OutlinedInput>
-        <div style={{ color: "red" }}>{errorMessage}</div>
-      </div>
-      <Button
-        style={{ marginRight: 10 }}
-        variant="contained"
-        onClick={() => {
-          // catches invalid URLs
-          try {
-            setModAndClassArray(convertURLtoArray(enteredURL));
-          } catch (error) {
-            setErrorMessage(error);
-      //<div>
+      
+      <div>
         Enter NUSMODs Sharing URL:
         <Tooltip
           title={
@@ -266,7 +239,7 @@ export function EnterURL(props) {
           </IconButton>
         </Tooltip>
       </div>
-      <div style={{ color: "red" }}>{errorMessage}</div>
+      <div style={{ color: "red" }}>{errorMessage && errorMessage.length < 1 ? "" :  errorMessage}</div>
       <OutlinedInput
         placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
         style={{ width: 500, marginLeft: 30, marginRight: 30 }}
