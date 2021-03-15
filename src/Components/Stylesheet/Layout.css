@@ -311,6 +311,7 @@ video {
 .w-full {
   width: 100%;
 }
+
 @-webkit-keyframes spin {
   to {
     transform: rotate(1turn);
@@ -386,8 +387,9 @@ video {
 input {
   background-color: inherit;
 }
+
 input:focus {
-  padding: 4px 4px 4px 4px;
+ 
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -400,4 +402,8 @@ input:focus {
   box-shadow: 0px 0px 8px #da337a;
   -moz-box-shadow: 0px 0px 8px #da337a;
   -webkit-box-shadow: 0px 0px 8px #da337a;
+}
+
+renameText:focus {
+  padding: 4px 4px 4px 4px;
 }

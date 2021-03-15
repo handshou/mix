@@ -119,6 +119,7 @@ function Layout(props) {
                     {localStorage.getItem("studentName") !== null &&
                     studentNameTextbox.val.length !== 0 ? (
                       <input
+                        className="renameText"
                         type="text"
                         disabled={studentNameTextbox.disable}
                         value={studentName}

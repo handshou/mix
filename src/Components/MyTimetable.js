@@ -15,6 +15,8 @@ import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import {Modal} from "react-responsive-modal"
 toast.configure();
 
 if (!firebase.apps.length) {
@@ -44,21 +46,6 @@ function MyTimetable(props) {
   const [studentName, setStudentName] = useState(
     localStorage.getItem("studentName")
   );
-  // Purpose: To get total student in the database [Dont delete first]
-  // const [totalStudentCount, setTotalStudentCount] = useState();
-  // let getTotalStudent = () => {
-  //      //Retrieve this to generate new studentID by +1
-  //   // var studentsRef = database.ref("Students/");
-  //   // studentsRef.once("value").then((snapshot) => {
-  //   //   console.log("***snapshot.numChildren()():  " + snapshot.numChildren());
-  //   //   // setTotalStudentCount(snapshot.numChildren());
-  //   //   setStudentId(snapshot.numChildren() + 1);
-  //   //   localStorage.setItem("studentId", snapshot.numChildren() + 1);
-  //   //   console.log("***getTotalStudents() 2 :  " + studentId);
-  //   //   console.log("***getTotalStudents() 3 :  " + localStorage.getItem("studentId"));
-  //   //   // return snapshot.numChildren();
-  //   // });
-  // }
 
   let createStudentId = (studentName) => {
     var query = database.ref("Students/").orderByKey();
@@ -91,14 +78,6 @@ function MyTimetable(props) {
     });
   };
 
-  // const [studentsList, setStudentList] = useState({});
-  // let getStudents = () => {
-  //   var studentsRef = database.ref("Students/");
-  //   studentsRef.once("value").then((snapshot) => {
-  //     snapshot.val() ? setStudentList(snapshot.val()) : console.log("missing");
-  //   });
-  // };
-
   // ========================================================== GROUPS ==========================================================
   const [studentGroups, setStudentGroups] = useState([]);
   const [groupId, setGroupId] = useState();
@@ -108,21 +87,6 @@ function MyTimetable(props) {
     setStudentGroups([]);
 
     var tempStudentGroups = [];
-
-    // Note: Suddenly not working with this code after database deleted and re-added data
-    // var studentGroupRef = database.ref(`Groups/`);
-    // studentGroupRef.once("value").then((snapshot) => {
-    //   console.log("snapshot: " + JSON.stringify(snapshot));
-    //   snapshot.val().forEach((element) => {
-    //     if (localStorage.getItem("studentId") != null) {
-    //       Object.values(element.members).forEach((studID) => {
-    //         if (studID == localStorage.getItem("studentId")) {
-    //           // studentGroups.push(element);
-    //           tempStudentGroups.push(element);
-    //         }
-    //       });
-    //     }
-    //   });
 
     var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
@@ -139,7 +103,6 @@ function MyTimetable(props) {
       }
 
       setStudentGroups(tempStudentGroups);
-      // localStorage.setItem("studentGroups", studentGroups);
     });
   };
 
@@ -300,10 +263,10 @@ function MyTimetable(props) {
     setRefreshKey(0);
 
     if (localStorage.getItem("studentId") == null) {
-      var studentName = prompt(
-        "Hi! Seems like this is the first time you visited MixTime. \nPlease enter your name and we'll tag it into your timetable."
-      );
-      createStudentId(studentName);
+      // var studentName = prompt(
+      //   "Hi! Seems like this is the first time you visited MixTime. \nPlease enter your name and we'll tag it into your timetable."
+      // );
+      // createStudentId(studentName);
     } else {
       getStudentName(localStorage.getItem("studentId"));
       getStudentEvents(localStorage.getItem("studentId"));
@@ -311,14 +274,6 @@ function MyTimetable(props) {
       getStudentGroups();
       getGroupMemberName();
     }
-    // if (!Array.isArray(studentEvents) || !studentEvents.length) {
-    //   for (var i = 0; i < studentEvents.length; i++) {
-    //     console.log("***eventname:  " + studentEvents[i].eventname);
-    //     console.log("***eventtype:  " + studentEvents[i].eventtype);
-    //     console.log("***endtime:  " + studentEvents[i].endtime);
-    //     console.log("***starttime:  " + studentEvents[i].starttime);
-    //   }
-    // }
   }, [refreshKey]);
 
   return (
@@ -435,44 +390,6 @@ function MyTimetable(props) {
         </Button>
         <br></br>
         <br></br>
-        {/* <div
-        style={{
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          wigth: "100%",
-        }}
-      >
-        <div
-          style={{
-            marginTop: 50,
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={() => {
-              if (getStudents() !== undefined) {
-                getStudents();
-              } else console.log("lmao it didnt work");
-            }}
-          >
-            Get ALL student information from firebase
-          </Button>
-        </div>
-        <div>
-          {studentsList && studentsList.length > 0 ? (
-            studentsList.map((val) => {
-              return (
-                <div>
-                  {JSON.stringify(val)} <br></br>
-                </div>
-              );
-            })
-          ) : (
-              <div></div>
-            )}
-          </div> */}
       </div>
     </Fragment>
   );
