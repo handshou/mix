@@ -121,7 +121,7 @@ export function EnterURL(props) {
         setErrorMessage(error);
       }
     else {
-      setErrorMessage("Invalid URL");
+      setErrorMessage("");
     }
   }, [modAndClassArray]);
 

@@ -1,4 +1,5 @@
 // converts valid NUSMODS timetable into a 2d array of mods and slots
+// throws error message --> Should catch in parent
 export const convertURLtoArray = (URL) => {
   // very basic validation for URL to ensure its the right URL
   if (
@@ -7,12 +8,10 @@ export const convertURLtoArray = (URL) => {
     URL.split("?")[1] !== undefined
   ) {
     let split = URL.split("?")[1];
-    console.log("split");
-    console.log(split);
     if (!split) {
       return [];
     }
-    let mods = split[1];
+    let mods = URL.split("?")[1];
 
     // formats url into array of module codes and slots into a single string
     // ["ACC3619=SEC:A3", "GES1041=TUT:D6,LEC:1", "IS4100=TUT:2,LEC:1", "IS4234=TUT:2,LEC:1", "IS4261=LEC:1"]
@@ -29,7 +28,7 @@ export const convertURLtoArray = (URL) => {
     });
   } else {
     console.log("Invalid URL entered");
-    return [];
+    throw "Invalid URL entered";
   }
 };
 
