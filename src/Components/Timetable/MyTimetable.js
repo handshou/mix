@@ -69,60 +69,51 @@ export default function MyTimetable(props) {
 
   return (
     <div>
-      {/* <input accept="image/*" id="contained-button-file" multiple type="file" />
-      <label htmlFor="contained-button-file">
-        <Button
-          variant="contained"
-          color="default"
-          component="span"
-          startIcon={<CloudUploadIcon />}>
-          Upload
-        </Button>
-      </label>
-      <input accept="image/*" id="icon-button-file" type="file" /> */}
       <div
         style={{
-          justifyContent: "left",
-          padding: "0px 10px 0px 10px",
-          textAlign: "center",
-          position: "absolute",
-          bottom: "475px",
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
-        <h3 style={{ padding: "5px" }}>
-          Colour Legend
-          <Tooltip
-            title={
-              <em>
-                {
-                  "What is this? Each timeblock in your personal timetable will have their respective colour representation depending on the type of event."
-                }
-              </em>
-            }
-          >
-            <IconButton aria-label="delete">
-              <HelpIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </h3>
-        <table style={{ display: "flex" }}>
-          <tr>
-            <th style={{ background: "#FDDFDF", color: "#000000" }}>Lecture</th>
-            <th style={{ background: "#F0DEFD", color: "#000000" }}>
-              Tutorial
-            </th>
-            <th style={{ background: "#DEFDE0", color: "#000000" }}>Private</th>
-            <th style={{ background: "#DEF3FD", color: "#000000" }}>Others</th>
-            <th style={{ background: "#FFFFFF", color: "#000000" }}>
-              Available
-            </th>
-          </tr>
-        </table>
-      </div>
-
-      <br></br>
-      <div style={{ display: "flex", justifyContent: "center" }}>
         <div>
+          <h3 style={{ padding: "0px 0px 0px 105px" }}>
+            Colour Legend
+            <Tooltip
+              title={
+                <em>
+                  {
+                    "What is this? Each timeblock in your personal timetable will have their respective colour representation depending on the type of event."
+                  }
+                </em>
+              }
+            >
+              <IconButton aria-label="delete">
+                <HelpIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </h3>
+          <table style={{ display: "flex", padding: "0px 0px 0px 20px" }}>
+            <tr>
+              <th style={{ background: "#FDDFDF", color: "#000000" }}>
+                Lecture
+              </th>
+              <th style={{ background: "#F0DEFD", color: "#000000" }}>
+                Tutorial
+              </th>
+              <th style={{ background: "#DEFDE0", color: "#000000" }}>
+                Private
+              </th>
+              <th style={{ background: "#DEF3FD", color: "#000000" }}>
+                Others
+              </th>
+              <th style={{ background: "#FFFFFF", color: "#000000" }}>
+                Available
+              </th>
+            </tr>
+          </table>
+        </div>
+
+        <div style={{ padding: "0px 80px 0px 0px" }}>
           <div
             style={{
               display: "flex",
@@ -132,7 +123,6 @@ export default function MyTimetable(props) {
           >
             Week Number
           </div>
-
           <Pagination
             count={13}
             page={week}
@@ -143,10 +133,20 @@ export default function MyTimetable(props) {
             boundaryCount={2}
           />
         </div>
+
+        <div style={{ display: "flex", padding: "20px 20px 0px 0px" }}>
+          <CreatePersonalEvent
+            timetableData={timetableData}
+            triggerMyTimetableForceRefresh={() => {
+              triggerMyTimetableForceRefresh();
+            }}
+          />
+        </div>
       </div>
       <br></br>
       <Timetable weekNumber={week} timetableData={timetableData} />
       <br></br>
+
       <div style={{ display: "flex", justifyContent: "center" }}>
         <EnterURL
           triggerLayoutForceRefresh={() => {
@@ -157,14 +157,7 @@ export default function MyTimetable(props) {
           }}
         />
       </div>
-
       <br></br>
-      <CreatePersonalEvent
-        timetableData={timetableData}
-        triggerMyTimetableForceRefresh={() => {
-          triggerMyTimetableForceRefresh();
-        }}
-      />
     </div>
   );
 }
