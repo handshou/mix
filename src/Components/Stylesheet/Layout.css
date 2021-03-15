@@ -4,7 +4,7 @@ html {
 }
 body {
   margin: 0;
-  background-color:#f4fafc
+  background-color: #f4fafc;
 }
 main {
   display: block;
@@ -373,4 +373,32 @@ video {
   }
 }
 
+/* input {
+  border: 1px solid #c4c4c4;
+  padding: 4px 4px 4px 4px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  box-shadow: 0px 0px 8px #d9d9d9;
+  -moz-box-shadow: 0px 0px 8px #d9d9d9;
+  -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+} */
 
+input {
+  background-color: inherit;
+}
+input:focus {
+  padding: 4px 4px 4px 4px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  box-shadow: 0px 0px 8px #d9d9d9;
+  -moz-box-shadow: 0px 0px 8px #d9d9d9;
+  -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+  border: 1px solid #c4c4c4;
+  outline: none;
+  border: 1px solid #da337a;
+  box-shadow: 0px 0px 8px #da337a;
+  -moz-box-shadow: 0px 0px 8px #da337a;
+  -webkit-box-shadow: 0px 0px 8px #da337a;
+}
