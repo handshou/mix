@@ -114,10 +114,14 @@ export function EnterURL(props) {
 
   useEffect(() => {
     // catches api catastrophic api errors, though it should never be triggered as there promise.allSettled helps handle Errors
-    try {
-      getModuleDetails();
-    } catch (error) {
-      setErrorMessage(error);
+    if (modAndClassArray !== undefined && modAndClassArray.length > 0)
+      try {
+        getModuleDetails();
+      } catch (error) {
+        setErrorMessage(error);
+      }
+    else {
+      setErrorMessage("Invalid URL");
     }
   }, [modAndClassArray]);
 

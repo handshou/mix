@@ -63,11 +63,6 @@ export default function MyTimetable(props) {
     loadTimetable();
   }, []);
 
-  useEffect(() => {
-    console.log("timetableData");
-    console.log(timetableData);
-  }, [timetableData]);
-
   const handleChange = (event, value) => {
     setWeek(value);
   };
