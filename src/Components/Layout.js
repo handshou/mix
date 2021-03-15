@@ -10,22 +10,19 @@ import { Link } from "react-router-dom";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import GroupIcon from "@material-ui/icons/Group";
 import ScheduleIcon from "@material-ui/icons/Schedule";
+import CreateIcon from "@material-ui/icons/Create";
+import DoneIcon from "@material-ui/icons/Done";
 
 import "./Stylesheet/Layout.css";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useHistory, useLocation } from "react-router-dom";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
+
 const useStyles = makeStyles({
-  // buttons: {
-  //   background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-  //   border: 0,
-  //   borderRadius: 3,
-  //   boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-  //   color: "white",
-  //   height: 48,
-  //   padding: "0 30px",
-  // },
   topNavBar: {
     background: "white",
     backgroundColor: "#fbfbfb",
@@ -42,7 +39,6 @@ const useStyles = makeStyles({
   buttonDesign: {
     boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
     color: "#000",
-    // backgroundColor: "#fff",
     padding: "10px 10px",
     backgroundColor: "#fbfbfb",
     border: "none",
@@ -51,7 +47,6 @@ const useStyles = makeStyles({
     cursor: "pointer",
     outline: "none",
     "&:hover": {
-      // backgroundColor: "#2EE59D",
       boxShadow: "0px 10px 15px #ff5138",
       transform: "translateY(-7px)",
     },
@@ -73,6 +68,44 @@ function Layout(props) {
     setStudentName(localStorage.getItem("studentName"));
   }, [props.forceRefresh]);
 
+  function editStudentName(event) {
+    localStorage.setItem("studentName", event.target.value);
+    setStudentName(localStorage.getItem("studentName"));
+    setStudentNameTextbox({ disable: false, val: studentName });
+  }
+
+  const [studentNameTextbox, setStudentNameTextbox] = useState({
+    disable: true,
+    val: "",
+    readOnly: true,
+  });
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    setRefreshKey(0);
+    setStudentName(localStorage.getItem("studentName"));
+  }, [refreshKey]);
+
+  function enableStudentNameEdit() {
+    setStudentNameTextbox({
+      disable: false,
+      val: studentName,
+      readOnly: false,
+    });
+    setRefreshKey(refreshKey + 1);
+  }
+
+  function updateStudentName() {
+    setStudentNameTextbox({ disable: true, val: studentName, readOnly: true });
+
+    if (studentNameTextbox.val !== localStorage.getItem("studentName")) {
+      toast.success("Student name has been updated successfully.");
+    }
+
+    //To update in firebase for real logic [now is just update in client side]
+  }
+
   return (
     <Fragment>
       <AppBar position="static" className={classes.topNavBar}>
@@ -83,9 +116,68 @@ function Layout(props) {
                 <div style={{ float: "right", marginTop: "2%" }}>
                   <Typography variant="h5">
                     Hi,{" "}
-                    <b>
-                      {studentName} (#{studentId})
-                    </b>
+                    {localStorage.getItem("studentName") !== null &&
+                    studentNameTextbox.val.length !== 0 ? (
+                      <input
+                        type="text"
+                        disabled={studentNameTextbox.disable}
+                        value={studentName}
+                        onChange={editStudentName}
+                        readOnly={studentNameTextbox.readOnly}
+                        size={studentNameTextbox.val.length - 3}
+                        style={
+                          studentNameTextbox.readOnly === false
+                            ? {
+                                padding: "4px 4px 4px 4px",
+                                borderRadius: "4px",
+                                outline: "none",
+                                border: "1px solid #da337a",
+                                boxShadow: "0px 0px 8px #da337a",
+                              }
+                            : {}
+                        }
+                      ></input>
+                    ) : (
+                      <span>{studentName}</span>
+                    )}
+                    (#{studentId})
+                    {
+                      studentNameTextbox.readOnly === true ? (
+                        //   <Button
+                        //   variant="contained"
+                        //   color="primary"
+                        //   style={{ width: "fit-content" }}
+                        // >
+                        <Link
+                          onClick={() => {
+                            enableStudentNameEdit();
+                          }}
+                        >
+                          <span style={{ color: "black" }}>
+                            {/* <abbr title="Edit Student Name"><CreateIcon/></abbr> */}
+                            <CreateIcon />
+                          </span>
+                        </Link>
+                      ) : (
+                        // </Button>
+                        //   <Button
+                        //   variant="contained"
+                        //   color="primary"
+                        //   style={{ width: "fit-content" }}
+                        // >
+                        <Link
+                          onClick={() => {
+                            updateStudentName();
+                          }}
+                        >
+                          <span style={{ color: "black" }}>
+                            {/* <abbr title="Save Changes"><DoneIcon /></abbr> */}
+                            <DoneIcon />
+                          </span>
+                        </Link>
+                      )
+                      // </Button>
+                    }
                   </Typography>
                 </div>
                 <Typography variant="h3" component="h4">
@@ -103,7 +195,6 @@ function Layout(props) {
           style={{
             display: "inherit",
             padding: "1%",
-            // margin: "auto",
             textAlign: "center",
             // width: "100%",
           }}
@@ -153,17 +244,6 @@ function Layout(props) {
               <ScheduleIcon /> &nbsp;&nbsp; Group Timetable
             </MenuItem>
             &nbsp; &nbsp;
-            {/* <MenuItem
-          component={Link}
-          to="/UserProfile"
-          itemID="/UserProfile"
-          selected={location.pathname === '/UserProfile' ? true : false}
-          classes={{
-            root: classes.sideNavBar,
-            selected: classes.sideNavBarActive,
-          }}>
-          <HomeIcon /> &nbsp;&nbsp; UserProfile [TEST]
-        </MenuItem> */}
             <MenuItem
               component={Link}
               to="/GroupManagement"
@@ -184,5 +264,4 @@ function Layout(props) {
   );
 }
 
-// export default makeStyles(makeStyles)(Layout);
 export default Layout;
