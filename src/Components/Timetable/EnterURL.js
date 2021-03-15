@@ -6,6 +6,10 @@ import UserLogin from "../UserLogin";
 
 import importURL from '../tutorialGIFs/ImportURL.mp4'
 
+import Tooltip from "@material-ui/core/Tooltip";
+import HelpIcon from "@material-ui/icons/Help";
+import IconButton from "@material-ui/core/IconButton";
+
 import {
   convertURLtoArray,
   findCorrectTimeslot,
@@ -246,18 +250,51 @@ export function EnterURL(props) {
             setModAndClassArray(convertURLtoArray(enteredURL));
           } catch (error) {
             setErrorMessage(error);
+      //<div>
+        Enter NUSMODs Sharing URL:
+        <Tooltip
+          title={
+            <em>
+              {
+                "What is this? Using the shared link on NUSMods, you can import in your modules into MixTime"
+              }
+            </em>
           }
+        >
+          <IconButton aria-label="delete">
+            <HelpIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </div>
+      <div style={{ color: "red" }}>{errorMessage}</div>
+      <OutlinedInput
+        placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
+        style={{ width: 500, marginLeft: 30, marginRight: 30 }}
+        onChange={(e) => {
+          setEnteredURL(e.target.value);
+          setErrorMessage("");
         }}
+      ></OutlinedInput>
+      <Tooltip
+        title={<em>{"Click here to update your personal timetable"}</em>}
       >
-        Update Timetable
-      </Button>
-
-      <Tooltip className="OrangeTooltip" background="#ff7043">
-        <video autoPlay loop muted> 
-          <source src={importURL} type="video/mp4"></source>
-        </video>
+        <Button
+          style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          variant="contained"
+          onClick={() => {
+            console.log("hih");
+            // catches invalid URLs
+            try {
+              setModAndClassArray(convertURLtoArray(enteredURL));
+            } catch (error) {
+              setErrorMessage(error);
+            }
+          }}
+        >
+          Update Timetable
+        </Button>
       </Tooltip>
-    </div>
+      </div> 
   );
 }
 

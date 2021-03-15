@@ -31,7 +31,7 @@ const useStyles = makeStyles({
   root: {
     margin: "2%",
     //width: "25%",
-    display: "inline",
+    display: "inline"
   },
   media: {
     height: 140,
@@ -95,26 +95,19 @@ function GroupManagement(props) {
 
     var tempStudentGroups = [];
 
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
-
     var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
       var data = snapshot.val();
       for (var index in data) {
         var element = data[index];
         if (localStorage.getItem("studentId") != null) {
-          if (element !== undefined && element.members !== undefined) {
-            Object.values(element.members).forEach((studID) => {
-              if (studID == localStorage.getItem("studentId")) {
-                tempStudentGroups.push(element);
-              }
-            });
-          }
+          if(element !== undefined && element.members !== undefined) {
+          Object.values(element.members).forEach((studID) => {
+            if (studID == localStorage.getItem("studentId")) {
+              tempStudentGroups.push(element);
+            }
+          });
+        }
         }
       }
       setStudentGroups(tempStudentGroups);
@@ -124,12 +117,6 @@ function GroupManagement(props) {
   const [groupMemberName, setGroupMemName] = useState([]);
   let getGroupMemberName = () => {
     setGroupMemName([]);
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
     var studentNameRef = database.ref("Students/");
     studentNameRef.once("value").then((snapshot) => {
       setGroupMemName(snapshot);
@@ -165,9 +152,7 @@ function GroupManagement(props) {
   };
 
   let createGroup = (groupName, groupId) => {
-    var noOfGroupMembers = prompt(
-      "Enter the number of members you want to add"
-    );
+    var noOfGroupMembers = prompt("Enter the number of members you want to add");
     if (noOfGroupMembers == null) {
       toast.success("The creation of group has been cancelled.");
       return;
@@ -175,7 +160,7 @@ function GroupManagement(props) {
 
     if (parseInt(noOfGroupMembers) > 0) {
       for (var i = 0; i < noOfGroupMembers; i++) {
-        var memberId = prompt("Enter member ID for member " + (i + 1));
+        var memberId = prompt("Enter member ID for member " + (i+1));
         if (memberId == null) {
           toast.success("The creation of group has been cancelled.");
           return;
@@ -251,11 +236,15 @@ function GroupManagement(props) {
       });
     });
 
-    if (
-      parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))
-    ) {
-      toast.success("You have left group" + groupId + " successfully.");
-    } else {
+    if (parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId")))
+    {
+      toast.success(
+        "You have left group" +
+          groupId +
+          " successfully."
+      );
+    }
+    else {
       toast.success(
         "Member ID: " +
           removeStudentId +
@@ -264,8 +253,9 @@ function GroupManagement(props) {
           " successfully."
       );
     }
-
+    
     setRefreshKey(refreshKey + 1);
+    
   };
 
   const [refreshKey, setRefreshKey] = useState(0);
@@ -314,14 +304,7 @@ function GroupManagement(props) {
             </Button>
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            margin: "auto",
-            marginLeft: "10%",
-          }}
-        >
+        <div style={{ display: "flex", flexWrap: "wrap", margin: "auto", marginLeft: "10%"}}>
           {studentGroups.map((group, i) => (
             <Card className={classes.root}>
               <div className="cardRow">
@@ -372,17 +355,7 @@ function GroupManagement(props) {
                     </div>
                   ))}
                 </CardContent>
-                <div>Join Group URL:</div>
-                <div
-                  onClick={() => {
-                    // implement copy to clipboard
-                    // am considering the library react-copy-to-clipboard
-                  }}
-                >
-                  {console.log(window.location.host)}
-                  http://{window.location.host}/JoinGroup/
-                  {group.groupId}
-                </div>
+
                 <CardActions
                   style={{
                     float: "right",
