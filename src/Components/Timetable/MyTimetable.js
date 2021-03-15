@@ -69,34 +69,14 @@ export default function MyTimetable(props) {
 
   return (
     <div>
-      {/* <input accept="image/*" id="contained-button-file" multiple type="file" />
-      <label htmlFor="contained-button-file">
-        <Button
-          variant="contained"
-          color="default"
-          component="span"
-          startIcon={<CloudUploadIcon />}>
-          Upload
-        </Button>
-      </label>
-      <input accept="image/*" id="icon-button-file" type="file" /> */}
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "spaceBetween",
-          //to add width
+          justifyContent: "space-between",
         }}
       >
-        <div
-          style={{
-            justifyContent: "left",
-            padding: "0px 10px 0px 10px",
-            textAlign: "center",
-            bottom: "475px",
-          }}
-        >
-          <h3 style={{ padding: "5px" }}>
+        <div>
+          <h3 style={{ padding: "0px 0px 0px 105px" }}>
             Colour Legend
             <Tooltip
               title={
@@ -112,7 +92,7 @@ export default function MyTimetable(props) {
               </IconButton>
             </Tooltip>
           </h3>
-          <table style={{ display: "flex" }}>
+          <table style={{ display: "flex", padding: "0px 0px 0px 20px" }}>
             <tr>
               <th style={{ background: "#FDDFDF", color: "#000000" }}>
                 Lecture
@@ -133,30 +113,28 @@ export default function MyTimetable(props) {
           </table>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: "5px",
-              }}
-            >
-              Week Number
-            </div>
-
-            <Pagination
-              count={13}
-              page={week}
-              siblingCount={0}
-              onChange={handleChange}
-              variant="outlined"
-              shape="rounded"
-              boundaryCount={2}
-            />
+        <div style={{ padding: "0px 80px 0px 0px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+          >
+            Week Number
           </div>
+          <Pagination
+            count={13}
+            page={week}
+            siblingCount={0}
+            onChange={handleChange}
+            variant="outlined"
+            shape="rounded"
+            boundaryCount={2}
+          />
         </div>
-        <div>
+
+        <div style={{ display: "flex", padding: "20px 20px 0px 0px" }}>
           <CreatePersonalEvent
             timetableData={timetableData}
             triggerMyTimetableForceRefresh={() => {
@@ -166,9 +144,9 @@ export default function MyTimetable(props) {
         </div>
       </div>
       <br></br>
-
       <Timetable weekNumber={week} timetableData={timetableData} />
       <br></br>
+
       <div style={{ display: "flex", justifyContent: "center" }}>
         <EnterURL
           triggerLayoutForceRefresh={() => {
@@ -179,7 +157,6 @@ export default function MyTimetable(props) {
           }}
         />
       </div>
-
       <br></br>
     </div>
   );
