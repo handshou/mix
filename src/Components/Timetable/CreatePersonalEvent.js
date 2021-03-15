@@ -237,7 +237,7 @@ export default function CreatePersonalEvent(props) {
 
   return (
     <div className="submit-form">
-      <span style={{ position: "absolute", left: "1350px", bottom: "500px" }}>
+      <span>
         <Tooltip
           title={
             <em>
