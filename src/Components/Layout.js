@@ -41,7 +41,7 @@ const useStyles = makeStyles({
     borderTop: "5px solid #ff5138 !important",
     backgroundColor: "#fbfbfb",
   },
-  buttonDesign: {    
+  buttonDesign: {
     boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
     color: "#000",
     // backgroundColor: "#fff",
@@ -52,7 +52,7 @@ const useStyles = makeStyles({
     transition: "all 0.3s ease 0s",
     cursor: "pointer",
     outline: "none",
-    "&:hover":{
+    "&:hover": {
       // backgroundColor: "#2EE59D",
       boxShadow: "0px 10px 15px #ff5138",
       transform: "translateY(-7px)",
@@ -71,11 +71,8 @@ function Layout(props) {
   );
 
   useEffect(() => {
-    console.log("layout is refreshing");
     setStudentId(localStorage.getItem("studentId"));
     setStudentName(localStorage.getItem("studentName"));
-    console.log(studentId);
-    console.log(studentName);
   }, [props.forceRefresh]);
 
   return (
@@ -105,7 +102,7 @@ function Layout(props) {
           </div>
         </Toolbar>
         <div
-          style={{      
+          style={{
             display: "inherit",
             padding: "1%",
             // margin: "auto",
@@ -185,8 +182,6 @@ function Layout(props) {
           </MenuList>
         </div>
       </AppBar>
-
-      
     </Fragment>
   );
 }

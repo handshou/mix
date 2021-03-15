@@ -4,6 +4,7 @@ import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 import { Button } from "@material-ui/core";
 import { toast } from "react-toastify";
+import { getGroupMembersOfGroup } from "../Functions/apiFunctions";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
@@ -93,37 +94,23 @@ function JoinGroup(props) {
     }
   };
 
-  let getGroupMembersOfGroup = async (groupIdToJoin) => {
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
-    var studentGroupRef = database.ref(`Groups/`);
-    await studentGroupRef.once("value").then((snapshot) => {
-      var data = snapshot.val();
-      for (var index in data) {
-        var element = data[index];
-        if (localStorage.getItem("studentId") != null) {
-          if (element !== undefined && element.members !== undefined) {
-            if (element.groupId == groupIdToJoin) {
-              setGroupData(element);
-            }
-          }
-        }
-      }
-    });
-  };
-
-  useEffect(() => {
+  useEffect(async () => {
     let params = url.split("/");
     let groupIdToJoin = params[params.length - 1];
     if (
       localStorage.getItem("studentId") != null &&
       groupIdToJoin !== undefined
     ) {
-      let groupMembers = getGroupMembersOfGroup(groupIdToJoin);
+      var database;
+      if (!firebase.apps.length) {
+      } else {
+        firebase.app();
+        var database = firebase.app().database();
+      }
+      let groupMembers = await getGroupMembersOfGroup(groupIdToJoin, database);
+      console.log("asdasdasd");
+      console.log(groupMembers);
+      setGroupData(groupMembers);
       setGroupIdToJoin(groupIdToJoin);
     }
   }, []);

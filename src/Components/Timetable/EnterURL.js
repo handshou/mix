@@ -66,10 +66,14 @@ export function EnterURL(props) {
 
   useEffect(() => {
     // catches api catastrophic api errors, though it should never be triggered as there promise.allSettled helps handle Errors
-    try {
-      getModuleDetails();
-    } catch (error) {
-      setErrorMessage(error);
+    if (modAndClassArray !== undefined && modAndClassArray.length > 0)
+      try {
+        getModuleDetails();
+      } catch (error) {
+        setErrorMessage(error);
+      }
+    else {
+      setErrorMessage("Invalid URL");
     }
   }, [modAndClassArray]);
 
@@ -216,20 +220,27 @@ export function EnterURL(props) {
       ></UserLogin>
 
       <div>Enter NUSMODs Sharing URL:</div>
-      <div style={{ color: "red" }}>{errorMessage}</div>
-      <OutlinedInput
-        placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
-        style={{ width: 500, marginLeft: 30, marginRight: 30 }}
-        onChange={(e) => {
-          setEnteredURL(e.target.value);
-          setErrorMessage("");
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
-      ></OutlinedInput>
+      >
+        <OutlinedInput
+          placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
+          style={{ width: 500, marginLeft: 30, marginRight: 30 }}
+          onChange={(e) => {
+            setEnteredURL(e.target.value);
+            setErrorMessage("");
+          }}
+        ></OutlinedInput>
+        <div style={{ color: "red" }}>{errorMessage}</div>
+      </div>
       <Button
         style={{ marginRight: 10 }}
         variant="contained"
         onClick={() => {
-          console.log("hih");
           // catches invalid URLs
           try {
             setModAndClassArray(convertURLtoArray(enteredURL));
