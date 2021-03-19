@@ -3,11 +3,11 @@ import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 import UserLogin from "../UserLogin";
 
-import importURL from '../tutorialGIFs/ImportURL.mp4'
-
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpIcon from "@material-ui/icons/Help";
 import IconButton from "@material-ui/core/IconButton";
+
+import VisualTip from "../VisualTip"
 
 import {
   convertURLtoArray,
@@ -242,7 +242,7 @@ export function EnterURL(props) {
       <div style={{ color: "red" }}>{errorMessage && errorMessage.length < 1 ? "" :  errorMessage}</div>
       <OutlinedInput
         placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
-        style={{ width: 500, marginLeft: 30, marginRight: 30 }}
+        style={{ width: 500, marginLeft: 10, marginRight: 30 }}
         onChange={(e) => {
           setEnteredURL(e.target.value);
           setErrorMessage("");
@@ -267,6 +267,7 @@ export function EnterURL(props) {
           Update Timetable
         </Button>
       </Tooltip>
+      <VisualTip></VisualTip>
       </div> 
   );
 }

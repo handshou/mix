@@ -9,6 +9,8 @@ import MyTimetable from "../Components/Timetable/MyTimetable";
 import Layout from "../Components/Layout";
 import JoinGroup from "../Components/JoinGroup";
 
+import TutorialPage from "../Components/TutorialPage"
+
 export default () => {
   const [forceRefresh, setForceRefresh] = useState(0);
   useEffect(() => {
@@ -51,6 +53,7 @@ export default () => {
             }}
           />
         </Route>
+        <Route path="/TutorialPage" exact component={TutorialPage}/>
       </Switch>
     </Router>
   );

@@ -13,6 +13,11 @@ import ScheduleIcon from "@material-ui/icons/Schedule";
 import CreateIcon from "@material-ui/icons/Create";
 import DoneIcon from "@material-ui/icons/Done";
 
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import HelpIcon from "@material-ui/icons/Help";
+import DirectionsIcon from '@material-ui/icons/Directions';
+
 import "./Stylesheet/Layout.css";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -115,6 +120,19 @@ function Layout(props) {
               <div style={{ color: "#ff5138" }}>
                 <div style={{ float: "right", marginTop: "2%" }}>
                   <Typography variant="h5">
+                    <Tooltip
+                      title={
+                        <em>
+                          {
+                            "This is your Student Name. The number is your User ID."
+                          }
+                        </em>
+                      }
+                    >
+                      <IconButton aria-label="delete">
+                        <HelpIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                     Hi,{" "}
                     {localStorage.getItem("studentName") !== null &&
                     studentNameTextbox.val.length !== 0 ? (
@@ -206,7 +224,7 @@ function Layout(props) {
               width: "10%",
               boxShadow: "0 3px 5px 2px rgb(0 0 0 / 15%)",
               height: "100vh",
-              float: "left",
+              // float: "left",
               color: "black",
             }}
             onSelect={({ itemID }) => {
@@ -258,6 +276,28 @@ function Layout(props) {
             >
               <GroupIcon /> &nbsp;&nbsp; Manage Groups
             </MenuItem>
+            &nbsp;&nbsp; 
+            <span style={{ float: "right", display: "inherit" }}>
+              <MenuItem
+                classes={{
+                  root: classes.buttonDesign,
+                  selected: classes.sideNavBarActive,
+                }}
+                style={{ width: "fit-content", marginLeft: "auto" }}
+                component={Link}
+                to="/TutorialPage"
+                itemID="/TutorialPage"
+                selected={location.pathname === "/TutorialPage" ? true : false}
+              >
+                <div
+                  style={{
+                    color: "black",
+                  }}
+                >
+                  <DirectionsIcon/> &nbsp;&nbsp; Learning Guide
+                </div>
+              </MenuItem>
+            </span>
           </MenuList>
         </div>
       </AppBar>
