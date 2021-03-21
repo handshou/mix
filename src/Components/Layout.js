@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     borderRadius: "45px",
   },
   sideNavBarActive: {
-    borderTop: "5px solid #ff5138 !important",
+    borderBottom: "5px solid #ff5138 !important",
     backgroundColor: "#fbfbfb",
   },
   buttonDesign: {
