@@ -1,6 +1,6 @@
-import { React, Fragment, useState, useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
-import Button from "@material-ui/core/Button";
+import { Button, OutlinedInput} from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import firebase from "firebase";
@@ -9,6 +9,7 @@ import { overrideStudentEventsToDB } from "../../Functions/apiFunctions";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 toast.configure();
 
 function getModalStyle() {
@@ -122,8 +123,8 @@ export default function CreatePersonalEvent(props) {
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid #ff5138",
-            boxShadow: "5px 5px #ff5138",
+            outline: "1px solid #ff5138",
+            boxShadow: "0 5px 0 #ff5138",
           }}
         />
         <br></br>
@@ -146,8 +147,8 @@ export default function CreatePersonalEvent(props) {
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid #ff5138",
-            boxShadow: "5px 5px #ff5138",
+            outline: "1px solid #ff5138",
+            boxShadow: "0 5px 0 #ff5138",
           }}
         >
           <option selected hidden>
@@ -182,8 +183,8 @@ export default function CreatePersonalEvent(props) {
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid #ff5138",
-            boxShadow: "5px 5px #ff5138",
+            outline: "1px solid #ff5138",
+            boxShadow: "0 5px 0 #ff5138",
           }}
         />
         <br></br>
@@ -212,8 +213,8 @@ export default function CreatePersonalEvent(props) {
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
-            outline: "3px solid #ff5138",
-            boxShadow: "5px 5px #ff5138",
+            outline: "1px solid #ff5138",
+            boxShadow: "0 5px 0 #ff5138",
           }}
         />
         <br></br>
@@ -221,14 +222,20 @@ export default function CreatePersonalEvent(props) {
         {/* <Button onClick={saveModule} setOpen="false" variant="contained">
           Submit
         </Button> */}
-        <Button variant="contained">
-        {/* <input type="submit" value="SUBMIT" style={{background: "#e7e7e7", padding: "8px", borderRadius: "5px"}}> */}
-        <input type="submit" value="SUBMIT" style={{background: "none"}}>
-        </input>
+        <Button variant="contained" style={{ boxShadow: "0 5px 0 darkgrey" }}>
+          {/* <input type="submit" value="SUBMIT" style={{background: "#e7e7e7", padding: "8px", borderRadius: "5px"}}> */}
+          <input
+            type="submit"
+            value="SUBMIT"
+            style={{ background: "none" }}
+          ></input>
         </Button>
-
         &nbsp;
-        <Button onClick={handleClose} variant="contained">
+        <Button
+          onClick={handleClose}
+          variant="contained"
+          style={{ boxShadow: "0 5px 0 darkgrey" }}
+        >
           Cancel
         </Button>
       </form>
@@ -248,16 +255,13 @@ export default function CreatePersonalEvent(props) {
           <Button
             onClick={handleOpen}
             variant="contained"
-            style={{ boxShadow: "5px 5px 5px 0px grey" }}
+            style={{ boxShadow: "0 5px 0 darkgrey" }}
           >
             Add New Event
           </Button>
         </Tooltip>
       </span>
-      <Modal
-        open={open}
-        onClose={handleClose}
-      >
+      <Modal open={open} onClose={handleClose}>
         {body}
       </Modal>
     </div>

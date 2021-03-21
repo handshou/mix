@@ -169,48 +169,59 @@ function GroupManagement(props) {
         localStorage.setItem("groupId", parseInt(key) + 1);
         setGroupId(parseInt(key) + 1);
       });
-      createGroup(groupName, localStorage.getItem("groupId"));
-    });
-  };
-
-  let createGroup = (groupName, groupId) => {
-    var noOfGroupMembers = prompt("Enter the number of members you want to add");
-    if (noOfGroupMembers == null) {
-      toast.success("The creation of group has been cancelled.");
-      return;
-    }
-
+    //only create group entry without other members
     groupMembers.push(parseInt(studentId)); //to set this will always be key = 0, to prevent error undefined members.0
-    if (parseInt(noOfGroupMembers) > 0) {
-      for (var i = 0; i < noOfGroupMembers; i++) {
-        var memberId = prompt("Enter member ID for member " + (i+1));
-        if (memberId == null) {
-          toast.success("The creation of group has been cancelled.");
-          return;
-        }
-
-        if (parseInt(memberId) == parseInt(studentId)) {
-          toast.error("You are not allowed to add your own Student ID.");
-          return;
-        }
-
-        groupMembers.push(parseInt(memberId));
-      }
-    }
-
-    var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
+      var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
     groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
     groupsRef.child("groupName").set(groupName);
-
-    // groupMembers.push(parseInt(studentId));
     setGroupMembers(groupMembers);
     groupsRef.child("members").set(groupMembers);
-
-    toast.success(
+        toast.success(
       "Group name: " + groupName + " has been created successfully."
     );
     setRefreshKey(refreshKey + 1);
+    });
   };
+
+  //create group entry with other members
+  // let createGroup = (groupName, groupId) => {
+  //   var noOfGroupMembers = prompt("Enter the number of members you want to add");
+  //   if (noOfGroupMembers == null) {
+  //     toast.success("The creation of group has been cancelled.");
+  //     return;
+  //   }
+
+  //   groupMembers.push(parseInt(studentId)); //to set this will always be key = 0, to prevent error undefined members.0
+  //   if (parseInt(noOfGroupMembers) > 0) {
+  //     for (var i = 0; i < noOfGroupMembers; i++) {
+  //       var memberId = prompt("Enter member ID for member " + (i+1));
+  //       if (memberId == null) {
+  //         toast.success("The creation of group has been cancelled.");
+  //         return;
+  //       }
+
+  //       if (parseInt(memberId) == parseInt(studentId)) {
+  //         toast.success("You are not allowed to add your own Student ID.");
+  //         return;
+  //       }
+
+  //       groupMembers.push(parseInt(memberId));
+  //     }
+  //   }
+
+  //   var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
+  //   groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
+  //   groupsRef.child("groupName").set(groupName);
+
+  //   // groupMembers.push(parseInt(studentId));
+  //   setGroupMembers(groupMembers);
+  //   groupsRef.child("members").set(groupMembers);
+
+  //   toast.success(
+  //     "Group name: " + groupName + " has been created successfully."
+  //   );
+  //   setRefreshKey(refreshKey + 1);
+  // };
 
   let addMemberToGroup = (groupId) => {
     for (var i = 0; i < studentGroups.length; i++) {
