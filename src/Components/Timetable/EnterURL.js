@@ -277,7 +277,7 @@ export function EnterURL(props) {
         title={<em>{"Click here to update your personal timetable"}</em>}
       >
         <Button
-          style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          style={{ boxShadow: "0 5px 0 darkgrey" }}
           variant="contained"
           onClick={() => {
             console.log("hih");
