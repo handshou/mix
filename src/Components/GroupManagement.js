@@ -190,7 +190,7 @@ function GroupManagement(props) {
         }
 
         if (parseInt(memberId) == parseInt(studentId)) {
-          toast.success("You are not allowed to add your own Student ID.");
+          toast.error("You are not allowed to add your own Student ID.");
           return;
         }
 
@@ -234,7 +234,7 @@ function GroupManagement(props) {
     }
 
     if (parseInt(memberId) == parseInt(studentId)) {
-      toast.success("You are not allowed to add your own Student ID");
+      toast.error("You are not allowed to add your own Student ID");
       return;
     }
 

@@ -89,8 +89,8 @@ export function UserLogin(props) {
         </p>
         <div>
           Enter Your Name:
-          <OutlinedInput
-            placeholder={"John Doe"}
+          <OutlinedInput required
+            placeholder={"e.g, John Doe"}
             style={{
               width: 300,
               marginLeft: 30,
@@ -310,7 +310,7 @@ export function UserLogin(props) {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
           Welcome to MixTime!
         </Modal.Title>

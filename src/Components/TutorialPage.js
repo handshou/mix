@@ -310,6 +310,13 @@ export function TutorialPage() {
           <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
             Editing Your Group Details
           </p>
+          <p>-</p>
+
+          <br></br>
+          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
+            Leaving Your Group
+          </p>
+          <p>-</p>
         </div>
       </div>
     );
