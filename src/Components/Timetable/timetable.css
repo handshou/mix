@@ -57,3 +57,10 @@ td {
 .nice-table tbody tr:nth-of-type(even) {
   background-color: #ffffff;
 }
+
+.OrangeTooltip {
+  background-color: #ff7043 !important;
+  color: #fff !important;
+  fill: #fff !important;
+}
+

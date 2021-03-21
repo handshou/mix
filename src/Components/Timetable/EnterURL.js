@@ -1,16 +1,20 @@
 import { React, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
+import UserLogin from "../UserLogin";
 
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpIcon from "@material-ui/icons/Help";
 import IconButton from "@material-ui/core/IconButton";
+
+import VisualTip from "../VisualTip"
 
 import {
   convertURLtoArray,
   findCorrectTimeslot,
   convertWeekDayTimeToTimestamp,
 } from "../../Functions/urlFunctions.js";
+
 import {
   getModDetails,
   addStudentEventsToDB,
@@ -34,55 +38,6 @@ export function EnterURL(props) {
     localStorage.getItem("studentName")
   );
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
-
-  let getStudentName = (studentId) => {
-    var studentsRef = database.ref(
-      `Students/${localStorage.getItem("studentId")}/name`
-    );
-    studentsRef.once("value").then((snapshot) => {
-      setStudentName(snapshot.val());
-    });
-  };
-
-  let createStudentId = (studentName) => {
-    console.log("studentName: " + studentName);
-    var query = database.ref("Students/").orderByKey();
-
-    console.log("1: " + query);
-    query.once("value").then(function (snapshot) {
-      snapshot.forEach(function (childSnapshot) {
-        var key = childSnapshot.key;
-        setStudentId(parseInt(key) + 1);
-        localStorage.setItem("studentId", parseInt(key) + 1);
-      });
-      createStudentRecord(studentName);
-    });
-  };
-
-  let createStudentRecord = (studentName) => {
-    var studentsRef = database.ref(`Students/`);
-    studentsRef
-      .child(localStorage.getItem("studentId"))
-      .child("name")
-      .set(studentName);
-    setRefreshKey(refreshKey + 1);
-    localStorage.setItem("studentName", studentName);
-    if (props.triggerLayoutForceRefresh !== undefined) {
-      props.triggerLayoutForceRefresh();
-    }
-  };
-
-  useEffect(() => {
-    setRefreshKey(0);
-    if (localStorage.getItem("studentId") == null) {
-      var studentName = prompt(
-        "Hi! Seems like this is the first time you visited MixTime. \nPlease enter your name and we'll tag it into your timetable."
-      );
-      createStudentId(studentName);
-    } else {
-      getStudentName(localStorage.getItem("studentId"));
-    }
-  }, [refreshKey]);
 
   // handle URL
   const [enteredURL, setEnteredURL] = useState("");
@@ -121,7 +76,7 @@ export function EnterURL(props) {
         setErrorMessage(error);
       }
     else {
-      setErrorMessage("Invalid URL");
+      setErrorMessage("");
     }
   }, [modAndClassArray]);
 
@@ -146,7 +101,12 @@ export function EnterURL(props) {
 
   useEffect(() => {
     if (userEventArray && userEventArray.length > 0)
-      addStudentEventsToDB(studentId, userEventArray, existingEvents, database);
+      addStudentEventsToDB(
+        localStorage.getItem("studentId"),
+        userEventArray,
+        existingEvents,
+        database
+      );
   }, [userEventArray]);
 
   // waits for response and sets
@@ -239,6 +199,14 @@ export function EnterURL(props) {
     setUserEventArray(newEventArray);
   };
 
+  let triggerNameRefresh = () => {};
+
+  if (props.triggerLayoutForceRefresh !== undefined) {
+    triggerNameRefresh = () => {
+      props.triggerLayoutForceRefresh();
+    };
+  }
+
   return (
     <div
       style={{
@@ -248,6 +216,13 @@ export function EnterURL(props) {
         alignItems: "center",
       }}
     >
+      <UserLogin
+        triggerNameRefresh={() => {
+          triggerNameRefresh();
+        }}
+      ></UserLogin>
+
+      
       <div>
         Enter NUSMODs Sharing URL:
         <Tooltip
@@ -264,10 +239,10 @@ export function EnterURL(props) {
           </IconButton>
         </Tooltip>
       </div>
-      <div style={{ color: "red" }}>{errorMessage}</div>
+      <div style={{ color: "red" }}>{errorMessage && errorMessage.length < 1 ? "" :  errorMessage}</div>
       <OutlinedInput
         placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
-        style={{ width: 500, marginLeft: 30, marginRight: 30 }}
+        style={{ width: 500, marginLeft: 10, marginRight: 30 }}
         onChange={(e) => {
           setEnteredURL(e.target.value);
           setErrorMessage("");
@@ -292,7 +267,8 @@ export function EnterURL(props) {
           Update Timetable
         </Button>
       </Tooltip>
-    </div>
+      <VisualTip></VisualTip>
+      </div> 
   );
 }
 
