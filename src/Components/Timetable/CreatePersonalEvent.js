@@ -255,6 +255,7 @@ export default function CreatePersonalEvent(props) {
           <Button
             onClick={handleOpen}
             variant="contained"
+            color="primary"
             style={{ boxShadow: "0 5px 0 darkgrey" }}
           >
             Add New Event

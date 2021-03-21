@@ -26,8 +26,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
-
-
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
   var database = firebaseApp.database();
@@ -169,17 +167,17 @@ function GroupManagement(props) {
         localStorage.setItem("groupId", parseInt(key) + 1);
         setGroupId(parseInt(key) + 1);
       });
-    //only create group entry without other members
-    groupMembers.push(parseInt(studentId)); //to set this will always be key = 0, to prevent error undefined members.0
+      //only create group entry without other members
+      groupMembers.push(parseInt(studentId)); //to set this will always be key = 0, to prevent error undefined members.0
       var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
-    groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
-    groupsRef.child("groupName").set(groupName);
-    setGroupMembers(groupMembers);
-    groupsRef.child("members").set(groupMembers);
-        toast.success(
-      "Group name: " + groupName + " has been created successfully."
-    );
-    setRefreshKey(refreshKey + 1);
+      groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
+      groupsRef.child("groupName").set(groupName);
+      setGroupMembers(groupMembers);
+      groupsRef.child("members").set(groupMembers);
+      toast.success(
+        "Group name: " + groupName + " has been created successfully."
+      );
+      setRefreshKey(refreshKey + 1);
     });
   };
 
@@ -269,7 +267,7 @@ function GroupManagement(props) {
       parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))
     ) {
       var leaveGroupPrompt = window.confirm(
-        `Are you sure you want to leave the group?`
+        `Are you sure you want to leave the group? Leaving a group means all members will stay, but only you are removed.`
       );
       if (leaveGroupPrompt) {
         var removeStudentRef = database.ref(`Groups/${groupId}/members/`);
@@ -318,7 +316,6 @@ function GroupManagement(props) {
       );
     }
     setRefreshKey(refreshKey + 1);
-    
   };
 
   let getGroupMembersInAGroup = (groupId) => {
@@ -667,6 +664,7 @@ function GroupManagement(props) {
                                   width: "fit-content",
                                   float: "right",
                                   display: "inline",
+                                  color: "#DC3545",
                                 }}
                                 onClick={() =>
                                   removeStudentFromGroup(group.groupId, memId)
@@ -734,8 +732,12 @@ function GroupManagement(props) {
                   >
                     <Button
                       variant="contained"
-                      color="primary"
-                      style={{ width: "fit-content" }}
+                      //color="primary"
+                      style={{
+                        width: "fit-content",
+                        backgroundColor: "#DC3545",
+                        color: "white",
+                      }}
                       onClick={() =>
                         removeStudentFromGroup(
                           group.groupId,
