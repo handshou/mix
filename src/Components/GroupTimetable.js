@@ -1,14 +1,15 @@
 import { React, Fragment, useState, useEffect } from "react";
-import {
-  getStudentGroups,
-  getStudentEvents,
-} from "../Functions/apiFunctions.js";
-
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
 import Tabs from "@material-ui/core/Tabs";
 import TabPanel from "@material-ui/lab/TabPanel";
+
+import {
+  getStudentGroups,
+  getStudentEvents,
+} from "../Functions/apiFunctions.js";
+import { Timetable } from "../Components/Timetable";
 
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
@@ -103,7 +104,7 @@ function GroupTimetable(props) {
             indicatorColor="primary"
             textColor="primary"
             onChange={handleChange}
-            aria-label="disabled tabs example"
+            aria-label="Project Group Tabs"
           >
             {studentGroups !== undefined &&
             studentGroups.length !== undefined &&
@@ -129,9 +130,10 @@ function GroupTimetable(props) {
                 return (
                   <TabPanel value={JSON.stringify(index)}>
                     {studentEventsPerGroup[index] !== undefined ? (
-                      studentEventsPerGroup[index].map((event, index2) => {
-                        return <div>{JSON.stringify(event)} </div>;
-                      })
+                      <Timetable
+                        weekNumber={1}
+                        timetableData={studentEventsPerGroup[index]}
+                      />
                     ) : (
                       <div>Lmao no events lul</div>
                     )}

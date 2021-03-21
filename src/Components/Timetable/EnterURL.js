@@ -9,7 +9,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import HelpIcon from "@material-ui/icons/Help";
 import IconButton from "@material-ui/core/IconButton";
 
-import VisualTip from "../VisualTip"
+import VisualTip from "../VisualTip";
 
 import {
   convertURLtoArray,
@@ -37,7 +37,7 @@ if (!firebase.apps.length) {
   var database = firebase.app().database();
 }
 
-export function EnterURL(props) {
+const EnterURL = (props) => {
   // handle new user
   const [refreshKey, setRefreshKey] = useState(0);
   const [studentName, setStudentName] = useState(
@@ -235,6 +235,7 @@ export function EnterURL(props) {
         flexDirection: "row",
         color: "red",
         alignItems: "center",
+        marginTop: "1em",
       }}
     >
       <UserLogin
@@ -313,8 +314,8 @@ export function EnterURL(props) {
         </Button>
       </Tooltip>
       <VisualTip></VisualTip>
-      </div> 
+    </div>
   );
-}
+};
 
 export default EnterURL;

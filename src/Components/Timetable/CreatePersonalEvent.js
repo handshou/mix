@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
-import { Button, OutlinedInput} from "@material-ui/core";
+import { Button, OutlinedInput } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import firebase from "firebase";
