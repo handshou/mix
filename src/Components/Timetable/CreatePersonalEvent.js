@@ -98,7 +98,7 @@ export default function CreatePersonalEvent(props) {
 
   const body = (
     <div style={modalStyle}>
-      <p style={{ fontSize: "25px", color: "#ff5138" }}>Add A New Event</p>
+      <p style={{ fontSize: "25px", color: "#ff5138" }}>Add Event</p>
       <form onSubmit={saveModule}>
         <label
           for="eventName"
@@ -124,10 +124,9 @@ export default function CreatePersonalEvent(props) {
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "0 5px 0 #ff5138",
+            boxShadow: "5px 5px 5px 0px #ff5138",
           }}
         />
-        <br></br>
         <label
           for="eventType"
           style={{
@@ -148,7 +147,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "0 5px 0 #ff5138",
+            boxShadow: "5px 5px 5px 0px #ff5138",
           }}
         >
           <option selected hidden>
@@ -157,7 +156,6 @@ export default function CreatePersonalEvent(props) {
           <option value="Private">Personal Event</option>
           <option value="Others">Others</option>
         </select>
-        <br></br>
         <label
           for="startTime"
           style={{
@@ -184,10 +182,9 @@ export default function CreatePersonalEvent(props) {
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "0 5px 0 #ff5138",
+            boxShadow: "5px 5px 5px 0px #ff5138",
           }}
         />
-        <br></br>
         <label
           for="endTime"
           style={{
@@ -214,16 +211,15 @@ export default function CreatePersonalEvent(props) {
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "0 5px 0 #ff5138",
+            boxShadow: "5px 5px 5px 0px #ff5138",
           }}
         />
         <br></br>
-        <br></br>
-        {/* <Button onClick={saveModule} setOpen="false" variant="contained">
-          Submit
-        </Button> */}
-        <Button variant="contained" style={{ boxShadow: "0 5px 0 darkgrey" }}>
-          {/* <input type="submit" value="SUBMIT" style={{background: "#e7e7e7", padding: "8px", borderRadius: "5px"}}> */}
+        <Button
+          variant="contained"
+          style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          color="primary"
+        >
           <input
             type="submit"
             value="SUBMIT"
@@ -234,7 +230,8 @@ export default function CreatePersonalEvent(props) {
         <Button
           onClick={handleClose}
           variant="contained"
-          style={{ boxShadow: "0 5px 0 darkgrey" }}
+          style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          color="secondary"
         >
           Cancel
         </Button>
@@ -256,9 +253,9 @@ export default function CreatePersonalEvent(props) {
             onClick={handleOpen}
             variant="contained"
             color="primary"
-            style={{ boxShadow: "0 5px 0 darkgrey" }}
+            style={{ boxShadow: "5px 5px 5px 0px grey" }}
           >
-            Add New Event
+            Add Event
           </Button>
         </Tooltip>
       </span>
