@@ -14,6 +14,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import CreateIcon from "@material-ui/icons/Create";
 import DoneIcon from "@material-ui/icons/Done";
+import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from "@material-ui/icons/Add";
 import Box from "@material-ui/core/Box";
 import { shadows } from "@material-ui/system";
@@ -610,8 +611,8 @@ function GroupManagement(props) {
                             }}
                           >
                             <span style={{ color: "black", float: "right" }}>
-                              {/* <abbr title="Save Changes"><DoneIcon /></abbr> */}
-                              <DoneIcon />
+                            {/* <abbr title="Save Changes"><SaveIcon /></abbr> */}
+                              <SaveIcon />
                             </span>
                           </Link>
                         )
@@ -670,7 +671,7 @@ function GroupManagement(props) {
                                   removeStudentFromGroup(group.groupId, memId)
                                 }
                               >
-                                <RemoveCircleOutlineIcon />
+                                <abbr title="Remove member"><RemoveCircleOutlineIcon /></abbr>
                               </Link>
                             </div>
                             <div style={{ clear: "both" }}></div>

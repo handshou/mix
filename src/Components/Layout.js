@@ -12,6 +12,7 @@ import GroupIcon from "@material-ui/icons/Group";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import CreateIcon from "@material-ui/icons/Create";
 import DoneIcon from "@material-ui/icons/Done";
+import SaveIcon from '@material-ui/icons/Save';
 
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -190,8 +191,8 @@ function Layout(props) {
                           }}
                         >
                           <span style={{ color: "black" }}>
-                            {/* <abbr title="Save Changes"><DoneIcon /></abbr> */}
-                            <DoneIcon />
+                            {/* <abbr title="Save Changes"><SaveIcon /></abbr> */}
+                            <SaveIcon />
                           </span>
                         </Link>
                       )
