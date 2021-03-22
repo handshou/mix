@@ -3,11 +3,13 @@ import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 import UserLogin from "../UserLogin";
 
+import importURL from "../tutorialGIFs/ImportURL.mp4";
+
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpIcon from "@material-ui/icons/Help";
 import IconButton from "@material-ui/core/IconButton";
 
-import VisualTip from "../VisualTip"
+import VisualTip from "../VisualTip";
 
 import {
   convertURLtoArray,
@@ -18,9 +20,13 @@ import {
 import {
   getModDetails,
   addStudentEventsToDB,
+  overrideStudentEventsToDB,
 } from "../../Functions/apiFunctions.js";
 import { Button, OutlinedInput } from "@material-ui/core";
 import "./timetable.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 if (!firebase.apps.length) {
   const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -31,7 +37,7 @@ if (!firebase.apps.length) {
   var database = firebase.app().database();
 }
 
-export function EnterURL(props) {
+const EnterURL = (props) => {
   // handle new user
   const [refreshKey, setRefreshKey] = useState(0);
   const [studentName, setStudentName] = useState(
@@ -56,6 +62,7 @@ export function EnterURL(props) {
   const [existingEvents, setExistingEvents] = useState([]);
   // Contains new user event array
   const [userEventArray, setUserEventArray] = useState([]);
+  const [functionSelector, setFunctionSelector] = useState(1);
 
   // hard coded  value until we find a way to properly implement semester recording
   const [currentSemester, setCurrentSemester] = useState(2);
@@ -66,6 +73,9 @@ export function EnterURL(props) {
     // console.log(modAndClassDetails);
     // console.log(userEventArray);
   }, [modAndClassDetails, userEventArray]);
+  useEffect(() => {
+    console.log(functionSelector);
+  }, [functionSelector]);
 
   useEffect(() => {
     // catches api catastrophic api errors, though it should never be triggered as there promise.allSettled helps handle Errors
@@ -100,13 +110,24 @@ export function EnterURL(props) {
   }, [modAndClassDetails]);
 
   useEffect(() => {
-    if (userEventArray && userEventArray.length > 0)
-      addStudentEventsToDB(
-        localStorage.getItem("studentId"),
-        userEventArray,
-        existingEvents,
-        database
-      );
+    if (userEventArray && userEventArray.length > 0) {
+      if (functionSelector === 1) {
+        addStudentEventsToDB(
+          localStorage.getItem("studentId"),
+          userEventArray,
+          existingEvents,
+          database
+        );
+        toast.success("The timetable has been updated.");
+      } else if (functionSelector === 2) {
+        overrideStudentEventsToDB(
+          localStorage.getItem("studentId"),
+          userEventArray,
+          database
+        );
+        toast.success("The timetable has been replaced.");
+      }
+    }
   }, [userEventArray]);
 
   // waits for response and sets
@@ -214,6 +235,7 @@ export function EnterURL(props) {
         flexDirection: "row",
         color: "red",
         alignItems: "center",
+        marginTop: "1em",
       }}
     >
       <UserLogin
@@ -222,7 +244,6 @@ export function EnterURL(props) {
         }}
       ></UserLogin>
 
-      
       <div>
         Enter NUSMODs Sharing URL:
         <Tooltip
@@ -239,7 +260,9 @@ export function EnterURL(props) {
           </IconButton>
         </Tooltip>
       </div>
-      <div style={{ color: "red" }}>{errorMessage && errorMessage.length < 1 ? "" :  errorMessage}</div>
+      <div style={{ color: "red" }}>
+        {errorMessage && errorMessage.length < 1 ? "" : errorMessage}
+      </div>
       <OutlinedInput
         placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
         style={{ width: 500, marginLeft: 10, marginRight: 30 }}
@@ -249,13 +272,16 @@ export function EnterURL(props) {
         }}
       ></OutlinedInput>
       <Tooltip
-        title={<em>{"Click here to update your personal timetable"}</em>}
+        title={
+          <em>{"Click here to add your NUSmods classes personal timetable"}</em>
+        }
       >
         <Button
           style={{ boxShadow: "0 5px 0 darkgrey" }}
           variant="contained"
+          color="primary"
           onClick={() => {
-            console.log("hih");
+            setFunctionSelector(1);
             // catches invalid URLs
             try {
               setModAndClassArray(convertURLtoArray(enteredURL));
@@ -264,12 +290,32 @@ export function EnterURL(props) {
             }
           }}
         >
-          Update Timetable
+          Add Timetable
+        </Button>
+      </Tooltip>
+      <Tooltip
+        title={<em>{"Click here to override your timetable completely"}</em>}
+      >
+        <Button
+          style={{ boxShadow: "5px 5px 5px 0px grey", marginLeft: 30 }}
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setFunctionSelector(2);
+            // catches invalid URLs
+            try {
+              setModAndClassArray(convertURLtoArray(enteredURL));
+            } catch (error) {
+              setErrorMessage(error);
+            }
+          }}
+        >
+          Override Timetable
         </Button>
       </Tooltip>
       <VisualTip></VisualTip>
-      </div> 
+    </div>
   );
-}
+};
 
 export default EnterURL;
