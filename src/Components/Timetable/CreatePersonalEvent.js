@@ -218,6 +218,7 @@ export default function CreatePersonalEvent(props) {
         <Button
           variant="contained"
           style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          color="primary"
         >
           <input
             type="submit"
@@ -230,6 +231,7 @@ export default function CreatePersonalEvent(props) {
           onClick={handleClose}
           variant="contained"
           style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          color="secondary"
         >
           Cancel
         </Button>
