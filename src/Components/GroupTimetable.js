@@ -4,25 +4,44 @@ import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
 import Tabs from "@material-ui/core/Tabs";
 import TabPanel from "@material-ui/lab/TabPanel";
+import { makeStyles } from "@material-ui/core/styles";
+import firebase from "firebase";
+import firebaseConfig from "../Firebase/firebaseConfig";
 
 import {
   getStudentGroups,
   getStudentEvents,
 } from "../Functions/apiFunctions.js";
-import { Timetable } from "../Components/Timetable";
+import { Timetable, WeekSwitcher } from "../Components/Timetable";
 
-import firebase from "firebase";
-import firebaseConfig from "../Firebase/firebaseConfig";
+import { getCurrentWeek } from "../Components/Timetable/utils";
+
+const useStyles = makeStyles({
+  paper: {
+    backgroundColor: "#FFF",
+  },
+});
 
 function GroupTimetable(props) {
+  const [week, setWeek] = useState(getCurrentWeek());
   const [value, setValue] = useState(0);
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
   const [studentGroups, setStudentGroups] = useState();
   const [studentEventsPerGroup, setStudentEventsPerGroup] = useState();
 
+  const handleWeekChange = (event, value) => {
+    // use event as first element, ordering requirement to extract value
+    setWeek(value);
+  };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const anyStudentGroups =
+    studentGroups !== undefined &&
+    studentGroups.length !== undefined &&
+    studentGroups.length > 0;
 
   useEffect(async () => {
     var database;
@@ -40,11 +59,7 @@ function GroupTimetable(props) {
   }, [studentId]);
 
   useEffect(async () => {
-    if (
-      studentGroups !== undefined &&
-      studentGroups.length !== undefined &&
-      studentGroups.length > 0
-    ) {
+    if (anyStudentGroups) {
       var database;
       if (!firebase.apps.length) {
         const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -87,28 +102,32 @@ function GroupTimetable(props) {
     }
   }, [studentGroups]);
 
+  const classes = useStyles();
+
   return (
     <Fragment>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          wigth: "100%",
-          padding: "2%",
-        }}
-      >
-        <Paper square>
+      <Paper className={classes.paper} square>
+        {anyStudentGroups && (
+          <WeekSwitcher handleChange={handleWeekChange} week={week} />
+        )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            wigth: "100%",
+            // padding: "2%",
+          }}
+        >
           <Tabs
             value={value}
             indicatorColor="primary"
             textColor="primary"
             onChange={handleChange}
             aria-label="Project Group Tabs"
+            centered
           >
-            {studentGroups !== undefined &&
-            studentGroups.length !== undefined &&
-            studentGroups.length > 0 ? (
+            {anyStudentGroups ? (
               studentGroups.map((studentGroup, index) => {
                 return (
                   <Tab
@@ -122,16 +141,13 @@ function GroupTimetable(props) {
             )}
           </Tabs>
           <TabContext value={JSON.stringify(value)}>
-            {studentGroups !== undefined &&
-            studentGroups.length !== undefined &&
-            studentGroups.length > 0 &&
-            studentEventsPerGroup ? (
+            {anyStudentGroups && studentEventsPerGroup ? (
               studentGroups.map((studentGroup, index) => {
                 return (
                   <TabPanel value={JSON.stringify(index)}>
                     {studentEventsPerGroup[index] !== undefined ? (
                       <Timetable
-                        weekNumber={1}
+                        weekNumber={week}
                         timetableData={studentEventsPerGroup[index]}
                       />
                     ) : (
@@ -144,8 +160,8 @@ function GroupTimetable(props) {
               <div />
             )}
           </TabContext>
-        </Paper>
-      </div>
+        </div>
+      </Paper>
     </Fragment>
   );
 }

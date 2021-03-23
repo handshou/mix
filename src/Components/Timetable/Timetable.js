@@ -46,7 +46,7 @@ function pickColour(data) {
 }
 
 export default function Timetable(props) {
-  let { weekNumber = 1, timetableData } = props;
+  let { weekNumber = 1, timetableData, children } = props;
   weekNumber = parseInt(weekNumber);
 
   // TimetableTimings
@@ -67,43 +67,50 @@ export default function Timetable(props) {
   });
 
   return (
-    <div
-      style={{
-        display: "grid",
-        overflow: "auto",
-        margin: "1em",
-      }}
-    >
-      <table className="nice-table" aria-label="customized table">
-        <thead>
-          <tr>
-            <th></th>
-            {times.map((time) => (
-              <th align="center" key={time}>
-                {time}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {timetableDays.map((day) => (
-            <tr key={`${day.name}-tr`}>
-              <th key={`${day.name}-th`} className="tdays" style={{textAlign:'center'}}>
-                {day.name}
-              </th>
-              {day.modules.map((cell, i) => (
-                <td
-                  key={`${cell.id}-${i}`}
-                  align="center"
-                  style={{ backgroundColor: pickColour(cell) }}
-                >
-                  {createModules(cell)}
-                </td>
+    <>
+      {children}
+      <div
+        style={{
+          display: "grid",
+          overflow: "auto",
+          margin: "1em",
+        }}
+      >
+        <table className="nice-table" aria-label="customized table">
+          <thead>
+            <tr>
+              <th></th>
+              {times.map((time) => (
+                <th align="center" key={time}>
+                  {time}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {timetableDays.map((day) => (
+              <tr key={`${day.name}-tr`}>
+                <th
+                  key={`${day.name}-th`}
+                  className="tdays"
+                  style={{ textAlign: "center" }}
+                >
+                  {day.name}
+                </th>
+                {day.modules.map((cell, i) => (
+                  <td
+                    key={`${cell.id}-${i}`}
+                    align="center"
+                    style={{ backgroundColor: pickColour(cell) }}
+                  >
+                    {createModules(cell)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
