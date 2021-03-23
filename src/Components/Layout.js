@@ -204,7 +204,7 @@ function Layout(props) {
                   MixTime
                 </Typography>
                 <Typography variant="body1">
-                  <i>We mix your time to get the best mix of time available.</i>
+                  <i>We mix your time to get the best mix of time available</i>
                 </Typography>
               </div>
             </Typography>
@@ -224,7 +224,7 @@ function Layout(props) {
               display: "contents",
               width: "10%",
               boxShadow: "0 3px 5px 2px rgb(0 0 0 / 15%)",
-              height: "100vh",
+              // height: "100vh",
               // float: "left",
               color: "black",
             }}
@@ -277,7 +277,7 @@ function Layout(props) {
             >
               <GroupIcon /> &nbsp;&nbsp; Manage Groups
             </MenuItem>
-            &nbsp;&nbsp; 
+            &nbsp;&nbsp;
             <span style={{ float: "right", display: "inherit" }}>
               <MenuItem
                 classes={{
@@ -295,7 +295,7 @@ function Layout(props) {
                     color: "black",
                   }}
                 >
-                  <DirectionsIcon/> &nbsp;&nbsp; Learning Guide
+                  <DirectionsIcon /> &nbsp;&nbsp; Learning Guide
                 </div>
               </MenuItem>
             </span>

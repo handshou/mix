@@ -1,4 +1,6 @@
 import { React, useState, useEffect } from "react";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 import firebase from "firebase";
 
 import {
@@ -10,6 +12,14 @@ import {
 } from "../../Components/Timetable";
 
 import "../../Components/Timetable/timetable.css";
+
+const useStyles = makeStyles({
+  paper: {
+    marginTop: "-0.5em",
+    backgroundColor: "#FFF",
+    height: "100%",
+  },
+});
 
 export default function MyTimetable(props) {
   const [week, setWeek] = useState(1);
@@ -59,37 +69,39 @@ export default function MyTimetable(props) {
     setWeek(value);
   };
 
+  const classes = useStyles();
+
   return (
-    <>
-      <div className="header">
-        <div id="legend">
-          <Legend />
-        </div>
-        <div id="week-switcher">
-          <WeekSwitcher handleChange={handleWeekChange} week={week} />
-        </div>
-        <div id="action-button">
-          <CreatePersonalEvent
-            timetableData={timetableData}
+    <Paper className={classes.paper} square>
+        {" "}
+        <Timetable weekNumber={week} timetableData={timetableData}>
+          <div className="header">
+            <div id="legend">
+              <Legend />
+            </div>
+            <div id="week-switcher">
+              <WeekSwitcher handleChange={handleWeekChange} week={week} />
+            </div>
+            <div id="action-button">
+              <CreatePersonalEvent
+                timetableData={timetableData}
+                triggerMyTimetableForceRefresh={() => {
+                  triggerMyTimetableForceRefresh();
+                }}
+              />
+            </div>
+          </div>
+        </Timetable>
+        <div id="url-input">
+          <EnterURL
+            triggerLayoutForceRefresh={() => {
+              triggerLayoutForceRefresh();
+            }}
             triggerMyTimetableForceRefresh={() => {
               triggerMyTimetableForceRefresh();
             }}
           />
         </div>
-      </div>
-
-      <Timetable weekNumber={week} timetableData={timetableData} />
-
-      <div id="url-input">
-        <EnterURL
-          triggerLayoutForceRefresh={() => {
-            triggerLayoutForceRefresh();
-          }}
-          triggerMyTimetableForceRefresh={() => {
-            triggerMyTimetableForceRefresh();
-          }}
-        />
-      </div>
-    </>
+    </Paper>
   );
 }

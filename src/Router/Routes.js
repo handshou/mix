@@ -9,7 +9,7 @@ import MyTimetable from "../Pages/MyTimetable";
 import Layout from "../Components/Layout";
 import JoinGroup from "../Components/JoinGroup";
 
-import TutorialPage from "../Components/TutorialPage"
+import TutorialPage from "../Components/TutorialPage";
 
 export default () => {
   const [forceRefresh, setForceRefresh] = useState(0);
@@ -24,37 +24,38 @@ export default () => {
 
   return (
     <Router>
-      <Layout forceRefresh={forceRefresh} />
-
-      <Switch>
-        <Route path="/" exact>
-          <MyTimetable
-            triggerLayoutForceRefresh={() => {
-              triggerLayoutForceRefresh();
-            }}
-          />
-        </Route>
-        <Route path="/GroupManagement" exact>
-          <GroupManagement />
-        </Route>
-        <Route path="/GroupTimetable" exact component={GroupTimetable} />
-        <Route path="/UserProfile" exact component={UserProfile} />
-        <Route path="/Timetable" exact>
-          <MyTimetable
-            triggerLayoutForceRefresh={() => {
-              triggerLayoutForceRefresh();
-            }}
-          />
-        </Route>
-        <Route path="/JoinGroup">
-          <JoinGroup
-            triggerLayoutForceRefresh={() => {
-              triggerLayoutForceRefresh();
-            }}
-          />
-        </Route>
-        <Route path="/TutorialPage" exact component={TutorialPage}/>
-      </Switch>
+      <div style={{ height: "100vh" }}>
+        <Layout forceRefresh={forceRefresh} />
+        <Switch>
+          <Route path="/" exact>
+            <MyTimetable
+              triggerLayoutForceRefresh={() => {
+                triggerLayoutForceRefresh();
+              }}
+            />
+          </Route>
+          <Route path="/GroupManagement" exact>
+            <GroupManagement />
+          </Route>
+          <Route path="/GroupTimetable" exact component={GroupTimetable} />
+          <Route path="/UserProfile" exact component={UserProfile} />
+          <Route path="/Timetable" exact>
+            <MyTimetable
+              triggerLayoutForceRefresh={() => {
+                triggerLayoutForceRefresh();
+              }}
+            />
+          </Route>
+          <Route path="/JoinGroup">
+            <JoinGroup
+              triggerLayoutForceRefresh={() => {
+                triggerLayoutForceRefresh();
+              }}
+            />
+          </Route>
+          <Route path="/TutorialPage" exact component={TutorialPage} />
+        </Switch>
+      </div>
     </Router>
   );
 };

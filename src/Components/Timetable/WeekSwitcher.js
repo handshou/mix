@@ -5,25 +5,25 @@ import Pagination from "@material-ui/lab/Pagination";
 const WeekSwitcher = (props) => {
   const { handleChange, week } = props;
   return (
-    <div style={{ padding: "0px 0px 0px 0px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "5px",
-        }}
-      >
-        Week
-      </div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection:    "column",
+        padding:"0.5em"
+      }}
+    >
+      Week
       <Pagination
-        count={13}
+        count={14}
         page={week}
         siblingCount={0}
         onChange={handleChange}
         variant="outlined"
-        shape="rounded"
+        // shape="rounded"
         boundaryCount={2}
-      />
+      >Week</Pagination>
     </div>
   );
 };
