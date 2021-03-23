@@ -236,6 +236,7 @@ const EnterURL = (props) => {
         color: "red",
         alignItems: "center",
         marginTop: "1em",
+        marginBottom: "1em",
       }}
     >
       <UserLogin

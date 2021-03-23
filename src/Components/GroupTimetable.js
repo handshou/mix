@@ -14,6 +14,8 @@ import {
 } from "../Functions/apiFunctions.js";
 import { Timetable, WeekSwitcher } from "../Components/Timetable";
 
+import { getCurrentWeek } from "../Components/Timetable/utils";
+
 const useStyles = makeStyles({
   paper: {
     backgroundColor: "#FFF",
@@ -21,7 +23,7 @@ const useStyles = makeStyles({
 });
 
 function GroupTimetable(props) {
-  const [week, setWeek] = useState(1);
+  const [week, setWeek] = useState(getCurrentWeek());
   const [value, setValue] = useState(0);
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
   const [studentGroups, setStudentGroups] = useState();

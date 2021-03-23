@@ -11,18 +11,19 @@ import {
   CreatePersonalEvent,
 } from "../../Components/Timetable";
 
+import { getCurrentWeek } from "../../Components/Timetable/utils";
+
 import "../../Components/Timetable/timetable.css";
 
 const useStyles = makeStyles({
   paper: {
     marginTop: "-0.5em",
     backgroundColor: "#FFF",
-    height: "100%",
   },
 });
 
 export default function MyTimetable(props) {
-  const [week, setWeek] = useState(1);
+  const [week, setWeek] = useState(getCurrentWeek());
   const [timetableData, setTimetableData] = useState([]);
 
   let triggerLayoutForceRefresh = () => {};
