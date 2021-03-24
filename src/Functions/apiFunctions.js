@@ -136,11 +136,13 @@ export const getStudentEvents = async (studentId, database) => {
     const result = await studentsRef.once("value").then((snapshot) => {
       return snapshot.val();
     });
+    // guard condition for no student events
+    if (result === null) return;
 
+    // append studentId to each student event
     function addStudentId(studentEvents, studentId) {
       return studentEvents.map((e) => ({ ...e, studentId }));
     }
-
     return addStudentId(result, studentId);
   }
 };
