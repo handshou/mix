@@ -125,7 +125,7 @@ function Layout(props) {
                       title={
                         <em>
                           {
-                            "This is your Student Name. The number is your User ID."
+                            "This is your Student Name. The number #" + localStorage.getItem("studentId") + " is your User ID."
                           }
                         </em>
                       }
