@@ -133,8 +133,14 @@ export const getGroupMembersOfGroup = async (groupId, database) => {
 export const getStudentEvents = async (studentId, database) => {
   if (studentId !== null) {
     var studentsRef = database.ref(`Students/${studentId}/events`);
-    return studentsRef.once("value").then((snapshot) => {
+    const result = await studentsRef.once("value").then((snapshot) => {
       return snapshot.val();
     });
+
+    function addStudentId(studentEvents, studentId) {
+      return studentEvents.map((e) => ({ ...e, studentId }));
+    }
+
+    return addStudentId(result, studentId);
   }
 };

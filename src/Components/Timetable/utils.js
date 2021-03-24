@@ -3,7 +3,7 @@ const baseDate = toDate("Jan 11 2021 0:00 GMT+8").getTime();
 function getCurrentWeek() {
   const today = new Date();
   if (baseDate > today) return 0;
-  return (Math.floor((today - baseDate) / (1000 * 60 * 60 * 24 * 7)));
+  return Math.ceil((today - baseDate) / (1000 * 60 * 60 * 24 * 7));
 }
 
 function getModules(data) {
@@ -11,19 +11,23 @@ function getModules(data) {
     const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
     if (data == null) return [];
 
-    return data.map((d) => ({
-      id: d.startTime,
-      week: Math.floor((d.startTime - baseDate) / weekInMilliSeconds) + 1,
-      title: d.eventName,
-      type: d.eventType,
-      startTime: String(toDate(d.startTime).getHours())
-        .padStart(2, "0")
-        .concat(String(toDate(d.startTime).getMinutes()).padEnd(2, "0")),
-      endTime: String(toDate(d.endTime).getHours())
-        .padStart(2, "0")
-        .concat(String(toDate(d.endTime).getMinutes()).padEnd(2, "0")),
-      day: toDate(d.startTime).toLocaleString("en-us", { weekday: "long" }),
-    }));
+    return data.map((d) => {
+      const {  startTime, endTime, eventName, eventType, studentId = ""  } = d;
+      return {
+        id: `${startTime}-${eventName}-${eventType}-${studentId}`,
+        studentId: studentId,
+        week: Math.floor((startTime - baseDate) / weekInMilliSeconds) + 1,
+        title: eventName,
+        type: eventType,
+        startTime: String(toDate(startTime).getHours())
+          .padStart(2, "0")
+          .concat(String(toDate(startTime).getMinutes()).padEnd(2, "0")),
+        endTime: String(toDate(endTime).getHours())
+          .padStart(2, "0")
+          .concat(String(toDate(endTime).getMinutes()).padEnd(2, "0")),
+        day: toDate(startTime).toLocaleString("en-us", { weekday: "long" }),
+      };
+    });
   } catch (error) {
     throw new Error(error);
   }
@@ -97,4 +101,10 @@ const filterModules = (data, week, day) => {
     .filter((_data) => _data.day.includes(day));
 };
 
-export { getModules, getStartEndTimeByWeek, generateRows, filterModules, getCurrentWeek };
+export {
+  getModules,
+  getStartEndTimeByWeek,
+  generateRows,
+  filterModules,
+  getCurrentWeek,
+};

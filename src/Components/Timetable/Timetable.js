@@ -13,10 +13,10 @@ function createDay(name, modules) {
 }
 
 function createModules(data) {
-  return data.map((module) => {
+  return data.map((module, index) => {
     const { id, title, type } = module;
     return (
-      <div key={id}>
+      <div key={`${id}-${index}`}>
         <div>{title}</div>
         <div>{type}</div>
       </div>
