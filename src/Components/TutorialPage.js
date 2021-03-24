@@ -11,6 +11,7 @@ import GroupIcon from "@material-ui/icons/Group";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import CreateIcon from "@material-ui/icons/Create";
 import DoneIcon from "@material-ui/icons/Done";
+import SaveIcon from '@material-ui/icons/Save';
 
 import urlTutVid from "./tutorialGIFs/FullImportStep.mp4";
 import groupTutVid from "./tutorialGIFs/CreateGroup.mp4";
@@ -268,9 +269,9 @@ export function TutorialPage() {
           </p>
 
           <p>
-            You <b>must</b> crete groups first, then add members in, before
+            You <b>must</b> create groups first, then add members in, before
             being able to see everyone's timetables on the{" "}
-            <b>Group Timetaable</b> Page.
+            <b>Group Timetable</b> Page.
           </p>
           <br></br>
           <p>
@@ -310,13 +311,34 @@ export function TutorialPage() {
           <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
             Editing Your Group Details
           </p>
-          <p>-</p>
+          <p>
+            You can <b>only</b> change your group name on the Manage Groups page.
+          </p>
+          <br></br>
+          <p>
+            To <b>change your group name</b>, follow these steps:
+          </p>
+          <ol>
+            <li>
+              1. Head over to the <b>Manage Groups</b> page.
+            </li>
+            <li>2. Click on the <CreateIcon/> icon.</li>
+            <li>
+              3. Enter your <b>desired Group Name</b>.
+            </li>
+            <li>
+              4. When you are done, click on the <SaveIcon/>. You should see your new group name. Wait for awhile or refresh if you don't see
+              any.
+            </li>
+          </ol>
+          <br></br>
 
           <br></br>
           <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
             Leaving Your Group
           </p>
           <p>-</p>
+
         </div>
       </div>
     );
