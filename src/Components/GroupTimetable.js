@@ -39,9 +39,14 @@ function GroupTimetable(props) {
   };
 
   const anyStudentGroups =
+    studentGroups !== null &&
     studentGroups !== undefined &&
-    studentGroups.length !== undefined &&
     studentGroups.length > 0;
+
+  const exists = (arrayElement) =>
+    arrayElement !== null &&
+    arrayElement !== undefined &&
+    arrayElement.length > 0;
 
   useEffect(async () => {
     var database;
@@ -85,11 +90,7 @@ function GroupTimetable(props) {
         studentEventsPerGroupPerStudent.map((studentEventsArrayPerGroup) => {
           let flattenedEventsArray = [];
           studentEventsArrayPerGroup.forEach((studentEvents) => {
-            if (
-              studentEvents !== null &&
-              studentEvents !== undefined &&
-              studentEvents.length
-            ) {
+            if (exists(studentEvents)) {
               flattenedEventsArray = [
                 ...flattenedEventsArray,
                 ...studentEvents,
@@ -131,6 +132,7 @@ function GroupTimetable(props) {
               studentGroups.map((studentGroup, index) => {
                 return (
                   <Tab
+                    key={studentGroup.groupId}
                     label={studentGroup.groupName}
                     id={studentGroup.groupId}
                   />
@@ -144,14 +146,18 @@ function GroupTimetable(props) {
             {anyStudentGroups && studentEventsPerGroup ? (
               studentGroups.map((studentGroup, index) => {
                 return (
-                  <TabPanel value={JSON.stringify(index)}>
+                  <TabPanel
+                    key={studentGroup.groupId}
+                    value={JSON.stringify(index)}
+                  >
                     {studentEventsPerGroup[index] !== undefined ? (
                       <Timetable
+                        key={studentGroup.groupId}
                         weekNumber={week}
                         timetableData={studentEventsPerGroup[index]}
                       />
                     ) : (
-                      <div>Lmao no events lul</div>
+                      <div>No events found</div>
                     )}
                   </TabPanel>
                 );
