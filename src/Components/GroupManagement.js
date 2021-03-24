@@ -138,10 +138,19 @@ function GroupManagement(props) {
   const [groupMemberName, setGroupMemName] = useState([]);
   let getGroupMemberName = () => {
     setGroupMemName([]);
-    var studentNameRef = database.ref("Students/");
-    studentNameRef.once("value").then((snapshot) => {
-      setGroupMemName(snapshot);
-    });
+    if (!firebase.apps.length) {
+      var studentNameRef = database.ref("Students/");
+      studentNameRef.once("value").then((snapshot) => {
+        setGroupMemName(snapshot);
+      });
+    } else {
+      firebase.app();
+      var database = firebase.app().database();
+      var studentNameRef = database.ref("Students/");
+      studentNameRef.once("value").then((snapshot) => {
+        setGroupMemName(snapshot);
+      });
+    }
   };
 
   let getGMN = (studID) => {
@@ -268,7 +277,7 @@ function GroupManagement(props) {
       parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))
     ) {
       var leaveGroupPrompt = window.confirm(
-        `Are you sure you want to leave the group? Leaving a group means all members will stay, but only you are removed.`
+        `Are you sure you want to leave the group? Leaving a group means all members will stay, but only you are removed.\n\nYou will not be able to view the group related information anymore.`
       );
       if (leaveGroupPrompt) {
         var removeStudentRef = database.ref(`Groups/${groupId}/members/`);
@@ -288,7 +297,7 @@ function GroupManagement(props) {
       var removeStudentPrompt = window.confirm(
         `Are you sure you want to remove ${getGMN(
           removeStudentId
-        )} (#${removeStudentId}) from the group?`
+        )} (#${removeStudentId}) from the group?\n\nThe member will no longer be able to see the group related information.`
       );
       if (removeStudentPrompt) {
         var removeStudentRef = database.ref(`Groups/${groupId}/members/`);
@@ -439,15 +448,7 @@ function GroupManagement(props) {
     //To update in firebase for real logic [now is just update in client side]
   }
 
-  const [sizeOfGroup, setSizeOfGroup] = useState(0);
-  function getGroupSize(groupId) {
-    var membersInGroupRef = database
-      .ref(`Groups/${groupId}/members/`)
-      .on("value", function (snapshot) {
-        setSizeOfGroup(snapshot.numChildren());
-      });
-  }
-  function deleteGroup(groupId) {
+  function deleteGroup(groupId, sizeOfGroup) {
     if (sizeOfGroup > 1) {
       //logged in user himself
       toast.warning(
@@ -492,7 +493,7 @@ function GroupManagement(props) {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              margin: "auto",
+              // margin: "auto",
               width: "100%",
               justifyContent: "space-between",
             }}
@@ -719,8 +720,8 @@ function GroupManagement(props) {
                         minWidth: "30px",
                         backgroundColor: "green",
                       }}
-                      onMouseOver={() => getGroupSize(group.groupId)}
-                      onClick={() => deleteGroup(group.groupId)}
+                      onClick={() => deleteGroup(group.groupId, (group.members).length)}
+                      disabled = {(group.members).length > 1 ? true : false}
                     >
                       <DeleteIcon />
                     </Button>
