@@ -5,44 +5,12 @@ import {
   generateRows,
   filterModules,
 } from "./utils.js";
+import { TimetableModules } from "./TimetableModules";
 
 import "./timetable.css";
 
 function createDay(name, modules) {
   return { name, modules };
-}
-
-function createModules(data) {
-  return data.map((module, index) => {
-    const { id, title, type } = module;
-    return (
-      <div key={`${id}-${index}`}>
-        <div>{title}</div>
-        <div>{type}</div>
-      </div>
-    );
-  });
-}
-
-function pickColour(data) {
-  // let colors = ["#00d5ff", "#008cff", "#00ffe5", "#00fbff"];
-  // let random_color = colors[Math.floor(Math.random() * colors.length)];
-  let colors = ["#FDDFDF", "#F0DEFD", "#DEFDE0", "#DEF3FD", "#FCF7DE"];
-  let setColor = "#FFFFFF";
-
-  data.forEach((module) => {
-    const { type } = module;
-    if (type.includes("Lecture")) {
-      setColor = colors[0];
-    } else if (type.includes("Tutorial")) {
-      setColor = colors[1];
-    } else if (type == "Private") {
-      setColor = colors[2];
-    } else {
-      setColor = colors[3];
-    }
-  });
-  return setColor;
 }
 
 export default function Timetable(props) {
@@ -101,9 +69,8 @@ export default function Timetable(props) {
                   <td
                     key={`${cell.id}-${i}`}
                     align="center"
-                    style={{ backgroundColor: pickColour(cell) }}
                   >
-                    {createModules(cell)}
+                    <TimetableModules data={cell} />
                   </td>
                 ))}
               </tr>

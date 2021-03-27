@@ -50,14 +50,14 @@ td {
   background-color: #f9e1e0;
 }
 
-.nice-table tbody tr:nth-of-type(odd) {
-  /* background-color: #d9effc; */
+/* .nice-table tbody tr:nth-of-type(odd) {
+  background-color: #d9effc;
   background-color: #f8f8f8;
 }
 
 .nice-table tbody tr:nth-of-type(even) {
   background-color: #ffffff;
-}
+} */
 
 .OrangeTooltip {
   background-color: #ff7043 !important;

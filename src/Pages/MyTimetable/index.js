@@ -33,6 +33,10 @@ export default function MyTimetable(props) {
     };
   }
 
+  function addStudentId(studentEvents, studentId) {
+    return studentEvents.map((e) => ({ ...e, studentId }));
+  }
+
   let loadTimetable = () => {
     // ensure database is initialised first
     if (!firebase.apps.length) {
@@ -50,7 +54,7 @@ export default function MyTimetable(props) {
       if (studentId !== null) {
         var studentsRef = database.ref(`Students/${studentId}/events`);
         studentsRef.once("value").then((snapshot) => {
-          setTimetableData(snapshot.val());
+          setTimetableData(addStudentId(snapshot.val(),studentId));
         });
       }
     }
