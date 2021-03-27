@@ -268,7 +268,7 @@ function Layout(props) {
               component={Link}
               to="/GroupManagement"
               itemID="/GroupManagement"
-              selected={location.pathname === "/GroupManagement" ? true : false}
+              selected={location.pathname === "/GroupManagement" || location.pathname === "/ViewArchivedGroups" ? true : false}
               classes={{
                 root: classes.buttonDesign,
                 selected: classes.sideNavBarActive,

@@ -14,12 +14,9 @@ import PersonIcon from "@material-ui/icons/Person";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import CreateIcon from "@material-ui/icons/Create";
 import SaveIcon from "@material-ui/icons/Save";
-import AddIcon from "@material-ui/icons/Add";
-import Box from "@material-ui/core/Box";
-import { shadows } from "@material-ui/system";
 import UndoIcon from "@material-ui/icons/Undo";
 import DeleteIcon from "@material-ui/icons/Delete";
-import ArchiveIcon from "@material-ui/icons/Archive";
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
@@ -30,7 +27,7 @@ import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ExpandLess } from "@material-ui/icons";
+import { Unarchive } from "@material-ui/icons";
 toast.configure();
 
 if (!firebase.apps.length) {
@@ -43,6 +40,7 @@ if (!firebase.apps.length) {
 const useStyles = makeStyles({
   root: {
     margin: "2%",
+    //width: "25%",
     display: "inline",
   },
   media: {
@@ -60,7 +58,7 @@ const useStyles = makeStyles({
   },
 });
 
-function GroupManagement(props) {
+function ViewArchivedGroups(props) {
   const classes = useStyles();
   // ========================================================== STUDENTS ==========================================================
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
@@ -196,6 +194,46 @@ function GroupManagement(props) {
     });
   };
 
+  //create group entry with other members
+  // let createGroup = (groupName, groupId) => {
+  //   var noOfGroupMembers = prompt("Enter the number of members you want to add");
+  //   if (noOfGroupMembers == null) {
+  //     toast.success("The creation of group has been cancelled.");
+  //     return;
+  //   }
+
+  //   groupMembers.push(parseInt(studentId)); //to set this will always be key = 0, to prevent error undefined members.0
+  //   if (parseInt(noOfGroupMembers) > 0) {
+  //     for (var i = 0; i < noOfGroupMembers; i++) {
+  //       var memberId = prompt("Enter member ID for member " + (i+1));
+  //       if (memberId == null) {
+  //         toast.success("The creation of group has been cancelled.");
+  //         return;
+  //       }
+
+  //       if (parseInt(memberId) == parseInt(studentId)) {
+  //         toast.success("You are not allowed to add your own Student ID.");
+  //         return;
+  //       }
+
+  //       groupMembers.push(parseInt(memberId));
+  //     }
+  //   }
+
+  //   var groupsRef = database.ref(`Groups/${localStorage.getItem("groupId")}`);
+  //   groupsRef.child("groupId").set(parseInt(localStorage.getItem("groupId")));
+  //   groupsRef.child("groupName").set(groupName);
+
+  //   // groupMembers.push(parseInt(studentId));
+  //   setGroupMembers(groupMembers);
+  //   groupsRef.child("members").set(groupMembers);
+
+  //   toast.success(
+  //     "Group name: " + groupName + " has been created successfully."
+  //   );
+  //   setRefreshKey(refreshKey + 1);
+  // };
+
   let addMemberToGroup = (groupId) => {
     for (var i = 0; i < studentGroups.length; i++) {
       if (studentGroups[i].groupId === groupId) {
@@ -258,6 +296,7 @@ function GroupManagement(props) {
       }
     } else {
       //Remove student
+
       var removeStudentPrompt = window.confirm(
         `Are you sure you want to remove ${getGMN(
           removeStudentId
@@ -322,6 +361,8 @@ function GroupManagement(props) {
       getStudentGroups();
       getGroupMemberName();
       getGroupMembersInAGroup();
+
+      // getArchivedGroups();
     }
   }, [refreshKey]);
 
@@ -444,7 +485,10 @@ function GroupManagement(props) {
     getArchivedGroupsFromDB();
   }, []);
 
+  function getArchivedGroups() {}
+
   function getArchivedGroupsFromDB() {
+    // if (!firebase.apps.length) {
     var database = firebase.app().database();
     var studentsRef = database.ref(
       `Students/${localStorage.getItem("studentId")}/archivedGroups`
@@ -452,6 +496,18 @@ function GroupManagement(props) {
     studentsRef.once("value").then((snapshot) => {
       setArchivedGroups(snapshot.val());
     });
+    // } else {
+    //   firebase.app();
+    //   var database = firebase.app().database();
+    //   var database = firebase.app().database();
+    //   var studentsRef = database.ref(
+    //     `Students/${localStorage.getItem("studentId")}/archivedGroups`
+    //   );
+    //   studentsRef.once("value").then((snapshot) => {
+    //     setArchivedGroups(snapshot.val());
+    //   });
+    // }
+
     if (archivedGroups.length !== 0) {
       for (var i = 0; i < studentGroups.length; i++) {
         for (var j = 0; j < archivedGroups.length; j++) {
@@ -471,6 +527,11 @@ function GroupManagement(props) {
     }
 
     setActiveStudentGroups(Array.from(activeStudentGroupsDistinct));
+    console.log(
+      "getArchivedGroups() active student grps: " +
+        Array.from(activeStudentGroupsDistinct)
+    );
+    console.log("getArchivedGroups() archivedGroups: " + archivedGroups);
   }
 
   function archiveGroup(groupId) {
@@ -486,11 +547,29 @@ function GroupManagement(props) {
     } else {
       firebase.app();
       var database = firebase.app().database();
-      var studentsRef = database.ref(`Students/`);
-      studentsRef
-        .child(localStorage.getItem("studentId"))
-        .child("archivedGroups")
-        .set(archivedGroups);
+    }
+
+    // console.log("temp archivedGroups!!!" + JSON.stringify(archivedGroups))
+    // console.log("temp studentGroups!!!" + JSON.stringify(studentGroups))
+    // for(var i = 0; i < studentGroups.length; i++){
+    //   for (var j = 0; j < archivedGroups.length; j++){
+    //       if (studentGroups[i].groupId !== archivedGroups[i])
+    //       {
+    //         activeStudentGroups.push(studentGroups[i].groupId);
+    //       }
+    //   }
+    // }
+    // setActiveStudentGroups(activeStudentGroups);
+
+    for (var i = 0; i < studentGroups.length; i++) {
+      for (var j = 0; j < archivedGroups.length; j++) {
+        if (studentGroups[i].groupId !== archivedGroups[i]) {
+          if (!studentGroups.includes(archivedGroups[i])) {
+            activeStudentGroups.push(studentGroups[i].groupId);
+            activeStudentGroupsDistinct.add(studentGroups[i].groupId);
+          }
+        }
+      }
     }
     setActiveStudentGroups(Array.from(activeStudentGroupsDistinct));
     setRefreshKey(refreshKey + 1);
@@ -499,7 +578,7 @@ function GroupManagement(props) {
   const history = useHistory();
 
   const routeChange = () => {
-    let path = `ViewArchivedGroups`;
+    let path = `GroupManagement`;
     history.push(path);
   };
 
@@ -522,7 +601,7 @@ function GroupManagement(props) {
             </div>
             <div style={{ clear: "both" }}></div>
             <div style={{ float: "right" }}>
-              <Tooltip title={<em>{"Click here to view archived groups"}</em>}>
+              <Tooltip title={<em>{"Click here to view active groups"}</em>}>
                 <Button
                   style={{
                     boxShadow: "5px 5px 5px 0px grey",
@@ -532,8 +611,8 @@ function GroupManagement(props) {
                   color="primary"
                   onClick={routeChange}
                 >
-                  <ArchiveIcon/> &nbsp;
-                  View Archived Groups
+                  <UnarchiveIcon/> &nbsp;
+                  View Active Groups
                 </Button>
               </Tooltip>
               &nbsp; &nbsp;
@@ -551,8 +630,8 @@ function GroupManagement(props) {
                   color="primary"
                   onClick={() => toggleShow(!show)}
                 >
-                  {show ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-                  {show ? "Minimize All Groups" : "Expand All Groups"}
+                {show ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                {show ? "Minimize All Groups" : "Expand All Groups"}
                 </Button>
               </Tooltip>
             </div>
@@ -563,58 +642,25 @@ function GroupManagement(props) {
               display: "flex",
               flexWrap: "wrap",
               margin: "3% 2% 0% 15%",
+              // justifyContent: "space-between",
             }}
           >
-            <Box
-              boxShadow={6}
-              style={{
-                margin: "0% 3%",
-                minHeight: "220px",
-                width: "24%",
-                maxHeight: "220px",
-              }}
-              className={classes.boxDesign}
-            >
-              <Card className={classes.root}>
-                <div className="cardRow">
-                  <CardContent className={classes.cardColumn}>
-                    <div
-                      style={{
-                        margin: "auto",
-                        textAlign: "center",
-                        fontSize: "x-large",
-                        // minHeight: "170px",
-                      }}
-                    >
-                      <Link
-                        style={{ width: "fit-content" }}
-                        onClick={createGroupId}
-                      >
-                        <AddIcon style={{ width: "200px", height: "100px" }} />
-                        <br></br>
-                        <h3 style={{ fontWeight: "bold" }}>Create New Group</h3>
-                      </Link>
-                    </div>
-                  </CardContent>
-                  <CardActions></CardActions>
-                </div>
-              </Card>
-            </Box>
-
             {studentGroups.map((group, i) => (
               <div>
-                {!archivedGroups.includes(group.groupId) ? (
+                {archivedGroups.includes(group.groupId) ? (
                   <Card
                     className={classes.root}
                     style={{
-                      // width: "20%",
                       display: "table",
-                      // minWidth: "25%",
-                      margin: "0% 10% 10%"
+                      //   margin: "0% 10% 10%",
+                      //   width: "100%"
+                      //   width: "100%",
+
+                      margin: "0% 10% 10%",
                     }}
                   >
                     <div>
-                      <Tooltip
+                      {/* <Tooltip
                         title={<em>{"Click here to archive the group"}</em>}
                       >
                         <Link
@@ -625,7 +671,7 @@ function GroupManagement(props) {
                         >
                           <ArchiveIcon />
                         </Link>
-                      </Tooltip>
+                      </Tooltip> */}
                       <div style={{ clear: "both" }} />
                       <div className="cardRow">
                         <CardContent className={classes.cardColumn}>
@@ -637,7 +683,6 @@ function GroupManagement(props) {
                               backgroundColor: "#80808026",
                               padding: "2%",
                               overflow: "auto",
-                              minWidth: "250px !important"
                             }}
                           >
                             #{groupNameTextboxArr[i].groupId} -{" "}
@@ -673,6 +718,7 @@ function GroupManagement(props) {
                                 <span
                                   style={{ color: "black", float: "right" }}
                                 >
+                                  {/* <abbr title="Edit Student Name"><CreateIcon/></abbr> */}
                                   <CreateIcon />
                                 </span>
                               </Link>
@@ -685,11 +731,12 @@ function GroupManagement(props) {
                                 <span
                                   style={{ color: "black", float: "right" }}
                                 >
+                                  {/* <abbr title="Save Changes"><SaveIcon /></abbr> */}
                                   <SaveIcon />
                                 </span>
                               </Link>
                             )}
-                            {/* Undo group name */}
+                            {/* For Iteration 2 - Undo group name */}
                             {groupNameTextboxArr[i].allowUndo === true &&
                             localStorage.getItem("originalGroupName") !==
                               groupNameTextboxArr[i].val ? (
@@ -778,7 +825,8 @@ function GroupManagement(props) {
                                   style={{
                                     float: "left",
                                     // display: "inline",
-                                    minWidth: "20px",
+                                    // minWidth: "30px",
+                                    width: "20px",
                                     backgroundColor: "green",
                                   }}
                                   onClick={() =>
@@ -796,14 +844,17 @@ function GroupManagement(props) {
                               </CardActions>
 
                               <CardActions
-                                style={{
-                                  float: "right",
-                                }}
+                                style={
+                                  {
+                                    //   float: "right",
+                                  }
+                                }
                               >
                                 <Button
                                   variant="contained"
+                                  //color="primary"
                                   style={{
-                                    // width: "fit-content",
+                                    // width: "100px",
                                     backgroundColor: "#DC3545",
                                     color: "white",
                                   }}
@@ -822,7 +873,7 @@ function GroupManagement(props) {
                                   color="primary"
                                   style={
                                     {
-                                      // width: "fit-content"
+                                      // width: "100px",
                                     }
                                   }
                                   onClick={() =>
@@ -853,4 +904,4 @@ function GroupManagement(props) {
   );
 }
 
-export default GroupManagement;
+export default ViewArchivedGroups;
