@@ -2,6 +2,9 @@ import { React, useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
 import { Button, OutlinedInput } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import HelpIcon from "@material-ui/icons/Help";
+import ClearIcon from "@material-ui/icons/Clear";
 
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
@@ -98,7 +101,30 @@ export default function CreatePersonalEvent(props) {
 
   const body = (
     <div style={modalStyle}>
-      <p style={{ fontSize: "25px", color: "#ff5138" }}>Add Event</p>
+      <p style={{ fontSize: "25px", color: "#ff5138" }}>
+        Add a 30 Minute event
+        <Tooltip
+          title={
+            <em style={{ fontSize: "12px" }}>
+              {
+                "Add a event to your personal timetable, you may choose either a 'Private' event status for your personal commitment or 'Others' event status for general event."
+              }
+            </em>
+          }
+        >
+          <IconButton aria-label="delete">
+            <HelpIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Button
+          onClick={handleClose}
+          variant="contained"
+          style={{ float: "right", borderRadius: "15px" }}
+          color="secondary"
+        >
+          <ClearIcon fontSize="small" />
+        </Button>
+      </p>
       <form onSubmit={saveModule}>
         <label
           for="eventName"
@@ -108,7 +134,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          Title:{" "}
+          Title: *{" "}
         </label>
         <input
           type="text"
@@ -118,13 +144,13 @@ export default function CreatePersonalEvent(props) {
           value={module.eventName}
           onChange={handleInputChange}
           name="eventName"
-          placeholder="IS4261 6UGs Submission"
+          placeholder="Example: IS4261 6UGs Submission..."
           style={{
             width: "100%",
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "5px 5px 5px 0px #ff5138",
+            boxShadow: "3px 3px 3px 0px #ff5138",
           }}
         />
         <label
@@ -135,7 +161,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          Event Type:{" "}
+          Event Status: *{" "}
         </label>
         <select
           name="eventType"
@@ -147,13 +173,13 @@ export default function CreatePersonalEvent(props) {
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "5px 5px 5px 0px #ff5138",
+            boxShadow: "3px 3px 3px 0px #ff5138",
           }}
         >
           <option selected hidden>
-            Choose Here!
+            Choose your event status
           </option>
-          <option value="Private">Personal Event</option>
+          <option value="Private">Private</option>
           <option value="Others">Others</option>
         </select>
         <label
@@ -164,7 +190,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          Start Date and Time:{" "}
+          Start Date and Time: *{" "}
         </label>
         <input
           type="datetime-local"
@@ -182,7 +208,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "5px 5px 5px 0px #ff5138",
+            boxShadow: "3px 3px 3px 0px #ff5138",
           }}
         />
         <label
@@ -193,7 +219,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          End Date and Time:{" "}
+          End Date and Time: *{" "}
         </label>
         <input
           type="datetime-local"
@@ -211,21 +237,29 @@ export default function CreatePersonalEvent(props) {
             padding: "0.7em",
             marginBottom: "0.5rem",
             outline: "1px solid #ff5138",
-            boxShadow: "5px 5px 5px 0px #ff5138",
+            boxShadow: "3px 3px 3px 0px #ff5138",
           }}
         />
         <br></br>
-        <Button
-          variant="contained"
-          style={{ boxShadow: "5px 5px 5px 0px grey" }}
-          color="primary"
+        <Tooltip
+          title={
+            <em style={{ fontSize: "12px" }}>
+              {"Click here to submit the form"}
+            </em>
+          }
         >
-          <input
-            type="submit"
-            value="SUBMIT"
-            style={{ background: "none" }}
-          ></input>
-        </Button>
+          <Button
+            variant="contained"
+            style={{ boxShadow: "5px 5px 5px 0px grey" }}
+            color="primary"
+          >
+            <input
+              type="submit"
+              value="SUBMIT"
+              style={{ background: "none" }}
+            ></input>
+          </Button>
+        </Tooltip>
         &nbsp;
         <Button
           onClick={handleClose}
@@ -244,7 +278,7 @@ export default function CreatePersonalEvent(props) {
       <span>
         <Tooltip
           title={
-            <em>
+            <em style={{ fontSize: "12px" }}>
               {"Click here to add a new event to your personal timetable"}
             </em>
           }

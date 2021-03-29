@@ -284,11 +284,19 @@ const EnterURL = (props) => {
         Enter NUSMODs Sharing URL:
         <Tooltip
           title={
-            <em>
+            <p>
+            <em style={{ fontSize: "12px" }}>
               {
                 "What is this? Using the shared link on NUSMods, you can import in your modules into MixTime"
               }
             </em>
+            <h1></h1>
+            <em style={{ fontSize: "12px" }}>
+              {
+                "For tutorial guidance, there will be a video beside the 'OVERRIDE TIMETABLE' button"
+              }
+            </em>
+            </p>
           }
         >
           <IconButton aria-label="delete">
@@ -335,7 +343,9 @@ const EnterURL = (props) => {
 
       <Tooltip
         title={
-          <em>{"Click here to add your NUSmods classes personal timetable"}</em>
+          <em style={{ fontSize: "12px" }}>
+            {"Click here to add your NUSmods classes personal timetable"}
+          </em>
         }
       >
         <Button
@@ -357,7 +367,11 @@ const EnterURL = (props) => {
       </Tooltip>
       {/* 
       <Tooltip
-        title={<em>{"Click here to override your timetable completely"}</em>}
+        title={
+          <em style={{ fontSize: "12px" }}>
+            {"Click here to override your timetable completely"}
+          </em>
+        }
       >
         <Button
           style={{ boxShadow: "5px 5px 5px 0px grey", marginLeft: 30 }}

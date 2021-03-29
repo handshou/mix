@@ -29,7 +29,7 @@ th {
 }
 
 td {
-  padding: 8px;
+  /* padding: 8px; */
   text-align: left;
   border-bottom: 1px solid #ddd;
   min-width: 50px;
@@ -47,7 +47,7 @@ td {
 }
 
 .nice-table tbody td:hover {
-  background-color: #f9e1e0;
+  background-color: grey;
 }
 
 /* .nice-table tbody tr:nth-of-type(odd) {

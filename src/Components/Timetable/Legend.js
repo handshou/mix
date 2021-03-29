@@ -13,7 +13,7 @@ const Legend = () => {
         Colour Legend
         <Tooltip
           title={
-            <em>
+            <em style={{fontSize: "12px"}}>
               {
                 "What is this? Each timeblock in your personal timetable will have their respective colour representation depending on the type of event."
               }
