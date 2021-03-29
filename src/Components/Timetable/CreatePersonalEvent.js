@@ -190,7 +190,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          Start Date and Time: *{" "}
+          Start Date and Time (30 Minutes Interval): *{" "}
         </label>
         <input
           type="datetime-local"
@@ -219,7 +219,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          End Date and Time: *{" "}
+          End Date and Time (30 Minutes Interval): *{" "}
         </label>
         <input
           type="datetime-local"
@@ -230,7 +230,7 @@ export default function CreatePersonalEvent(props) {
           value={module.endTime}
           onChange={handleInputChange}
           name="endTime"
-          min="2021-01-10T00:00"
+          min={module.startTime}
           max="2021-12-31T00:00"
           style={{
             width: "100%",
