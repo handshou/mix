@@ -177,7 +177,7 @@ export default function CreatePersonalEvent(props) {
           }}
         >
           <option selected hidden>
-            Choose your event status
+            Select your event status
           </option>
           <option value="Private">Private</option>
           <option value="Others">Others</option>
