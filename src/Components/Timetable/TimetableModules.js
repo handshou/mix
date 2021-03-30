@@ -1,6 +1,10 @@
 import { React, useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
 import { Button } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import HelpIcon from "@material-ui/icons/Help";
+import ClearIcon from "@material-ui/icons/Clear";
 
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
@@ -96,20 +100,40 @@ const TimetableModules = (props) => {
 
   // create a new component for modules
   const modules = data.map((module, index) => {
-    const { studentId = 0, id, title, type, startTime } = module;
+    const { studentId = 0, id, title, type, startTime, endTime } = module;
 
     const body = (
       <div style={modalStyle}>
-        <p style={{ fontSize: "25px", color: "#ff5138" }}>Event ID: {id}</p>
         <p style={{ fontSize: "25px", color: "#ff5138" }}>
-          Event Title: {title}
+          View Event Details
+          <Tooltip
+            title={
+              <em style={{ fontSize: "12px" }}>
+                {
+                  "Through this page, you are able to view the details of your event."
+                }
+              </em>
+            }
+          >
+            <IconButton aria-label="delete">
+              <HelpIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Button
+            onClick={handleClose}
+            variant="contained"
+            style={{ float: "right", borderRadius: "15px" }}
+            color="secondary"
+          >
+            <ClearIcon fontSize="small" />
+          </Button>
         </p>
-        <p style={{ fontSize: "25px", color: "#ff5138" }}>
-          Event Status: {type}
-        </p>
-        <p style={{ fontSize: "25px", color: "#ff5138" }}>
-          Start Time: {startTime}
-        </p>
+        {/* <p>Event ID: {id}</p> */}
+        <p>Event Title: {title}</p>
+        <p>Event Status: {type}</p>
+        <p>Start Time: {startTime}</p>
+        <p>End Time: {endTime}</p>
+        <br></br>
         <Button
           onClick={() => deleteEvent(id, title, type, fullData)}
           variant="contained"
@@ -130,16 +154,11 @@ const TimetableModules = (props) => {
       </div>
     );
 
-    // function handleClick() {
-    //   console.log("studentId", studentId);
-    //   console.log("title", title);
-    // }
-
     return (
       <div key={`${id}-${index}`} style={{ backgroundColor: pickColour(type) }}>
         <button onClick={handleOpen}>
-        <div>{title}</div>
-        <div>{type}</div>
+          <div>{title}</div>
+          <div>{type}</div>
         </button>
         <div>
           <Modal open={open} onClose={handleClose}>
