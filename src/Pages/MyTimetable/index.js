@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function MyTimetable(props) {
+export function MyTimetable(props) {
   const [week, setWeek] = useState(getCurrentWeek());
   const [timetableData, setTimetableData] = useState([]);
 
@@ -54,7 +54,7 @@ export default function MyTimetable(props) {
       if (studentId !== null) {
         var studentsRef = database.ref(`Students/${studentId}/events`);
         studentsRef.once("value").then((snapshot) => {
-          setTimetableData(addStudentId(snapshot.val(),studentId));
+          setTimetableData(addStudentId(snapshot.val(), studentId));
         });
       }
     }
@@ -78,35 +78,41 @@ export default function MyTimetable(props) {
 
   return (
     <Paper className={classes.paper} square>
-        {" "}
-        <Timetable weekNumber={week} timetableData={timetableData}>
-          <div className="header">
-            <div id="legend">
-              <Legend />
-            </div>
-            <div id="week-switcher">
-              <WeekSwitcher handleChange={handleWeekChange} week={week} />
-            </div>
-            <div id="action-button">
-              <CreatePersonalEvent
-                timetableData={timetableData}
-                triggerMyTimetableForceRefresh={() => {
-                  triggerMyTimetableForceRefresh();
-                }}
-              />
-            </div>
+      {" "}
+      <Timetable
+        weekNumber={week}
+        timetableData={timetableData}
+        triggerMyTimetableForceRefresh={() => {
+          triggerMyTimetableForceRefresh();
+        }}
+      >
+        <div className="header">
+          <div id="legend">
+            <Legend />
           </div>
-        </Timetable>
-        <div id="url-input">
-          <EnterURL
-            triggerLayoutForceRefresh={() => {
-              triggerLayoutForceRefresh();
-            }}
-            triggerMyTimetableForceRefresh={() => {
-              triggerMyTimetableForceRefresh();
-            }}
-          />
+          <div id="week-switcher">
+            <WeekSwitcher handleChange={handleWeekChange} week={week} />
+          </div>
+          <div id="action-button">
+            <CreatePersonalEvent
+              timetableData={timetableData}
+              triggerMyTimetableForceRefresh={() => {
+                triggerMyTimetableForceRefresh();
+              }}
+            />
+          </div>
         </div>
+      </Timetable>
+      <div id="url-input">
+        <EnterURL
+          triggerLayoutForceRefresh={() => {
+            triggerLayoutForceRefresh();
+          }}
+          triggerMyTimetableForceRefresh={() => {
+            triggerMyTimetableForceRefresh();
+          }}
+        />
+      </div>
     </Paper>
   );
 }

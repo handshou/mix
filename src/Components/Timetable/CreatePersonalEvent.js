@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
-import { Button, OutlinedInput } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import HelpIcon from "@material-ui/icons/Help";
@@ -35,7 +35,6 @@ export default function CreatePersonalEvent(props) {
   }
 
   const [modalStyle] = useState(getModalStyle);
-  const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
   const initialState = {
     endTime: "",
     eventName: "",

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import GroupManagement from "../Components/GroupManagement";
 import GroupTimetable from "../Components/GroupTimetable";
 import UserProfile from "../Components/UserProfile";
-import MyTimetable from "../Pages/MyTimetable";
+import { MyTimetable } from "../Pages/MyTimetable";
 
 import Layout from "../Components/Layout";
 import JoinGroup from "../Components/JoinGroup";

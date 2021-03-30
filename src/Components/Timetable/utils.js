@@ -13,6 +13,7 @@ function getModules(data) {
 
     return data.map((d) => {
       const {  startTime, endTime, eventName, eventType, studentId = ""  } = d;
+      // console.log("******************** " + JSON.stringify(d));
       return {
         id: `${startTime}-${eventName}-${eventType}-${studentId}`,
         studentId: studentId,

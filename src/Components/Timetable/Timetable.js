@@ -14,7 +14,7 @@ function createDay(name, modules) {
 }
 
 export default function Timetable(props) {
-  let { weekNumber = 1, timetableData, children } = props;
+  let { weekNumber = 1, timetableData, children, triggerMyTimetableForceRefresh } = props;
   weekNumber = parseInt(weekNumber);
 
   // TimetableTimings
@@ -66,11 +66,14 @@ export default function Timetable(props) {
                   {day.name}
                 </th>
                 {day.modules.map((cell, i) => (
-                  <td
-                    key={`${cell.id}-${i}`}
-                    align="center"
-                  >
-                    <TimetableModules data={cell} />
+                  <td key={`${cell.id}-${i}`} align="center">
+                    <TimetableModules
+                      data={cell}
+                      fullData={timetableData}
+                      triggerMyTimetableForceRefresh={() => {
+                        triggerMyTimetableForceRefresh();
+                      }}
+                    />
                   </td>
                 ))}
               </tr>

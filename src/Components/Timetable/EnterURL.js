@@ -290,7 +290,7 @@ const EnterURL = (props) => {
                 "What is this? Using the shared link on NUSMods, you can import in your modules into MixTime"
               }
             </em>
-            <h1></h1>
+            <p></p>
             <em style={{ fontSize: "12px" }}>
               {
                 "For tutorial guidance, there will be a video beside the 'OVERRIDE TIMETABLE' button"

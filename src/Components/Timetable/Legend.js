@@ -25,7 +25,7 @@ const Legend = () => {
           </IconButton>
         </Tooltip>
       </div>
-      <table style={{ display: "flex" }}>
+      <table style={{ display: "flex"}}>
         <tbody>
           <tr>
             <th style={{ background: "#FDDFDF", color: "#000000" }}>Lecture</th>
@@ -34,7 +34,7 @@ const Legend = () => {
             </th>
             <th style={{ background: "#DEFDE0", color: "#000000" }}>Private</th>
             <th style={{ background: "#DEF3FD", color: "#000000" }}>Others</th>
-            <th style={{ background: "#FFFFFF", color: "#000000" }}>
+            <th style={{ background: "#FFFFFF", color: "#000000", border: "1px solid lightgrey"}}>
               Available
             </th>
           </tr>
