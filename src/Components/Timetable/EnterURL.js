@@ -284,19 +284,21 @@ const EnterURL = (props) => {
         Enter NUSMODs Sharing URL:
         <Tooltip
           title={
-            <p>
-            <em style={{ fontSize: "12px" }}>
-              {
-                "What is this? Using the shared link on NUSMods, you can import in your modules into MixTime"
-              }
-            </em>
-            <p></p>
-            <em style={{ fontSize: "12px" }}>
-              {
-                "For tutorial guidance, there will be a video beside the 'OVERRIDE TIMETABLE' button"
-              }
-            </em>
-            </p>
+            <div>
+              <em style={{ fontSize: "12px" }}>{"What is this?"}</em>
+              <p></p>
+              <em style={{ fontSize: "12px" }}>
+                {
+                  "Using the shared link on NUSMods, you can import in your modules into MixTime"
+                }
+              </em>
+              <p></p>
+              <em style={{ fontSize: "12px" }}>
+                {
+                  "For tutorial guidance, there will be a video beside the 'OVERRIDE TIMETABLE' button"
+                }
+              </em>
+            </div>
           }
         >
           <IconButton aria-label="delete">

@@ -6,6 +6,11 @@ import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
 import { overrideStudentEventsToDB } from "../../Functions/apiFunctions";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
+
 function pickColour(type) {
   let colors = ["#FDDFDF", "#F0DEFD", "#DEFDE0", "#DEF3FD", "#FCF7DE"];
   let setColor = "#FFFFFF";
@@ -76,6 +81,9 @@ const TimetableModules = (props) => {
     );
 
     setRefreshKey(refreshKey + 1);
+    setOpen(false);
+
+    toast.success("The event has been deleted successfully.");
   }
 
   useEffect(() => {
@@ -129,9 +137,10 @@ const TimetableModules = (props) => {
 
     return (
       <div key={`${id}-${index}`} style={{ backgroundColor: pickColour(type) }}>
-        <button onClick={handleOpen}>{title}</button>
+        <button onClick={handleOpen}>
+        <div>{title}</div>
         <div>{type}</div>
-
+        </button>
         <div>
           <Modal open={open} onClose={handleClose}>
             {body}

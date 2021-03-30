@@ -14,7 +14,12 @@ function createDay(name, modules) {
 }
 
 export default function Timetable(props) {
-  let { weekNumber = 1, timetableData, children, triggerMyTimetableForceRefresh } = props;
+  let {
+    weekNumber = 1,
+    timetableData,
+    children,
+    triggerMyTimetableForceRefresh,
+  } = props;
   weekNumber = parseInt(weekNumber);
 
   // TimetableTimings
