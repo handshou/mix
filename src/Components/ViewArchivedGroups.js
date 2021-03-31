@@ -16,9 +16,9 @@ import CreateIcon from "@material-ui/icons/Create";
 import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
 import DeleteIcon from "@material-ui/icons/Delete";
-import UnarchiveIcon from '@material-ui/icons/Unarchive';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import UnarchiveIcon from "@material-ui/icons/Unarchive";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
 import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
@@ -106,6 +106,20 @@ function ViewArchivedGroups(props) {
   const [studentGroups, setStudentGroups] = useState([]);
   const [, setGroupId] = useState();
   const [groupMembers, setGroupMembers] = useState([]);
+
+  const [search, setSearch] = useState("");
+
+  const filteredStudentGroups = studentGroups.filter((g) => {
+    return g.groupName.toLowerCase().includes(search.toLowerCase());
+  });
+
+  useEffect(() => {
+    studentGroups.filter((g) => {
+      console.log(">>>>>" + g.groupName);
+      console.log(search + "<<<<<<<<<<");
+      console.log(g.groupName.toLowerCase().includes(search.toLowerCase()));
+    });
+  }, [filteredStudentGroups]);
 
   let getStudentGroups = () => {
     setStudentGroups([]);
@@ -485,8 +499,6 @@ function ViewArchivedGroups(props) {
     getArchivedGroupsFromDB();
   }, []);
 
-  function getArchivedGroups() {}
-
   function getArchivedGroupsFromDB() {
     // if (!firebase.apps.length) {
     var database = firebase.app().database();
@@ -527,11 +539,6 @@ function ViewArchivedGroups(props) {
     }
 
     setActiveStudentGroups(Array.from(activeStudentGroupsDistinct));
-    console.log(
-      "getArchivedGroups() active student grps: " +
-        Array.from(activeStudentGroupsDistinct)
-    );
-    console.log("getArchivedGroups() archivedGroups: " + archivedGroups);
   }
 
   function archiveGroup(groupId) {
@@ -601,6 +608,23 @@ function ViewArchivedGroups(props) {
             </div>
             <div style={{ clear: "both" }}></div>
             <div style={{ float: "right" }}>
+              {/* <label style={{float: "right"}}>
+                Filter Groups: &nbsp; &nbsp;
+                <input
+                  type="text"
+                  placeholder="Enter search term"
+                  style={{
+                    padding: "4px 4px 4px 4px",
+                    borderRadius: "4px",
+                    outline: "none",
+                    border: "1px solid #da337a",
+                    boxShadow: "0px 0px 8px #da337a",
+                    backgroundColor: "initial !important",
+                  }}
+                  onChange={(e) => setSearch(e.target.value)}
+                ></input>
+              </label>
+              <br></br> */}
               <Tooltip title={<em>{"Click here to view active groups"}</em>}>
                 <Button
                   style={{
@@ -611,8 +635,7 @@ function ViewArchivedGroups(props) {
                   color="primary"
                   onClick={routeChange}
                 >
-                  <UnarchiveIcon/> &nbsp;
-                  View Active Groups
+                  <UnarchiveIcon /> &nbsp; View Active Groups
                 </Button>
               </Tooltip>
               &nbsp; &nbsp;
@@ -630,8 +653,8 @@ function ViewArchivedGroups(props) {
                   color="primary"
                   onClick={() => toggleShow(!show)}
                 >
-                {show ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-                {show ? "Minimize All Groups" : "Expand All Groups"}
+                  {show ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  {show ? "Minimize All Groups" : "Expand All Groups"}
                 </Button>
               </Tooltip>
             </div>
@@ -645,7 +668,7 @@ function ViewArchivedGroups(props) {
               // justifyContent: "space-between",
             }}
           >
-            {studentGroups.map((group, i) => (
+            {filteredStudentGroups.map((group, i) => (
               <div>
                 {archivedGroups.includes(group.groupId) ? (
                   <Card
