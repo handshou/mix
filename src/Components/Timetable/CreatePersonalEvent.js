@@ -1,10 +1,11 @@
 import { React, useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
 import { Button } from "@material-ui/core";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
+import { Tooltip, IconButton } from "@material-ui/core";
 import HelpIcon from "@material-ui/icons/Help";
 import ClearIcon from "@material-ui/icons/Clear";
+import AddIcon from "@material-ui/icons/Add";
+import moment from 'moment';
 
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
@@ -98,6 +99,9 @@ export default function CreatePersonalEvent(props) {
     setOpen(false);
   };
 
+  let newDate = new Date()
+  let todayDate = moment(newDate).format('DD-MM-YYYY');
+  let day = moment().format('dddd'); 
   const body = (
     <div style={modalStyle}>
       <p style={{ fontSize: "25px", color: "#ff5138" }}>
@@ -124,6 +128,7 @@ export default function CreatePersonalEvent(props) {
           <ClearIcon fontSize="small" />
         </Button>
       </p>
+      <p>Today's Date: {todayDate}, {day}</p>
       <form onSubmit={saveModule}>
         <label
           for="eventName"
@@ -189,7 +194,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          Start Date and Time (30 Minutes Interval): *{" "}
+          Start Date and Time (30 Minutes Time Block): *{" "}
         </label>
         <input
           type="datetime-local"
@@ -218,7 +223,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          End Date and Time (30 Minutes Interval): *{" "}
+          End Date and Time (30 Minutes Time Block): *{" "}
         </label>
         <input
           type="datetime-local"
@@ -288,6 +293,7 @@ export default function CreatePersonalEvent(props) {
             color="primary"
             style={{ boxShadow: "5px 5px 5px 0px grey" }}
           >
+            <AddIcon fontSize="small" style={{ color: "white" }} />
             Add Event
           </Button>
         </Tooltip>

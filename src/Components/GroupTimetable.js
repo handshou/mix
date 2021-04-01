@@ -155,6 +155,7 @@ function GroupTimetable(props) {
                         key={studentGroup.groupId}
                         weekNumber={week}
                         timetableData={studentEventsPerGroup[index]}
+                        triggerMyTimetableForceRefresh={() => {}}
                       />
                     ) : (
                       <div>No events found</div>

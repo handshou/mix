@@ -31,25 +31,21 @@ function pickColour(type) {
   return setColor;
 }
 
+function getModalStyle() {
+  return {
+    padding: "50px",
+    background: "#f9f9f9",
+    marginTop: "3rem",
+    maxWidth: "700px",
+    marginLeft: "auto",
+    marginRight: "auto",
+  };
+}
+
 const TimetableModules = (props) => {
-  const [refreshKey, setRefreshKey] = useState(0);
   const { data, fullData } = props;
-
-  // console.log(data);
-
-  function getModalStyle() {
-    return {
-      padding: "50px",
-      background: "#f9f9f9",
-      marginTop: "3rem",
-      maxWidth: "700px",
-      marginLeft: "auto",
-      marginRight: "auto",
-    };
-  }
-
+  const [refreshKey, setRefreshKey] = useState(0);
   const [modalStyle] = useState(getModalStyle);
-
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -128,7 +124,6 @@ const TimetableModules = (props) => {
             <ClearIcon fontSize="small" />
           </Button>
         </p>
-        {/* <p>Event ID: {id}</p> */}
         <p>Event Title: {title}</p>
         <p>Event Status: {type}</p>
         <p>Start Time: {startTime}</p>
