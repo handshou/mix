@@ -91,6 +91,11 @@ const EnterURL = (props) => {
   }, [modAndClassArray]);
 
   useEffect(() => {
+    if (errorMessage !== undefined && errorMessage.length > 1)
+      toast.error(errorMessage);
+  }, [errorMessage]);
+
+  useEffect(() => {
     var studentsRef = database.ref(`Students/${studentId}/events`);
     studentsRef.once("value").then((snapshot) => {
       setExistingEvents(snapshot.val());
@@ -261,17 +266,43 @@ const EnterURL = (props) => {
           </IconButton>
         </Tooltip>
       </div>
-      <div style={{ color: "red" }}>
-        {errorMessage && errorMessage.length < 1 ? "" : errorMessage}
-      </div>
+
       <OutlinedInput
         placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
-        style={{ width: 500, marginLeft: 10, marginRight: 30 }}
+        style={{
+          width: 500,
+          marginLeft: 10,
+          marginRight: 30,
+          border:
+            errorMessage !== undefined && errorMessage.length < 1
+              ? ""
+              : "1px solid #da337a",
+          boxShadow:
+            errorMessage !== undefined && errorMessage.length < 1
+              ? ""
+              : "0px 0px 8px #da337a",
+        }}
         onChange={(e) => {
           setEnteredURL(e.target.value);
           setErrorMessage("");
         }}
       ></OutlinedInput>
+
+      {errorMessage !== undefined && errorMessage.length < 1 ? (
+        <div />
+      ) : (
+        <div
+          style={{
+            marginLeft: 10,
+            marginRight: 30,
+            color: "red",
+            fontSize: 20,
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
+
       <Tooltip
         title={
           <em>{"Click here to add your NUSmods classes personal timetable"}</em>

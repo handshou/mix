@@ -613,7 +613,7 @@ function GroupManagement(props) {
             <div style={{display: "contents"}}>
               {filteredStudentGroups.map((group, i) => (
                 <div style={{padding: "0.5% 0.5%"}}>
-                  {!archivedGroups.includes(group.groupId) ? (
+                  {archivedGroups!== null && !archivedGroups.includes(group.groupId) ? (
                     <Card
                       className={classes.root}
                       style={{
