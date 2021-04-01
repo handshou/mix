@@ -520,7 +520,7 @@ function ViewArchivedGroups(props) {
     //   });
     // }
 
-    if (archivedGroups.length !== 0) {
+    if (archivedGroups !== undefined && archivedGroups.length !== 0) {
       for (var i = 0; i < studentGroups.length; i++) {
         for (var j = 0; j < archivedGroups.length; j++) {
           if (studentGroups[i].groupId !== archivedGroups[i]) {
@@ -670,7 +670,8 @@ function ViewArchivedGroups(props) {
           >
             {filteredStudentGroups.map((group, i) => (
               <div>
-                {archivedGroups.includes(group.groupId) ? (
+                {archivedGroups !== undefined &&
+                  archivedGroups !== null && archivedGroups.includes(group.groupId) ? (
                   <Card
                     className={classes.root}
                     style={{
