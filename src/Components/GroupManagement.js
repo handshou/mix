@@ -20,8 +20,8 @@ import { shadows } from "@material-ui/system";
 import UndoIcon from "@material-ui/icons/Undo";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ArchiveIcon from "@material-ui/icons/Archive";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
 import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
@@ -610,10 +610,12 @@ function GroupManagement(props) {
           {groupNameTextboxArr !== undefined &&
           filteredStudentGroups !== undefined &&
           groupNameTextboxArr.length === filteredStudentGroups.length ? (
-            <div style={{display: "contents"}}>
+            <div style={{ display: "contents" }}>
               {filteredStudentGroups.map((group, i) => (
-                <div style={{padding: "0.5% 0.5%"}}>
-                  {archivedGroups!== null && !archivedGroups.includes(group.groupId) ? (
+                <div style={{ padding: "0.5% 0.5%" }}>
+                  {archivedGroups !== undefined &&
+                  archivedGroups !== null &&
+                  !archivedGroups.includes(group.groupId) ? (
                     <Card
                       className={classes.root}
                       style={{
@@ -788,21 +790,20 @@ function GroupManagement(props) {
                                     variant="contained"
                                     color="secondary"
                                     style={
-                                      group.members.length > 1 
+                                      group.members.length > 1
                                         ? {
-                                          float: "left",
-                                          minWidth: "20px",
-                                          backgroundColor: "green",
-                                          opacity: "0.4"
+                                            float: "left",
+                                            minWidth: "20px",
+                                            backgroundColor: "green",
+                                            opacity: "0.4",
                                           }
                                         : {
-                                          float: "left",
-                                          minWidth: "20px",
-                                          backgroundColor: "green",
-                                          opacity: "1"
+                                            float: "left",
+                                            minWidth: "20px",
+                                            backgroundColor: "green",
+                                            opacity: "1",
                                           }
                                     }
-
                                     onClick={() =>
                                       deleteGroup(
                                         group.groupId,
@@ -862,7 +863,252 @@ function GroupManagement(props) {
                       <div></div>
                     </Card>
                   ) : (
-                    <div></div>
+                    <Card
+                      className={classes.root}
+                      style={{
+                        width: "100%",
+                        display: "table",
+                        // minWidth: "25%",
+                        // margin: "0% 10% 10%",
+                      }}
+                    >
+                      <div>
+                        <Tooltip
+                          title={<em>{"Click here to archive the group"}</em>}
+                        >
+                          <Link
+                            onClick={() => {
+                              archiveGroup(group.groupId);
+                            }}
+                            style={{ position: "absolute" }}
+                          >
+                            <ArchiveIcon />
+                          </Link>
+                        </Tooltip>
+                        <div style={{ clear: "both" }} />
+                        <div className="cardRow">
+                          <CardContent className={classes.cardColumn}>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              style={{
+                                backgroundColor: "#80808026",
+                                padding: "2%",
+                                overflow: "auto",
+                                minWidth: "250px !important",
+                              }}
+                            >
+                              #{groupNameTextboxArr[i].groupId} -{" "}
+                              <input
+                                type="text"
+                                disabled={groupNameTextboxArr[i].disable}
+                                value={groupNameTextboxArr[i].val}
+                                onChange={editGroupName}
+                                readOnly={groupNameTextboxArr[i].readOnly}
+                                size={groupNameTextboxArr[i].val.length - 2}
+                                style={
+                                  groupNameTextboxArr[i].readOnly === false
+                                    ? {
+                                        padding: "4px 4px 4px 4px",
+                                        borderRadius: "4px",
+                                        outline: "none",
+                                        border: "1px solid #da337a",
+                                        boxShadow: "0px 0px 8px #da337a",
+                                        backgroundColor: "initial !important",
+                                      }
+                                    : {
+                                        width: "50%",
+                                        backgroundColor: "initial",
+                                      }
+                                }
+                              ></input>
+                              {groupNameTextboxArr[i].readOnly === true ? (
+                                <Link
+                                  onClick={() => {
+                                    enableGroupNameEdit(i);
+                                  }}
+                                >
+                                  <span
+                                    style={{ color: "black", float: "right" }}
+                                  >
+                                    <CreateIcon />
+                                  </span>
+                                </Link>
+                              ) : (
+                                <Link
+                                  onClick={() => {
+                                    updateGroupName(i);
+                                  }}
+                                >
+                                  <span
+                                    style={{ color: "black", float: "right" }}
+                                  >
+                                    <SaveIcon />
+                                  </span>
+                                </Link>
+                              )}
+                              {/* Undo group name */}
+                              {groupNameTextboxArr[i].allowUndo === true &&
+                              localStorage.getItem("originalGroupName") !==
+                                groupNameTextboxArr[i].val ? (
+                                <span style={{ float: "right" }}>
+                                  <Link
+                                    onClick={() => {
+                                      undoGroupRename(i);
+                                    }}
+                                  >
+                                    <UndoIcon />
+                                  </Link>
+                                </span>
+                              ) : (
+                                <span></span>
+                              )}
+                            </Typography>
+
+                            {show && (
+                              <div>
+                                Other Members:
+                                {Object.values(group.members).map(
+                                  (memId, i) => (
+                                    <div>
+                                      {memId !=
+                                      localStorage.getItem("studentId") ? (
+                                        <div>
+                                          <div style={{ float: "left" }}>
+                                            <PersonIcon /> #
+                                            {memId + ", " + getGMN(memId)}
+                                          </div>
+                                          {"      "}
+
+                                          <div style={{ float: "right" }}>
+                                            <Link
+                                              style={{
+                                                width: "fit-content",
+                                                float: "right",
+                                                display: "inline",
+                                                color: "#DC3545",
+                                              }}
+                                              onClick={() =>
+                                                removeStudentFromGroup(
+                                                  group.groupId,
+                                                  memId
+                                                )
+                                              }
+                                            >
+                                              <abbr title="Remove member">
+                                                <RemoveCircleOutlineIcon />
+                                              </abbr>
+                                            </Link>
+                                          </div>
+                                          <div style={{ clear: "both" }}></div>
+                                        </div>
+                                      ) : (
+                                        <div></div>
+                                      )}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            )}
+                          </CardContent>
+
+                          {show && (
+                            <div>
+                              <div style={{ padding: "2%" }}>
+                                <div>Join Group URL:</div>
+                                <div
+                                  onClick={() => {
+                                    // implement copy to clipboard
+                                    // am considering the library react-copy-to-clipboard
+                                  }}
+                                >
+                                  {/* {console.log(window.location.host)} */}
+                                  http://{window.location.host}/JoinGroup/
+                                  {group.groupId}
+                                </div>
+                              </div>
+
+                              <div style={{ clear: "both" }} />
+
+                              <div>
+                                <CardActions style={{ float: "left" }}>
+                                  <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    style={
+                                      group.members.length > 1
+                                        ? {
+                                            float: "left",
+                                            minWidth: "20px",
+                                            backgroundColor: "green",
+                                            opacity: "0.4",
+                                          }
+                                        : {
+                                            float: "left",
+                                            minWidth: "20px",
+                                            backgroundColor: "green",
+                                            opacity: "1",
+                                          }
+                                    }
+                                    onClick={() =>
+                                      deleteGroup(
+                                        group.groupId,
+                                        group.members.length
+                                      )
+                                    }
+                                    disabled={
+                                      group.members.length > 1 ? true : false
+                                    }
+                                  >
+                                    <DeleteIcon />
+                                  </Button>
+                                </CardActions>
+
+                                <CardActions
+                                  style={{
+                                    float: "right",
+                                  }}
+                                >
+                                  <Button
+                                    variant="contained"
+                                    style={{
+                                      // width: "fit-content",
+                                      backgroundColor: "#DC3545",
+                                      color: "white",
+                                    }}
+                                    onClick={() =>
+                                      removeStudentFromGroup(
+                                        group.groupId,
+                                        localStorage.getItem("studentId")
+                                      )
+                                    }
+                                  >
+                                    Leave Group
+                                  </Button>
+
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    style={
+                                      {
+                                        // width: "fit-content"
+                                      }
+                                    }
+                                    onClick={() =>
+                                      addMemberToGroup(group.groupId)
+                                    }
+                                  >
+                                    Add Member
+                                  </Button>
+                                </CardActions>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div></div>
+                    </Card>
                   )}
                 </div>
               ))}
@@ -872,7 +1118,6 @@ function GroupManagement(props) {
           )}
         </div>
       </div>
-      }
     </Fragment>
   );
 }
