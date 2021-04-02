@@ -222,6 +222,13 @@ function GroupManagement(props) {
       return;
     }
 
+    //check if this memberId exist in the system
+    var newMemberName = getGMN(memberId);
+    if (newMemberName === undefined) {
+      toast.error("There is no record of this member.");
+      return;
+    }
+
     groupMembers.push(parseInt(memberId));
     database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
 
@@ -235,6 +242,31 @@ function GroupManagement(props) {
     getGroupMembersInAGroup(groupId);
     setRefreshKey(refreshKey + 1);
   };
+
+  const removeAllOtherMembersFromGroup = (groupId) => {
+    groupMembers.push(parseInt(localStorage.getItem("studentId")));
+    setGroupMembers(groupMembers);
+    if (!firebase.apps.length) {
+      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+    } else {
+      firebase.app();
+      var database = firebase.app().database();
+      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+
+      var removeAllMembersPrompt = window.confirm(
+        "Are you sure you want to remove all other members from Group ID: #" +
+          groupId +
+          "?"
+      );
+      if (!removeAllMembersPrompt) {
+        toast.success("Removal of all members has been cancelled.");
+        return;
+      }
+      toast.success("All other group members have been removed successfully.");
+      setRefreshKey(refreshKey + 1);
+    }
+  };
+
 
   let removeStudentFromGroup = (groupId, removeStudentId) => {
     //Leave Group
@@ -767,6 +799,26 @@ function GroupManagement(props) {
                                       )}
                                     </div>
                                   )
+                                )}
+                                {group.members.length > 2 ? (
+                                  <Button
+                                    variant="contained"
+                                    style={{
+                                      // width: "fit-content",
+                                      backgroundColor: "#DC3545",
+                                      color: "white",
+                                      float: "right",
+                                    }}
+                                    onClick={() =>
+                                      removeAllOtherMembersFromGroup(
+                                        group.groupId
+                                      )
+                                    }
+                                  >
+                                    Remove All Members
+                                  </Button>
+                                ) : (
+                                  <div></div>
                                 )}
                               </div>
                             )}
