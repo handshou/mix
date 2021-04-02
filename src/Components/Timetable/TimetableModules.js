@@ -43,28 +43,44 @@ function getModalStyle() {
 }
 
 const TimetableModules = (props) => {
+  let localTimetableData = [];
+  if (props !== undefined && props.fullData !== undefined) {
+    localTimetableData = props.fullData;
+  }
+
   const { data, fullData } = props;
   const [refreshKey, setRefreshKey] = useState(0);
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const initialState = {
+    endTime: "",
+    eventName: "",
+    eventType: "",
+    startTime: "",
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const [module, setModule] = useState(initialState);
+
+  if (module.id !== data.key) {
+    setModule(data.endTime, data.title);
+  }
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setModule({ ...module, [name]: value });
   };
 
-  function deleteEvent(id, title, type, fullData) {
-    const startTimeSplit = id.split("-")[0];
+  const updateModule = () => {
+    var data = {
+      endTime: new Date(module.endTime).getTime(),
+      eventName: module.eventName,
+      eventType: module.eventType,
+      startTime: new Date(module.startTime).getTime(),
+    };
 
-    const newData = fullData.filter(
-      (event) =>
-        event.startTime != startTimeSplit ||
-        event.eventName != title ||
-        event.eventType != type
-    );
+    let newTimetableData = [...localTimetableData];
+    newTimetableData.push(data);
 
     var database;
     if (!firebase.apps.length) {
@@ -76,14 +92,61 @@ const TimetableModules = (props) => {
     }
     overrideStudentEventsToDB(
       localStorage.getItem("studentId"),
-      newData,
+      newTimetableData,
       database
     );
 
     setRefreshKey(refreshKey + 1);
     setOpen(false);
 
-    toast.success("The event has been deleted successfully.");
+    toast.success("A new event has been sucessfully added.");
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  function deleteEvent(id, title, type, fullData) {
+    var deleteEventPrompt = window.confirm(
+      `Are you sure you want to delete the event?\nYou cannot undo this.`
+    );
+
+    if (deleteEventPrompt) {
+      const startTimeSplit = id.split("-")[0];
+
+      const newData = fullData.filter(
+        (event) =>
+          event.startTime != startTimeSplit ||
+          event.eventName != title ||
+          event.eventType != type
+      );
+
+      var database;
+      if (!firebase.apps.length) {
+        const firebaseApp = firebase.initializeApp(firebaseConfig);
+        database = firebaseApp.database();
+      } else {
+        firebase.app();
+        database = firebase.app().database();
+      }
+      overrideStudentEventsToDB(
+        localStorage.getItem("studentId"),
+        newData,
+        database
+      );
+
+      setRefreshKey(refreshKey + 1);
+      setOpen(false);
+
+      toast.success("The event has been deleted successfully.");
+    } else {
+      setOpen(false);
+      toast.success("Deletion of event is cancelled.");
+    }
   }
 
   useEffect(() => {
@@ -123,6 +186,136 @@ const TimetableModules = (props) => {
           >
             <ClearIcon fontSize="small" />
           </Button>
+        </p>{" "}
+        <p>
+          {/* <form onSubmit={updateModule}>
+            <label
+              for="eventName"
+              style={{
+                textAlign: "left",
+                display: "block",
+                padding: "0.5em 1.5em 0.5em 0",
+              }}
+            >
+              Title: *{" "}
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="eventName"
+              required="required"
+              value={title}
+              onChange={handleInputChange}
+              name="eventName"
+              placeholder="Example: IS4261 6UGs Submission..."
+              style={{
+                width: "100%",
+                padding: "0.7em",
+                marginBottom: "0.5rem",
+                outline: "1px solid #ff5138",
+                boxShadow: "3px 3px 3px 0px #ff5138",
+              }}
+            />
+            <label
+              for="eventType"
+              style={{
+                textAlign: "left",
+                display: "block",
+                padding: "0.5em 1.5em 0.5em 0",
+              }}
+            >
+              Event Status: *{" "}
+            </label>
+            <select
+              name="eventType"
+              id="eventType"
+              required="required"
+              onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "0.7em",
+                marginBottom: "0.5rem",
+                outline: "1px solid #ff5138",
+                boxShadow: "3px 3px 3px 0px #ff5138",
+              }}
+            >
+              <option selected hidden>
+                Select your event status
+              </option>
+              <option value="Private">Private</option>
+              <option value="Others">Others</option>
+            </select>
+            <label
+              for="startTime"
+              style={{
+                textAlign: "left",
+                display: "block",
+                padding: "0.5em 1.5em 0.5em 0",
+              }}
+            >
+              Start Date and Time (30 Minutes Time Block): *{" "}
+            </label>
+            <input
+              type="datetime-local"
+              step="1800"
+              className="form-control"
+              id="startTime"
+              required={true}
+              value={startTime}
+              onChange={handleInputChange}
+              name="startTime"
+              min="2021-01-10T00:00"
+              max="2021-12-31T00:00"
+              style={{
+                width: "100%",
+                padding: "0.7em",
+                marginBottom: "0.5rem",
+                outline: "1px solid #ff5138",
+                boxShadow: "3px 3px 3px 0px #ff5138",
+              }}
+            />
+            <label
+              for="endTime"
+              style={{
+                textAlign: "left",
+                display: "block",
+                padding: "0.5em 1.5em 0.5em 0",
+              }}
+            >
+              End Date and Time (30 Minutes Time Block): *{" "}
+            </label>
+            <input
+              type="datetime-local"
+              step="1800"
+              className="form-control"
+              id="endTime"
+              required={true}
+              value={endTime}
+              onChange={handleInputChange}
+              name="endTime"
+              min={module.startTime}
+              max="2021-12-31T00:00"
+              style={{
+                width: "100%",
+                padding: "0.7em",
+                marginBottom: "0.5rem",
+                outline: "1px solid #ff5138",
+                boxShadow: "3px 3px 3px 0px #ff5138",
+              }}
+            />
+            <br></br>
+            <Button
+              variant="contained"
+              style={{ boxShadow: "5px 5px 5px 0px grey" }}
+              color="primary"
+            >
+              <input
+                type="submit"
+                value="SUBMIT"
+                style={{ background: "none" }}
+              ></input>
+            </Button>
+          </form> */}
         </p>
         <p>Event Title: {title}</p>
         <p>Event Status: {type}</p>

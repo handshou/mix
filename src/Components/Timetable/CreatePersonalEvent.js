@@ -5,7 +5,7 @@ import { Tooltip, IconButton } from "@material-ui/core";
 import HelpIcon from "@material-ui/icons/Help";
 import ClearIcon from "@material-ui/icons/Clear";
 import AddIcon from "@material-ui/icons/Add";
-import moment from 'moment';
+import moment from "moment";
 
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
@@ -99,9 +99,9 @@ export default function CreatePersonalEvent(props) {
     setOpen(false);
   };
 
-  let newDate = new Date()
-  let todayDate = moment(newDate).format('DD-MM-YYYY');
-  let day = moment().format('dddd'); 
+  let newDate = new Date();
+  let todayDate = moment(newDate).format("DD-MM-YYYY");
+  let day = moment().format("dddd");
   const body = (
     <div style={modalStyle}>
       <p style={{ fontSize: "25px", color: "#ff5138" }}>
@@ -128,7 +128,9 @@ export default function CreatePersonalEvent(props) {
           <ClearIcon fontSize="small" />
         </Button>
       </p>
-      <p>Today's Date: {todayDate}, {day}</p>
+      <p>
+        Today's Date: {todayDate}, {day}
+      </p>
       <form onSubmit={saveModule}>
         <label
           for="eventName"
