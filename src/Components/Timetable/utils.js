@@ -14,7 +14,7 @@ function getModules(data) {
     return data.map((d) => {
       const { startTime, endTime, eventName, eventType, studentId = "" } = d;
       return {
-        id: `${startTime}-${eventName}-${eventType}-${studentId}`,
+        id: `${startTime}-${eventName}-${eventType}-${studentId}-${endTime}`,
         studentId: studentId,
         week: Math.floor((startTime - baseDate) / weekInMilliSeconds) + 1,
         title: eventName,

@@ -62,10 +62,6 @@ const TimetableModules = (props) => {
 
   const [module, setModule] = useState(initialState);
 
-  if (module.id !== data.key) {
-    setModule(data.endTime, data.title);
-  }
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setModule({ ...module, [name]: value });
@@ -188,7 +184,7 @@ const TimetableModules = (props) => {
           </Button>
         </p>{" "}
         <p>
-          {/* <form onSubmit={updateModule}>
+          <form onSubmit={updateModule}>
             <label
               for="eventName"
               style={{
@@ -204,7 +200,7 @@ const TimetableModules = (props) => {
               className="form-control"
               id="eventName"
               required="required"
-              value={title}
+              // value={module.title}
               onChange={handleInputChange}
               name="eventName"
               placeholder="Example: IS4261 6UGs Submission..."
@@ -215,94 +211,8 @@ const TimetableModules = (props) => {
                 outline: "1px solid #ff5138",
                 boxShadow: "3px 3px 3px 0px #ff5138",
               }}
-            />
-            <label
-              for="eventType"
-              style={{
-                textAlign: "left",
-                display: "block",
-                padding: "0.5em 1.5em 0.5em 0",
-              }}
             >
-              Event Status: *{" "}
-            </label>
-            <select
-              name="eventType"
-              id="eventType"
-              required="required"
-              onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "0.7em",
-                marginBottom: "0.5rem",
-                outline: "1px solid #ff5138",
-                boxShadow: "3px 3px 3px 0px #ff5138",
-              }}
-            >
-              <option selected hidden>
-                Select your event status
-              </option>
-              <option value="Private">Private</option>
-              <option value="Others">Others</option>
-            </select>
-            <label
-              for="startTime"
-              style={{
-                textAlign: "left",
-                display: "block",
-                padding: "0.5em 1.5em 0.5em 0",
-              }}
-            >
-              Start Date and Time (30 Minutes Time Block): *{" "}
-            </label>
-            <input
-              type="datetime-local"
-              step="1800"
-              className="form-control"
-              id="startTime"
-              required={true}
-              value={startTime}
-              onChange={handleInputChange}
-              name="startTime"
-              min="2021-01-10T00:00"
-              max="2021-12-31T00:00"
-              style={{
-                width: "100%",
-                padding: "0.7em",
-                marginBottom: "0.5rem",
-                outline: "1px solid #ff5138",
-                boxShadow: "3px 3px 3px 0px #ff5138",
-              }}
-            />
-            <label
-              for="endTime"
-              style={{
-                textAlign: "left",
-                display: "block",
-                padding: "0.5em 1.5em 0.5em 0",
-              }}
-            >
-              End Date and Time (30 Minutes Time Block): *{" "}
-            </label>
-            <input
-              type="datetime-local"
-              step="1800"
-              className="form-control"
-              id="endTime"
-              required={true}
-              value={endTime}
-              onChange={handleInputChange}
-              name="endTime"
-              min={module.startTime}
-              max="2021-12-31T00:00"
-              style={{
-                width: "100%",
-                padding: "0.7em",
-                marginBottom: "0.5rem",
-                outline: "1px solid #ff5138",
-                boxShadow: "3px 3px 3px 0px #ff5138",
-              }}
-            />
+            </input>
             <br></br>
             <Button
               variant="contained"
@@ -311,12 +221,14 @@ const TimetableModules = (props) => {
             >
               <input
                 type="submit"
-                value="SUBMIT"
+                value="UPDATE"
                 style={{ background: "none" }}
               ></input>
             </Button>
-          </form> */}
+          </form>
         </p>
+        <br></br>
+        <p>ID: {id}</p>  
         <p>Event Title: {title}</p>
         <p>Event Status: {type}</p>
         <p>Start Time: {startTime}</p>
