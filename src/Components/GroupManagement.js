@@ -486,6 +486,7 @@ function GroupManagement(props) {
         .set(archivedGroups);
     }
     setRefreshKey(refreshKey + 1);
+    toast.success("You have successfully archived the group.");
   }
 
   const history = useHistory();

@@ -107,19 +107,19 @@ function ViewArchivedGroups(props) {
   const [, setGroupId] = useState();
   const [groupMembers, setGroupMembers] = useState([]);
 
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
 
-  const filteredStudentGroups = studentGroups.filter((g) => {
-    return g.groupName.toLowerCase().includes(search.toLowerCase());
-  });
+  // const filteredStudentGroups = studentGroups.filter((g) => {
+  //   return g.groupName.toLowerCase().includes(search.toLowerCase());
+  // });
 
-  useEffect(() => {
-    studentGroups.filter((g) => {
-      console.log(">>>>>" + g.groupName);
-      console.log(search + "<<<<<<<<<<");
-      console.log(g.groupName.toLowerCase().includes(search.toLowerCase()));
-    });
-  }, [filteredStudentGroups]);
+  // useEffect(() => {
+  //   studentGroups.filter((g) => {
+  //     console.log(">>>>>" + g.groupName);
+  //     console.log(search + "<<<<<<<<<<");
+  //     console.log(g.groupName.toLowerCase().includes(search.toLowerCase()));
+  //   });
+  // }, [filteredStudentGroups]);
 
   let getStudentGroups = () => {
     setStudentGroups([]);
@@ -275,8 +275,13 @@ function ViewArchivedGroups(props) {
     }
 
     groupMembers.push(parseInt(memberId));
-    database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-
+    if (!firebase.apps.length) {
+      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+    } else {
+      firebase.app();
+      var database = firebase.app().database();
+      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+    }
     toast.success(
       "Member ID: " +
         memberId +
@@ -668,19 +673,15 @@ function ViewArchivedGroups(props) {
               // justifyContent: "space-between",
             }}
           >
-            {filteredStudentGroups.map((group, i) => (
-              <div>
+            {studentGroups.map((group, i) => (
+              <div style={{ padding: "0.5% 0.5%" }}>
                 {archivedGroups !== undefined &&
                   archivedGroups !== null && archivedGroups.includes(group.groupId) ? (
                   <Card
                     className={classes.root}
                     style={{
                       display: "table",
-                      //   margin: "0% 10% 10%",
-                      //   width: "100%"
-                      //   width: "100%",
-
-                      margin: "0% 10% 10%",
+                      width: "100%"
                     }}
                   >
                     <div>
