@@ -139,7 +139,6 @@ const EnterURL = (props) => {
   const getModuleDetails = async () => {
     let apiPromises = modAndClassArray.map((modAndClasses) => {
       // only need module code for api to ping details
-      // safeguard for button
       if (
         modAndClasses &&
         modAndClasses.length > 0 &&
@@ -151,10 +150,10 @@ const EnterURL = (props) => {
       }
     });
     // .allSettled() used instead of .all()
+    // safeguards for invalid/dirty Mod&class pairs
     // allowed failed requests to go through but prevents immediate failure
-    // additional implmentation to catch errors is required
     Promise.allSettled(apiPromises).then((details) => {
-      setModAndClassDetails(details);
+      setModAndClassDetails(details);      
     });
   };
 
