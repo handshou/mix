@@ -36,10 +36,15 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import {
   EmailShareButton,
-  FacebookShareButton,
+  EmailIcon,
+  FacebookMessengerShareButton,
+  FacebookMessengerIcon,
   LineShareButton,
+  LineIcon,
   TelegramShareButton,
+  TelegramIcon,
   WhatsappShareButton,
+  WhatsappIcon,
 } from "react-share";
 
 toast.configure();
@@ -1411,6 +1416,89 @@ function GroupManagement(props) {
                   </CopyToClipboard>
                 </div>
               </div>
+            </div>
+
+            <div
+              style={{
+                marginBottom: 30,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  marginRight: 15,
+                }}
+              >
+                Share Via:
+              </div>
+              <div
+                style={{
+                  marginRight: 15,
+                }}
+              >
+                <WhatsappShareButton
+                  url={
+                    "Use the link to join my MixTime Group" +
+                    "\n" +
+                    "http://" +
+                    window.location.host +
+                    "/JoinGroup/" +
+                    addMemberModalGroupId
+                  }
+                >
+                  <WhatsappIcon size={32} round={true} />
+                </WhatsappShareButton>
+              </div>
+              <div
+                style={{
+                  marginRight: 15,
+                }}
+              >
+                <TelegramShareButton
+                  url={
+                    "Use the link to join my MixTime Group" +
+                    "\n" +
+                    "http://" +
+                    window.location.host +
+                    "/JoinGroup/" +
+                    addMemberModalGroupId
+                  }
+                >
+                  <TelegramIcon size={32} round={true} />
+                </TelegramShareButton>
+              </div>
+              {/*
+              <div
+                style={{
+                  marginRight: 15,
+                }}
+              >
+                <EmailShareButton
+                  url={
+                    "Use the link to join my MixTime Group" +
+                    "\n" +
+                    "http://" +
+                    window.location.host +
+                    "/JoinGroup/" +
+                    addMemberModalGroupId
+                  }
+                  subject={"Join me on MixTime"}
+                  body={
+                    "Use the link to join my MixTime Group" +
+                    "\n" +
+                    "http://" +
+                    window.location.host +
+                    "/JoinGroup/" +
+                    addMemberModalGroupId
+                  }
+                  separator={" "}
+                >
+                  <EmailIcon size={32} round={true} />
+                </EmailShareButton>
+              </div>
+            */}
             </div>
 
             <div style={{ marginBottom: 30 }}>
