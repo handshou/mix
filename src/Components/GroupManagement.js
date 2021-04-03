@@ -216,6 +216,13 @@ function GroupManagement(props) {
 
   function handleChangeAddMemberModal(e) {
     var memberId = e.target.value;
+    // no more than 1 per input
+    if (memberId.includes(",")) {
+      toast.error("You are not allowed to enter ,");
+      return;
+    }
+
+    setModalMemberId(memberId);
 
     //check if this user trying to add himself
     if (parseInt(memberId) == parseInt(studentId)) {
@@ -232,6 +239,19 @@ function GroupManagement(props) {
       return;
     }
 
+    //check if duplicate member
+    let skip = false;
+    groupMembers.forEach((groupMemberId) => {
+      if (parseInt(memberId) == parseInt(groupMemberId)) {
+        toast.error("You are not allowed to add existing group members");
+        setAddMemberDisabled(true);
+        skip = true;
+      }
+    });
+    if (skip === true) {
+      return;
+    }
+
     firebase.app();
     var database = firebase.app().database();
     var studentsRef = database.ref(`Students/${memberId}`);
@@ -243,7 +263,6 @@ function GroupManagement(props) {
       }
     });
 
-    setModalMemberId(memberId);
     setAddMemberDisabled(false);
   }
 
