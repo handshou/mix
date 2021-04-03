@@ -67,15 +67,29 @@ const TimetableModules = (props) => {
     setModule({ ...module, [name]: value });
   };
 
-  const updateModule = () => {
+  function updateEvent(id, title, type, fullData) {
+    const startTimeSplit = id.split("-")[0];
+    const eventTypeSplit = id.split("-")[2];
+    const studentIdSplit = id.split("-")[3];
+    const endTimeSplit = id.split("-")[4];
+
     var data = {
-      endTime: new Date(module.endTime).getTime(),
+      endTime: new Date(Number(endTimeSplit)).getTime(),
       eventName: module.eventName,
-      eventType: module.eventType,
-      startTime: new Date(module.startTime).getTime(),
+      eventType: eventTypeSplit,
+      startTime: new Date(Number(startTimeSplit)).getTime(),
     };
 
-    let newTimetableData = [...localTimetableData];
+    let newTimetableData = [];
+
+    newTimetableData = fullData.filter(
+      (event) =>
+        event.startTime != startTimeSplit ||
+        event.eventName != title ||
+        event.eventType != type
+    );
+
+    newTimetableData = [...newTimetableData];
     newTimetableData.push(data);
 
     var database;
@@ -86,17 +100,13 @@ const TimetableModules = (props) => {
       firebase.app();
       database = firebase.app().database();
     }
-    overrideStudentEventsToDB(
-      localStorage.getItem("studentId"),
-      newTimetableData,
-      database
-    );
+    overrideStudentEventsToDB(studentIdSplit, newTimetableData, database);
 
     setRefreshKey(refreshKey + 1);
     setOpen(false);
 
-    toast.success("A new event has been sucessfully added.");
-  };
+    toast.success("Event has been updated sucessfully.");
+  }
 
   const handleOpen = () => {
     setOpen(true);
@@ -184,7 +194,7 @@ const TimetableModules = (props) => {
           </Button>
         </p>{" "}
         <p>
-          <form onSubmit={updateModule}>
+          <form>
             <label
               for="eventName"
               style={{
@@ -211,24 +221,20 @@ const TimetableModules = (props) => {
                 outline: "1px solid #ff5138",
                 boxShadow: "3px 3px 3px 0px #ff5138",
               }}
-            >
-            </input>
+            ></input>
             <br></br>
             <Button
+              onClick={() => updateEvent(id, title, type, fullData)}
               variant="contained"
               style={{ boxShadow: "5px 5px 5px 0px grey" }}
               color="primary"
             >
-              <input
-                type="submit"
-                value="UPDATE"
-                style={{ background: "none" }}
-              ></input>
+              Update
             </Button>
           </form>
         </p>
         <br></br>
-        <p>ID: {id}</p>  
+        {/* <p>ID: {id}</p> */}
         <p>Event Title: {title}</p>
         <p>Event Status: {type}</p>
         <p>Start Time: {startTime}</p>
