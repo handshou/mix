@@ -11,14 +11,22 @@ import GroupIcon from "@material-ui/icons/Group";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import CreateIcon from "@material-ui/icons/Create";
 import DoneIcon from "@material-ui/icons/Done";
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from "@material-ui/icons/Save";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import urlTutVid from "./tutorialGIFs/FullImportStep.mp4";
 import groupTutVid from "./tutorialGIFs/CreateGroup.mp4";
+import addingMember from "./tutorialGIFs/AddingMember.mp4";
+import deleteGroup from "./tutorialGIFs/DeletingGroup.mp4";
+import weeksNav from "./tutorialGIFs/ClickingWeeks.mp4";
 
 export function TutorialPage() {
   const [activeStep, setActiveStep] = useState();
-  const useStyles = makeStyles({
+  const useStyles = makeStyles((theme) => ({
     root: {
       minWidth: 275,
     },
@@ -33,9 +41,23 @@ export function TutorialPage() {
     pos: {
       marginBottom: 12,
     },
-  });
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      flexBasis: "33.33%",
+      flexShrink: 0,
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary,
+    },
+  }));
 
   const classes = useStyles();
+  const [expanded, setExpanded] = useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   //Card Content
   function getCardContent(stepIndex) {
@@ -48,7 +70,10 @@ export function TutorialPage() {
         return groupTut();
       default:
         return (
-          <div>Click on any tabs from the left, to find what you need.</div>
+          <div>
+            <br></br>
+            <b>Click</b> on any tabs from the left, to find what you need.
+          </div>
         );
     }
   }
@@ -87,9 +112,10 @@ export function TutorialPage() {
           </p>
 
           <p>
-            Your User ID is <b>{localStorage.getItem("studentId")}</b>. It is
-            tied to your profile and you cannot change it. Other MixTime users
-            can add you via this ID number.
+            Hello <b>{localStorage.getItem("studentName")}</b>, your User ID is{" "}
+            <b>{localStorage.getItem("studentId")}</b>. It is tied to your
+            profile and you cannot change it. Other MixTime users can add you
+            via this ID number.
           </p>
 
           <br></br>
@@ -110,7 +136,7 @@ export function TutorialPage() {
             <li>2. Your name will change into a textbox.</li>
             <li>3. Click on it, and change it to anything you need.</li>
             <li>
-              4. When you are done, click on the <DoneIcon></DoneIcon>
+              4. When you are done, click on the <SaveIcon />.
             </li>
             <li>
               5. Your name has been successfully changed. You should be able to
@@ -148,88 +174,172 @@ export function TutorialPage() {
           <br></br>
           <p>
             Depending on your schedule, the timetable will be able to display
-            weekend events, on top of your curricular events at NUS.
+            weekend events, on top of your curricular events at NUS. Click on
+            one of the tabs below to find out more.
           </p>
+          <br></br>
+          <Accordion
+            expanded={expanded === "panel1"}
+            onChange={handleChange("panel1")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography className={classes.heading}>
+                Importing Your Timetable
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                Steps on how to <b>import</b> your timetables from NUSMods.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  You <b>must</b> import your NUSMods timetable into MixTime, to
+                  see it on your <b>Timetable Page</b>.
+                </p>
+                <br></br>
+                <p>
+                  To <b>import your timetable</b>, follow these steps:
+                </p>
+                <ol>
+                  <li>
+                    1. Head over to{" "}
+                    <u>
+                      <a href="https://nusmods.com/">NUSMods</a>
+                    </u>{" "}
+                    website.
+                  </li>
+                  <li>
+                    2. You should see your own timetable. Click on the
+                    "Share/Sync" button.
+                  </li>
+                  <li>3. Click on the Copy icon.</li>
+                  <li>
+                    4. Paste your link into MixTime, under the{" "}
+                    <b>Enter NUSMods Sharing URL</b> textbox.
+                  </li>
+                  <li>
+                    5. Head back to MixTime's website and navigate to the URL
+                    textbox on the <b>My Timetable</b> page.
+                  </li>
+                  <li>
+                    6. Place the copied NUSMods URL, and click on the{" "}
+                    <b>Update Timetable</b> button.
+                  </li>
+                  <li>
+                    7. Your timetable has been successfully added. You can see
+                    it from the "My Timetable" tab.
+                  </li>
+                </ol>
+                <br></br>
+                <p>
+                  See video steps <b>here</b>:
+                </p>
+                <video key={urlTutVid} controls muted style={{ width: "70%" }}>
+                  <source src={urlTutVid} type="video/mp4" />
+                </video>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
 
-          <br></br>
-          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
-            Importing Your Timetable
-          </p>
+          <Accordion
+            expanded={expanded === "panel2"}
+            onChange={handleChange("panel2")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2bh-content"
+              id="panel2bh-header"
+            >
+              <Typography className={classes.heading}>
+                Adding New Events
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                You can <b>add events</b> into your timetable.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  You can <b>add an event</b> into your MixTime timetables, on
+                  top of your NUSMods timetable.
+                </p>
+                <br></br>
+                <p>
+                  To <b>add</b> new events, follow these steps:
+                </p>
+                <ol>
+                  <li>
+                    1. In the <b>My Timetable</b> page. On the right of your
+                    screen, click on the <b>Create Event</b> button.
+                  </li>
+                  <li>
+                    2. A prompt will appear. Enter the event details
+                    accordingly.
+                  </li>
+                  <li>
+                    3. When you are done, click on the <b>Submit</b> button.
+                  </li>
+                  <li>
+                    4. Your name has been successfully changed. You should be
+                    able to see the update now. If you can't, try to refresh
+                    your browser.
+                  </li>
+                </ol>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
 
-          <p>
-            You <b>must</b> import your NUSMods timetable into MixTime, to see
-            it on your <b>Timetable Page</b>.
-          </p>
-          <br></br>
-          <p>
-            To <b>import your timetable</b>, follow these steps:
-          </p>
-          <ol>
-            <li>
-              1. Head over to{" "}
-              <u>
-                <a href="https://nusmods.com/">NUSMods</a>
-              </u>{" "}
-              website.
-            </li>
-            <li>
-              2. You should see your own timetable. Click on the "Share/Sync"
-              button.
-            </li>
-            <li>3. Click on the Copy icon.</li>
-            <li>
-              4. Paste your link into MixTime, under the{" "}
-              <b>Enter NUSMods Sharing URL</b> textbox.
-            </li>
-            <li>
-              5. Head back to MixTime's website and navigate to the URL textbox
-              on the <b>My Timetable</b> page.
-            </li>
-            <li>
-              6. Place the copied NUSMods URL, and click on the{" "}
-              <b>Update Timetable</b> button.
-            </li>
-            <li>
-              7. Your timetable has been successfully added. You can see it from
-              the "My Timetable" tab.
-            </li>
-          </ol>
-          <br></br>
-          <p>
-            See video steps <b>here</b>:
-          </p>
-          <video key={urlTutVid} autoPlay loop muted style={{ width: "70%" }}>
-            <source src={urlTutVid} type="video/mp4" />
-          </video>
+          <Accordion
+            expanded={expanded === "panel3"}
+            onChange={handleChange("panel3")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2bh-content"
+              id="panel2bh-header"
+            >
+              <Typography className={classes.heading}>
+                Navigating The Weeks
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                You can go through different <b>weeks</b> to check your
+                schedule.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  On MixTime, we follow the <b>same semestral periods</b> as
+                  NUS. You can go through each week by clicking on the week
+                  number.
+                </p>
+                <br></br>
+                <p>
+                  Each week should display your timetable schedules, based on
+                  your imported timetable. If you cannot see it, refer to{" "}
+                  <b>Importing Your Timetable</b> tab.
+                </p>
 
+                <br></br>
+                <p>
+                  Note that week 7 is also the recess week, hence there should
+                  be no lessons appearing on that page. To get to each page,
+                  simply click on the corresponding page number.
+                </p>
+                <video key={weeksNav} autoPlay loop muted style={{ width: "70%" }}>
+                  <source src={weeksNav} type="video/mp4" />
+                </video>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
           <br></br>
-          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
-            Adding New Events
-          </p>
-
-          <p>
-            You can <b>add events</b> into your timetable.
-          </p>
-          <br></br>
-          <p>
-            To <b>add</b> new events, follow these steps:
-          </p>
-          <ol>
-            <li>
-              1. In the <b>My Timetable</b> page, on the right of your screen,
-              click on the <b>Create Event</b> button.
-            </li>
-            <li>
-              2. A prompt will appear. Enter the event details accordingly.
-            </li>
-            <li>
-              3. When you are done, click on the <b>Submit</b> button.
-            </li>
-            <li>
-              4. Your name has been successfully changed. You should be able to
-              see the update now. If you can't, try to refresh your browser.
-            </li>
-          </ol>
         </div>
       </div>
     );
@@ -260,85 +370,308 @@ export function TutorialPage() {
           <br></br>
           <p>
             Additionally, you can manage your groups, remove members, add them,
-            or delete the group entirely.
+            or delete the group entirely. Click on one of the tabs below to find
+            out more.
           </p>
 
           <br></br>
-          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
-            Creating A Group
-          </p>
+          <Accordion
+            expanded={expanded === "panel1"}
+            onChange={handleChange("panel1")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2bh-content"
+              id="panel2bh-header"
+            >
+              <Typography className={classes.heading}>
+                Creating A Group
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                Steps on how to <b>create</b> groups.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  To <b>create a group</b>, follow these steps:
+                </p>
+                <ol>
+                  <li>
+                    1. Head over to the <b>Manage Groups</b> page.
+                  </li>
+                  <li>2. Click on the big (+) icon.</li>
+                  <li>
+                    3. Enter your <b>Group Name</b>.
+                  </li>
+                  <li>
+                    4. Enter number of group members (I.e., 5 members, this
+                    includes you).
+                  </li>
+                  <li>
+                    5. Enter each group member's ID. Their IDs are found at the
+                    top right of their own screens.
+                  </li>
+                  <li>
+                    6. When you are done, click <b>OK</b>. You should see a new
+                    group appearing on the page. Wait for awhile or refresh if
+                    you don't see any.
+                  </li>
+                </ol>
+                <br></br>
+                <p>
+                  See video steps <b>here</b>:
+                </p>
+                <video
+                  key={groupTutVid}
+                  controls
+                  muted
+                  style={{ width: "70%" }}
+                >
+                  <source src={groupTutVid} type="video/mp4" />
+                </video>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
 
-          <p>
-            You <b>must</b> create groups first, then add members in, before
-            being able to see everyone's timetables on the{" "}
-            <b>Group Timetable</b> Page.
-          </p>
-          <br></br>
-          <p>
-            To <b>create a group</b>, follow these steps:
-          </p>
-          <ol>
-            <li>
-              1. Head over to the <b>Manage Groups</b> page.
-            </li>
-            <li>2. Click on the big (+) icon.</li>
-            <li>
-              3. Enter your <b>Group Name</b>.
-            </li>
-            <li>
-              4. Enter number of group members (I.e., 5 members, this includes
-              you).
-            </li>
-            <li>
-              5. Enter each group member's ID. Their IDs are found at the top
-              right of their own screens.
-            </li>
-            <li>
-              6. When you are done, click <b>OK</b>. You should see a new group
-              appearing on the page. Wait for awhile or refresh if you don't see
-              any.
-            </li>
-          </ol>
-          <br></br>
-          <p>
-            See video steps <b>here</b>:
-          </p>
-          <video key={groupTutVid} autoPlay loop muted style={{ width: "70%" }}>
-            <source src={groupTutVid} type="video/mp4" />
-          </video>
+          <Accordion
+            expanded={expanded === "panel2"}
+            onChange={handleChange("panel2")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2bh-content"
+              id="panel2bh-header"
+            >
+              <Typography className={classes.heading}>
+                Adding Group Members
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                Adding members to your MixTime group.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  You can <b>add</b> other MixTime users into the groups you
+                  have formed.
+                </p>
+                <br></br>
+                <p>
+                  To <b>add other members</b>, follow these steps:
+                </p>
+                <ol>
+                  <li>
+                    1. Head over to the <b>Manage Groups</b> page.
+                  </li>
+                  <li>
+                    2. Click on the <b>Add Member</b> button, in the group that
+                    you wish to add your members.
+                  </li>
+                  <li>
+                    3. A dialog will appear at the top of your screen. Enter
+                    your member's <b>User ID</b>.
+                  </li>
+                  <li>
+                    4. When you are done, click on <b>OK</b>. You should see
+                    your member's name in the corresponding group card. Wait for
+                    awhile or refresh if you don't see any.
+                  </li>
 
-          <br></br>
-          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
-            Editing Your Group Details
-          </p>
-          <p>
-            You can <b>only</b> change your group name on the Manage Groups page.
-          </p>
-          <br></br>
-          <p>
-            To <b>change your group name</b>, follow these steps:
-          </p>
-          <ol>
-            <li>
-              1. Head over to the <b>Manage Groups</b> page.
-            </li>
-            <li>2. Click on the <CreateIcon/> icon.</li>
-            <li>
-              3. Enter your <b>desired Group Name</b>.
-            </li>
-            <li>
-              4. When you are done, click on the <SaveIcon/>. You should see your new group name. Wait for awhile or refresh if you don't see
-              any.
-            </li>
-          </ol>
-          <br></br>
+                  <br></br>
+                  <p>
+                    See video steps <b>here</b>:
+                  </p>
+                  <video
+                    key={addingMember}
+                    controls
+                    muted
+                    style={{ width: "70%" }}
+                  >
+                    <source src={addingMember} type="video/mp4" />
+                  </video>
+                </ol>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
 
-          <br></br>
-          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
-            Leaving Your Group
-          </p>
-          <p>-</p>
+          <Accordion
+            expanded={expanded === "panel3"}
+            onChange={handleChange("panel3")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2bh-content"
+              id="panel2bh-header"
+            >
+              <Typography className={classes.heading}>
+                Editing Your Group Name
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                Rename your group based on your preferences.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  You can <b>only</b> change your group name on the{" "}
+                  <b>Manage Groups page</b>.
+                </p>
+                <br></br>
+                <p>
+                  To <b>change your group name</b>, follow these steps:
+                </p>
+                <ol>
+                  <li>
+                    1. Head over to the <b>Manage Groups</b> page.
+                  </li>
+                  <li>
+                    2. Click on the <CreateIcon /> icon.
+                  </li>
+                  <li>
+                    3. Enter your <b>desired Group Name</b>.
+                  </li>
+                  <li>
+                    4. When you are done, click on the <SaveIcon />. You should
+                    see your new group name. Wait for awhile or refresh if you
+                    don't see any.
+                  </li>
+                </ol>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
 
+          <Accordion
+            expanded={expanded === "panel4"}
+            onChange={handleChange("panel4")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2bh-content"
+              id="panel2bh-header"
+            >
+              <Typography className={classes.heading}>
+                Leaving Your Group
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                You can <b>leave a MixTime group</b> when you no longer need it.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  When you leave a MixTime group, <b>only</b> you will be{" "}
+                  <b>removed</b> from the group. Everyone else inside the group
+                  will still remain there.
+                </p>
+                <br></br>
+                <p>
+                  To <b>leave a group</b>, follow these steps:
+                </p>
+                <br></br>
+
+                <ol>
+                  <li>
+                    1. Head over to the <b>Manage Groups</b> page.
+                  </li>
+                  <li>
+                    2. Click on the <b> Leave Group </b> button.
+                  </li>
+                  <li>
+                    3. A <b>prompt</b> will appear on the top of your screen.
+                  </li>
+                  <li>
+                    4. Click on <b>OK</b> if you really want to leave group.
+                  </li>
+                  <li>
+                    5. You will see a message on the top right of your screen.
+                    This will tell you whether you have left the group or not.
+                  </li>
+                </ol>
+
+                <br></br>
+                <p>
+                  If you have <b>left a group by accident</b>, simply tell your
+                  group members to add you back in via your User ID (
+                  {localStorage.getItem("studentId")}).
+                </p>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion
+            expanded={expanded === "panel5"}
+            onChange={handleChange("panel5")}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2bh-content"
+              id="panel2bh-header"
+            >
+              <Typography className={classes.heading}>
+                Deleting A Group
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                Deleting a MixTime group which you don't need.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  When you delete a MixTime group, it is a permanent action. The
+                  group will <b>no longer</b> be available to anyone after
+                  deletion.
+                </p>
+                <br></br>
+                <p>
+                  You <b>must</b> remove everyone from the group first, before
+                  being able to delete the group.
+                </p>
+                <br></br>
+                <p>
+                  To <b>delete a group</b>, follow these steps:
+                </p>
+                <br></br>
+
+                <ol>
+                  <li>
+                    1. Head over to the <b>Manage Groups</b> page.
+                  </li>
+                  <li>
+                    2. Click on the <DeleteIcon /> icon.
+                  </li>
+                  <li>
+                    3. A <b>prompt</b> will appear on the top of your screen.
+                  </li>
+                  <li>
+                    4. Click on <b>OK</b> if you really want to delete the
+                    group.
+                  </li>
+                  <li>
+                    5. You will see a message on the top right of your screen.
+                    This will tell you whether the deletion is successful.
+                  </li>
+                  <br></br>
+                  <p>
+                    See video steps <b>here</b>:
+                  </p>
+                  <video
+                    key={deleteGroup}
+                    controls
+                    muted
+                    style={{ width: "70%" }}
+                  >
+                    <source src={deleteGroup} type="video/mp4" />
+                  </video>
+                </ol>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </div>
       </div>
     );
@@ -355,7 +688,7 @@ export function TutorialPage() {
           fontFamily: "Lato, sans-serif",
         }}
       >
-        Hello. How can we help you?
+        Hello {localStorage.getItem("studentName")}. How can we help you?
       </p>
 
       <div
