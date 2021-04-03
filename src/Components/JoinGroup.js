@@ -48,6 +48,13 @@ function JoinGroup(props) {
   );
   const [groupData, setGroupData] = useState([]);
   const [toGroupManagement, setToGroupManagement] = useState(false);
+  const [isJoinGroupDisabled, setIsJoinGroupDisabled] = useState(true);
+  const [joinGroupUserInput, setJoinGroupUserInput] = useState("");
+  const [
+    parsedGroupIdFromUserInput,
+    setParsedGroupIdFromUserInput,
+  ] = useState();
+  const [errorMessage, setErrorMessage] = useState("");
 
   // help make sure user is logged in
   const [refreshKey, setRefreshKey] = useState(0);
@@ -139,8 +146,6 @@ function JoinGroup(props) {
         var database = firebase.app().database();
       }
       let groupMembers = await getGroupMembersOfGroup(groupIdToJoin, database);
-      console.log("asdasdasd");
-      console.log(groupMembers);
       setGroupData(groupMembers);
       setGroupIdToJoin(groupIdToJoin);
     }
@@ -157,18 +162,13 @@ function JoinGroup(props) {
       let groupMembers = groupData.members;
       if (localStorage.getItem("studentId") != null) {
         if (groupMembers !== undefined && groupMembers.length > 0) {
-          console.log("passef");
           if (
             groupMembers.includes(parseInt(localStorage.getItem("studentId")))
           ) {
             //already in groupa
-            console.log("old groupMembers");
-            console.log(groupMembers);
             toast.error("You are already in this group");
           } else {
             groupMembers.push(parseInt(localStorage.getItem("studentId")));
-            console.log("new groupMembers");
-            console.log(groupMembers);
             database
               .ref(`Groups/`)
               .child(groupIdToJoin)
@@ -181,6 +181,65 @@ function JoinGroup(props) {
           console.log("here");
         }
       }
+    }
+  };
+
+  // Parse and check user input for numeric group ID
+  useEffect(() => {
+    if (joinGroupUserInput !== undefined && joinGroupUserInput.length < 1) {
+      setIsJoinGroupDisabled(true);
+      return;
+    }
+    // is integer then ok
+    if (parseInt(joinGroupUserInput)) {
+      setParsedGroupIdFromUserInput(parseInt(joinGroupUserInput));
+      setIsJoinGroupDisabled(false);
+      return;
+    }
+    // check url inputs
+    // check if mixtime url is part of the included url
+    if (!joinGroupUserInput.includes(window.location.host)) {
+      setIsJoinGroupDisabled(true);
+      setErrorMessage("Wrong URL Entered");
+      return;
+    }
+    // check if is joinGroup url
+    if (joinGroupUserInput.split("/JoinGroup/"[1])) {
+      let val = joinGroupUserInput.split("/JoinGroup/")[1];
+      if (parseInt(val)) {
+        setParsedGroupIdFromUserInput(parseInt(val));
+        setIsJoinGroupDisabled(false);
+        return;
+      }
+    }
+
+    setErrorMessage("Could not get group number, please check and try again");
+    setIsJoinGroupDisabled(true);
+  }, [joinGroupUserInput]);
+
+  useEffect(() => {}, [parsedGroupIdFromUserInput]);
+
+  const triggerGroupCheck = async () => {
+    if (
+      localStorage.getItem("studentId") != null &&
+      parsedGroupIdFromUserInput !== undefined
+    ) {
+      var database;
+      if (!firebase.apps.length) {
+      } else {
+        firebase.app();
+        var database = firebase.app().database();
+      }
+      let groupMembers = await getGroupMembersOfGroup(
+        parsedGroupIdFromUserInput,
+        database
+      );
+      if (groupMembers === undefined) {
+        toast.error("Group was not found, please check and try again.");
+        setErrorMessage("Group was not found, please check and try again.");
+      }
+      setGroupData(groupMembers);
+      setGroupIdToJoin(parsedGroupIdFromUserInput);
     }
   };
 
@@ -229,6 +288,31 @@ function JoinGroup(props) {
                 </CardContent>
                 <CardActions
                   style={{
+                    float: "left",
+                  }}
+                >
+                  <div styles={{ marginTop: 30, width: "80%" }}>
+                    <Button
+                      disabled={isJoinGroupDisabled}
+                      variant="contained"
+                      style={{
+                        // width: "fit-content",
+                        backgroundColor: "#DC3545",
+                        color: "white",
+                      }}
+                      onClick={() => {
+                        setGroupData([]);
+                        setGroupIdToJoin(undefined);
+                        setJoinGroupUserInput("");
+                      }}
+                    >
+                      Join a different group
+                    </Button>
+                  </div>
+                </CardActions>
+                {/*
+                <CardActions
+                  style={{
                     float: "right",
                   }}
                 >
@@ -242,6 +326,7 @@ function JoinGroup(props) {
                     </Button>
                   </Link>
                 </CardActions>
+                */}
               </Card>
             </Box>
           ) : (
@@ -296,6 +381,30 @@ function JoinGroup(props) {
                   </CardContent>
                   <CardActions
                     style={{
+                      float: "left",
+                    }}
+                  >
+                    <div styles={{ marginTop: 30, width: "80%" }}>
+                      <Button
+                        disabled={isJoinGroupDisabled}
+                        variant="contained"
+                        style={{
+                          // width: "fit-content",
+                          backgroundColor: "#DC3545",
+                          color: "white",
+                        }}
+                        onClick={() => {
+                          setGroupData([]);
+                          setGroupIdToJoin(undefined);
+                          setJoinGroupUserInput("");
+                        }}
+                      >
+                        Join a different group
+                      </Button>
+                    </div>
+                  </CardActions>
+                  <CardActions
+                    style={{
                       float: "right",
                     }}
                   >
@@ -305,7 +414,6 @@ function JoinGroup(props) {
                         color="primary"
                         onClick={() => {
                           addMemberToGroup();
-                          console.log(studentId);
                         }}
                       >
                         Join Group
@@ -317,7 +425,83 @@ function JoinGroup(props) {
             </Box>
           )
         ) : (
-          "We could not find this group"
+          <div>
+            <Box
+              boxShadow={6}
+              style={{
+                backgroundColor: "white",
+              }}
+              className={classes.boxDesign}
+            >
+              <Card style={{ width: 500 }}>
+                <CardContent
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                    height: 150,
+                  }}
+                >
+                  <div style={{ marginBottom: 10 }}>
+                    Enter Group ID or Join Group URL
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Enter Group ID to join"
+                    style={{
+                      padding: "4px 4px 4px 4px",
+                      borderRadius: "4px",
+                      outline: "none",
+                      border: "1px solid black",
+                      backgroundColor: "initial !important",
+                    }}
+                    value={joinGroupUserInput}
+                    onChange={(e) => {
+                      setErrorMessage("");
+                      setJoinGroupUserInput(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      try {
+                        let keypress = e.code;
+                        if (
+                          (keypress === "Enter" ||
+                            keypress === "NumpadEnter") &&
+                          !isJoinGroupDisabled
+                        ) {
+                          triggerGroupCheck();
+                        }
+                      } catch {
+                        // do nothing
+                      }
+                    }}
+                  ></input>
+                  <div style={{ marginTop: 20, color: "red" }}>
+                    {errorMessage !== undefined && errorMessage.length > 1
+                      ? errorMessage
+                      : ""}
+                  </div>
+                </CardContent>
+                <CardActions
+                  style={{
+                    float: "right",
+                  }}
+                >
+                  <div styles={{ marginTop: 30, width: "80%" }}>
+                    <Button
+                      disabled={isJoinGroupDisabled}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        triggerGroupCheck();
+                      }}
+                    >
+                      Find Group
+                    </Button>
+                  </div>
+                </CardActions>
+              </Card>
+            </Box>
+          </div>
         )}
       </div>
       <div>{toGroupManagement ? <Redirect to="/GroupManagement" /> : null}</div>

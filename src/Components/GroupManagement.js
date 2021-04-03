@@ -27,15 +27,20 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
-
 import { Link } from "react-router-dom";
-
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Modal from "react-bootstrap/Modal";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  LineShareButton,
+  TelegramShareButton,
+  WhatsappShareButton,
+} from "react-share";
 
 toast.configure();
 
@@ -114,10 +119,6 @@ function GroupManagement(props) {
   const [studentGroups, setStudentGroups] = useState([]);
   const [, setGroupId] = useState();
   const [groupMembers, setGroupMembers] = useState([]);
-  useEffect(() => {
-    console.log("groupMembers has changed");
-    console.log(groupMembers);
-  }, [groupMembers]);
 
   let getStudentGroups = () => {
     setStudentGroups([]);
@@ -406,7 +407,9 @@ function GroupManagement(props) {
       if (studentGroups[i].groupId === groupId) {
         var membersList = studentGroups[i].members;
         for (var j = 0; j < membersList.length; j++) {
-          tempGroupMembers.push(membersList[j]);
+          if (membersList[j] !== undefined) {
+            tempGroupMembers.push(membersList[j]);
+          }
         }
       }
     }
@@ -597,6 +600,7 @@ function GroupManagement(props) {
   const [addMemberModalIsOpen, setAddMemberModalIsOpen] = useState(false);
   const [addMemberModalGroupId, setAddMemberModalGroupId] = useState(-1);
   const [addMemberModalGroupName, setAddMemberModalGroupName] = useState("");
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const openAddMemberModal = (selectedGroupId, selectedGroupName) => {
     getGroupMembersInAGroup(selectedGroupId);
@@ -615,6 +619,7 @@ function GroupManagement(props) {
     setRefreshKey(refreshKey + 1);
     setModalMemberId(undefined);
     setAddMemberModalGroupName("");
+    setLinkCopied(false);
   };
   const history = useHistory();
 
@@ -710,42 +715,80 @@ function GroupManagement(props) {
             margin: "3% 2% 0% 15%",
           }}
         >
-          <Box
-            boxShadow={6}
+          <div
             style={{
-              margin: "0% 3%",
-              minHeight: "220px",
-              width: "24%",
-              maxHeight: "220px",
+              marginTop: "1%",
+              minWidth: 310,
+              maxWidth: 310,
+              minHeight: 280,
+              maxHeight: 280,
             }}
-            className={classes.boxDesign}
           >
-            <Card className={classes.root}>
-              <div className="cardRow">
-                <CardContent className={classes.cardColumn}>
-                  <div
-                    style={{
-                      margin: "auto",
-                      textAlign: "center",
-                      fontSize: "x-large",
-                      // minHeight: "170px",
-                    }}
-                  >
-                    <Link
-                      style={{ width: "fit-content" }}
-                      onClick={createGroupId}
+            <Box
+              boxShadow={6}
+              style={{
+                margin: "0% 3%",
+                minHeight: 220,
+                width: 300,
+                maxHeight: 220,
+              }}
+              className={classes.boxDesign}
+            >
+              <Card className={classes.root}>
+                <div className="cardRow">
+                  <CardContent className={classes.cardColumn}>
+                    <div
+                      style={{
+                        margin: "auto",
+                        textAlign: "center",
+                        fontSize: "x-large",
+                      }}
                     >
-                      <AddIcon style={{ width: "200px", height: "100px" }} />
-                      <br></br>
-                      <h3 style={{ fontWeight: "bold" }}>Create New Group</h3>
-                    </Link>
-                  </div>
-                </CardContent>
-                <CardActions></CardActions>
+                      <Link
+                        style={{ width: "fit-content" }}
+                        onClick={createGroupId}
+                      >
+                        <AddIcon style={{ width: "200px", height: "100px" }} />
+                        <br></br>
+                        <h3 style={{ fontWeight: "bold" }}>Create New Group</h3>
+                      </Link>
+                    </div>
+                  </CardContent>
+                  <CardActions></CardActions>
+                </div>
+              </Card>
+            </Box>
+            <Box
+              boxShadow={6}
+              style={{
+                margin: "0% 3%",
+                marginTop: 10,
+                minHeight: 50,
+                width: 300,
+                maxHeight: 50,
+              }}
+              className={classes.boxDesign}
+            >
+              <div
+                style={{
+                  margin: "auto",
+                  textAlign: "center",
+                }}
+              >
+                <Link
+                  style={{
+                    width: "fit-content",
+                    fontSize: "x-large",
+                  }}
+                  to="/JoinGroup"
+                >
+                  <h3 style={{ paddingTop: 11, fontWeight: "bold" }}>
+                    Join A Group
+                  </h3>
+                </Link>
               </div>
-            </Card>
-          </Box>
-
+            </Box>
+          </div>
           {groupNameTextboxArr !== undefined &&
           filteredStudentGroups !== undefined &&
           groupNameTextboxArr.length === filteredStudentGroups.length ? (
@@ -1301,69 +1344,126 @@ function GroupManagement(props) {
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <div>
-            <div>Join Group URL:</div>
-            <div
-              onClick={() => {
-                // implement copy to clipboard
-                // am considering the library react-copy-to-clipboard
-              }}
-            >
-              {/* {console.log(window.location.host)} */}
-              http://{window.location.host}/JoinGroup/
-              {addMemberModalGroupId}
-            </div>
-          </div>
-          <div>
-            Current Members
-            {groupMembers ? JSON.stringify(groupMembers) : "beep"}
-          </div>
           <div
             style={{
               display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
+              flexDirection: "column",
             }}
           >
-            <div style={{}}>Enter member ID: </div>
-            <input
-              type="text"
-              placeholder="Enter Group Member ID to add"
+            <div style={{ marginBottom: 30 }}>
+              <div style={{ marginBottom: 10 }}>
+                Share the following URL to your group mates to invite them to
+                the group
+              </div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "100%",
+                  }}
+                >
+                  <input
+                    style={{
+                      flexGrow: 1,
+                      marginRight: 20,
+                      padding: "4px 4px 4px 4px",
+                      borderRadius: "4px",
+                      outline: "none",
+                      border: "1px solid",
+                      backgroundColor: "lightGray",
+                    }}
+                    value={
+                      "http://" +
+                      window.location.host +
+                      "/JoinGroup/" +
+                      addMemberModalGroupId
+                    }
+                    onFocus={(event) => {
+                      event.target.select();
+                    }}
+                  ></input>
+                  <CopyToClipboard
+                    text={
+                      "Use the link to join my MixTime Group" +
+                      "\n" +
+                      "http://" +
+                      window.location.host +
+                      "/JoinGroup/" +
+                      addMemberModalGroupId
+                    }
+                    onCopy={() => {
+                      toast.success("The sharing link has been copied");
+                      setLinkCopied(true);
+                    }}
+                  >
+                    <div>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{
+                          width: "fit-content",
+                        }}
+                      >
+                        Copy To Clipboard
+                      </Button>
+                    </div>
+                  </CopyToClipboard>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 30 }}>
+              Current Members:
+              {groupMembers ? JSON.stringify(groupMembers) : "beep"}
+            </div>
+
+            <div
               style={{
-                // width: "100%",
-                flexGrow: 1,
-                marginLeft: 20,
-                marginRight: 20,
-                padding: "4px 4px 4px 4px",
-                borderRadius: "4px",
-                outline: "none",
-                border: "1px solid #da337a",
-                // boxShadow: "0px 0px 8px #da337a",
-                backgroundColor: "initial !important",
-              }}
-              value={modalMemberId}
-              onChange={(e) => {
-                handleChangeAddMemberModal(e);
-                // setModalMemberId(e.target.value);
-              }}
-            ></input>
-            <Button
-              disabled={addMemberDisabled === true ? true : false}
-              variant="contained"
-              color="primary"
-              style={{
-                width: "fit-content",
-              }}
-              onClick={() => {
-                addMemberToGroupUsingModal();
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
               }}
             >
-              Add Member
-            </Button>
-          </div>
-          <div>Note: You do not need to add your own ID.</div>
-          <div>
-            Your ID is displayed on the top right hand corner beside your name.
+              <div style={{}}>Enter member ID: </div>
+              <input
+                type="text"
+                placeholder="Enter Group Member ID to add"
+                style={{
+                  flexGrow: 1,
+                  marginLeft: 20,
+                  marginRight: 20,
+                  padding: "4px 4px 4px 4px",
+                  borderRadius: "4px",
+                  outline: "none",
+                  border: "1px solid #da337a",
+                  backgroundColor: "initial !important",
+                }}
+                value={modalMemberId}
+                onChange={(e) => {
+                  handleChangeAddMemberModal(e);
+                  // setModalMemberId(e.target.value);
+                }}
+              ></input>
+              <Button
+                disabled={addMemberDisabled === true ? true : false}
+                variant="contained"
+                color="primary"
+                style={{
+                  width: "fit-content",
+                }}
+                onClick={() => {
+                  addMemberToGroupUsingModal();
+                }}
+              >
+                Add Member
+              </Button>
+            </div>
+            <div>Note: You do not need to add your own ID.</div>
+            <div>
+              Your ID is displayed on the top right hand corner beside your
+              name.
+            </div>
           </div>
         </DialogContent>
       </Dialog>
