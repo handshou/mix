@@ -3,7 +3,7 @@ import { React, Fragment, useState, useEffect } from "react";
 import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 
-import { Button, setRef } from "@material-ui/core";
+import { Button, setRef, OutlinedInput } from "@material-ui/core";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -30,7 +30,8 @@ import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ExpandLess } from "@material-ui/icons";
+import Modal from "react-bootstrap/Modal";
+
 toast.configure();
 
 if (!firebase.apps.length) {
@@ -196,7 +197,43 @@ function GroupManagement(props) {
     });
   };
 
+  const [memberIdToAdd, setMemberIdToAdd] = useState(-1);
+  function handleChangeAddMemberModal(e) {
+    var memberId = e.target.value;
+
+    //check if this user trying to add himself
+    if (parseInt(memberId) == parseInt(studentId)) {
+      toast.error("You are not allowed to add your own Student ID");
+      setAddMemberDisabled(true);
+      return;
+    }
+
+    //check if this member is defined in the system
+    var newMemberName = getGMN(memberId);
+    if (newMemberName === undefined) {
+      toast.error("There is no record of this member ID #" + memberId);
+      setAddMemberDisabled(true);
+      return;
+    }
+
+    firebase.app();
+    var database = firebase.app().database();
+    var studentsRef = database.ref(`Students/${memberId}`);
+    studentsRef.once("value").then((snapshot) => {
+      if (snapshot.val() === null) {
+        toast.error("There is no record of this member ID #" + memberId);
+        setAddMemberDisabled(true);
+        return;
+      }
+    });
+
+    setMemberIdToAdd(memberId);
+    setAddMemberDisabled(false);
+  } 
+
   let addMemberToGroup = (groupId) => {
+    handleShowModal();
+
     for (var i = 0; i < studentGroups.length; i++) {
       if (studentGroups[i].groupId === groupId) {
         var membersList = studentGroups[i].members;
@@ -209,38 +246,55 @@ function GroupManagement(props) {
     }
     setGroupMembers(groupMembers);
 
-    var memberId = prompt(
-      "Enter member ID.\nNote: You do not need to add your own ID. \nYour ID is displayed on the top right hand corner beside your name."
-    );
-    if (memberId == null) {
-      toast.success("Member addition has been cancelled.");
-      return;
+    // var memberId = prompt(
+    //   "Enter member ID.\nNote: You do not need to add your own ID. \nYour ID is displayed on the top right hand corner beside your name."
+    // );
+    // if (memberId == null) {
+    //   toast.success("Member addition has been cancelled.");
+    //   return;
+    // }
+
+    // if (parseInt(memberId) == parseInt(studentId)) {
+    //   toast.error("You are not allowed to add your own Student ID");
+    //   return;
+    // }
+
+    // //check if this memberId exist in the system
+    // var newMemberName = getGMN(memberId);
+    // if (newMemberName === undefined) {
+    //   toast.error("There is no record of this member.");
+    //   return;
+    // }
+
+    // groupMembers.push(parseInt(memberId));
+    
+    if (memberIdToAdd !== -1) {
+      groupMembers.push(parseInt(memberIdToAdd));
+      if (!firebase.apps.length) {
+        database
+          .ref(`Groups/`)
+          .child(groupId)
+          .child("members")
+          .set(groupMembers);
+      } else {
+        firebase.app();
+        var database = firebase.app().database();
+        database
+          .ref(`Groups/`)
+          .child(groupId)
+          .child("members")
+          .set(groupMembers);
+      }
+      toast.success(
+        "Member ID: " +
+          memberIdToAdd +
+          " has been added to Group ID: " +
+          groupId +
+          " successfully."
+      );
+      getGroupMembersInAGroup(groupId);
+      setRefreshKey(refreshKey + 1);
     }
-
-    if (parseInt(memberId) == parseInt(studentId)) {
-      toast.error("You are not allowed to add your own Student ID");
-      return;
-    }
-
-    //check if this memberId exist in the system
-    var newMemberName = getGMN(memberId);
-    if (newMemberName === undefined) {
-      toast.error("There is no record of this member.");
-      return;
-    }
-
-    groupMembers.push(parseInt(memberId));
-    database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-
-    toast.success(
-      "Member ID: " +
-        memberId +
-        " has been added to Group ID: " +
-        groupId +
-        " successfully."
-    );
-    getGroupMembersInAGroup(groupId);
-    setRefreshKey(refreshKey + 1);
   };
 
   const removeAllOtherMembersFromGroup = (groupId) => {
@@ -527,6 +581,13 @@ function GroupManagement(props) {
     let path = `ViewArchivedGroups`;
     history.push(path);
   };
+  
+  const [showModal, setShowModal] = useState(false);
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
+
+  const [addMemberDisabled, setAddMemberDisabled] = useState(false);
+
 
   return (
     <Fragment>
@@ -906,9 +967,9 @@ function GroupManagement(props) {
                                         // width: "fit-content"
                                       }
                                     }
-                                    onClick={() =>
-                                      addMemberToGroup(group.groupId)
-                                    }
+                                    onClick={() => {
+                                      addMemberToGroup(group.groupId);
+                                    }}
                                   >
                                     Add Member
                                   </Button>
@@ -1197,6 +1258,58 @@ function GroupManagement(props) {
           )}
         </div>
       </div>
+
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        // backdrop="static"
+        // keyboard={false}
+        {...props}
+        size="lg"
+      >
+        <Modal.Header>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Add Member
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className={classes.root}>
+            <div>
+              <p>
+                Note: You do not need to add your own ID.
+                <br></br>
+                Your ID is displayed on the top right hand corner beside your
+                name.
+              </p>
+              <div>
+                Enter member ID:
+                <OutlinedInput
+                  required
+                  placeholder={"e.g, 8"}
+                  style={{
+                    width: 300,
+                    marginLeft: 30,
+                    marginRight: 30,
+                    marginTop: 20,
+                  }}
+                  onChange={(e) => {
+                    handleChangeAddMemberModal(e);
+                  }}
+                ></OutlinedInput>
+              </div>
+              <br></br>
+            </div>
+            <hr></hr>
+            <br></br>
+
+            <Button variant="contained" color="primary" style={{float: "right"}} disabled={addMemberDisabled === true ? true : false}>
+              Add Member
+            </Button>
+
+            <div></div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </Fragment>
   );
 }
