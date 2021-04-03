@@ -22,6 +22,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import ArchiveIcon from "@material-ui/icons/Archive";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
@@ -136,7 +141,7 @@ function GroupManagement(props) {
           }
         }
       }
-      setStudentGroups(tempStudentGroups);
+      setStudentGroups(tempStudentGroups.reverse());
     });
   };
 
@@ -173,6 +178,12 @@ function GroupManagement(props) {
     if (groupName == null) {
       toast.success("The creation of group has been cancelled.");
       return;
+    }
+    var database;
+    if (!firebase.apps.length) {
+    } else {
+      firebase.app();
+      var database = firebase.app().database();
     }
 
     var query = firebase.database().ref("Groups/").orderByKey();
@@ -267,8 +278,63 @@ function GroupManagement(props) {
     }
   };
 
+  const [modalMemberId, setModalMemberId] = useState();
+
+  let addMemberToGroupUsingModal = () => {
+    for (var i = 0; i < studentGroups.length; i++) {
+      if (studentGroups[i].groupId === addMemberModalGroupId) {
+        var membersList = studentGroups[i].members;
+        for (var j = 0; j < membersList.length; j++) {
+          if (membersList[j] !== undefined) {
+            groupMembers.push(membersList[j]);
+          }
+        }
+      }
+    }
+    setGroupMembers(groupMembers);
+
+    if (modalMemberId == null) {
+      toast.success("Member addition has been cancelled.");
+      return;
+    }
+
+    if (parseInt(modalMemberId) == parseInt(studentId)) {
+      toast.error("You are not allowed to add your own Student ID");
+      return;
+    }
+
+    var database;
+    if (!firebase.apps.length) {
+    } else {
+      firebase.app();
+      var database = firebase.app().database();
+    }
+
+    groupMembers.push(parseInt(modalMemberId));
+    database
+      .ref(`Groups/`)
+      .child(addMemberModalGroupId)
+      .child("members")
+      .set(groupMembers);
+
+    toast.success(
+      "Member ID: " +
+        modalMemberId +
+        " has been added to Group ID: " +
+        addMemberModalGroupId +
+        " successfully."
+    );
+    getGroupMembersInAGroup(addMemberModalGroupId);
+    setModalMemberId(undefined);
+  };
 
   let removeStudentFromGroup = (groupId, removeStudentId) => {
+    var database;
+    if (!firebase.apps.length) {
+    } else {
+      firebase.app();
+      var database = firebase.app().database();
+    }
     //Leave Group
     if (
       parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))
@@ -521,6 +587,26 @@ function GroupManagement(props) {
     toast.success("You have successfully archived the group.");
   }
 
+  const [addMemberModalIsOpen, setAddMemberModalIsOpen] = useState(false);
+  const [addMemberModalGroupId, setAddMemberModalGroupId] = useState(-1);
+  const [addMemberModalGroupName, setAddMemberModalGroupName] = useState("");
+
+  const openAddMemberModal = (selectedGroupId, selectedGroupName) => {
+    setAddMemberModalIsOpen(true);
+    if (selectedGroupId !== undefined) {
+      setAddMemberModalGroupId(selectedGroupId);
+    }
+    if (selectedGroupId !== undefined) {
+      setAddMemberModalGroupName(selectedGroupName);
+    }
+  };
+  const closeAddMemberModal = () => {
+    setAddMemberModalIsOpen(false);
+    setAddMemberModalGroupId(-1);
+    setRefreshKey(refreshKey + 1);
+    setModalMemberId(undefined);
+    setAddMemberModalGroupName("");
+  };
   const history = useHistory();
 
   const routeChange = () => {
@@ -826,20 +912,6 @@ function GroupManagement(props) {
 
                           {show && (
                             <div>
-                              <div style={{ padding: "2%" }}>
-                                <div>Join Group URL:</div>
-                                <div
-                                  onClick={() => {
-                                    // implement copy to clipboard
-                                    // am considering the library react-copy-to-clipboard
-                                  }}
-                                >
-                                  {/* {console.log(window.location.host)} */}
-                                  http://{window.location.host}/JoinGroup/
-                                  {group.groupId}
-                                </div>
-                              </div>
-
                               <div style={{ clear: "both" }} />
 
                               <div>
@@ -906,9 +978,12 @@ function GroupManagement(props) {
                                         // width: "fit-content"
                                       }
                                     }
-                                    onClick={() =>
-                                      addMemberToGroup(group.groupId)
-                                    }
+                                    onClick={() => {
+                                      openAddMemberModal(
+                                        group.groupId,
+                                        group.groupName
+                                      );
+                                    }}
                                   >
                                     Add Member
                                   </Button>
@@ -1088,20 +1163,6 @@ function GroupManagement(props) {
 
                               {show && (
                                 <div>
-                                  <div style={{ padding: "2%" }}>
-                                    <div>Join Group URL:</div>
-                                    <div
-                                      onClick={() => {
-                                        // implement copy to clipboard
-                                        // am considering the library react-copy-to-clipboard
-                                      }}
-                                    >
-                                      {/* {console.log(window.location.host)} */}
-                                      http://{window.location.host}/JoinGroup/
-                                      {group.groupId}
-                                    </div>
-                                  </div>
-
                                   <div style={{ clear: "both" }} />
 
                                   <div>
@@ -1197,6 +1258,93 @@ function GroupManagement(props) {
           )}
         </div>
       </div>
+      <Dialog
+        open={addMemberModalIsOpen}
+        onClose={() => {
+          closeAddMemberModal();
+        }}
+        fullWidth={300}
+      >
+        <DialogTitle>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="h2"
+            style={{
+              backgroundColor: "#80808026",
+              padding: "2%",
+              overflow: "auto",
+            }}
+          >
+            <div>
+              Add Members for Group #{addMemberModalGroupId}:{" "}
+              {addMemberModalGroupName}
+            </div>
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <div>
+            <div>Join Group URL:</div>
+            <div
+              onClick={() => {
+                // implement copy to clipboard
+                // am considering the library react-copy-to-clipboard
+              }}
+            >
+              {/* {console.log(window.location.host)} */}
+              http://{window.location.host}/JoinGroup/
+              {addMemberModalGroupId}
+            </div>
+          </div>
+          <div>
+            Current Members
+            {groupMembers}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <div style={{}}>Enter member ID: </div>
+            <input
+              type="text"
+              placeholder="Enter Group Member ID to add"
+              style={{
+                // width: "100%",
+                flexGrow: 1,
+                marginLeft: 20,
+                marginRight: 20,
+                padding: "4px 4px 4px 4px",
+                borderRadius: "4px",
+                outline: "none",
+                border: "1px solid #da337a",
+                // boxShadow: "0px 0px 8px #da337a",
+                backgroundColor: "initial !important",
+              }}
+              value={modalMemberId}
+              onChange={(e) => {
+                setModalMemberId(e.target.value);
+              }}
+            ></input>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{
+                width: "fit-content",
+              }}
+              onClick={() => addMemberToGroupUsingModal()}
+            >
+              Add Member
+            </Button>
+          </div>
+          <div>Note: You do not need to add your own ID.</div>
+          <div>
+            Your ID is displayed on the top right hand corner beside your name.
+          </div>
+        </DialogContent>
+      </Dialog>
     </Fragment>
   );
 }
