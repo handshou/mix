@@ -25,6 +25,7 @@ import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Mouse } from "@material-ui/icons";
 toast.configure();
 
 if (!firebase.apps.length) {
@@ -713,12 +714,10 @@ function GroupManagement(props) {
 
                     <Button
                       variant="contained"
-                      color="secondary"
                       style={{
                         float: "right",
                         display: "inline",
                         minWidth: "30px",
-                        backgroundColor: "green",
                       }}
                       onClick={() => deleteGroup(group.groupId, (group.members).length)}
                       disabled = {(group.members).length > 1 ? true : false}

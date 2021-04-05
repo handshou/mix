@@ -49,7 +49,13 @@ export function UserLogin(props) {
     },
     backButton: {
       marginRight: theme.spacing(1),
+      boxShadow: "grey 5px 5px 5px 0px",
     },
+    
+    nextButton: {
+      boxShadow: "grey 5px 5px 5px 0px",
+    },
+
     instructions: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
@@ -91,6 +97,7 @@ export function UserLogin(props) {
           Enter Your Name:
           <OutlinedInput required
             placeholder={"e.g, John Doe"}
+            defaultValue={localStorage.getItem("inputName")}
             style={{
               width: 300,
               marginLeft: 30,
@@ -103,8 +110,7 @@ export function UserLogin(props) {
           ></OutlinedInput>
           <div>
             <Button
-              //disabled={activeStep === 0}
-              //onClick={handleBack}
+              disabled
               className={classes.backButton}
             >
               Back
@@ -113,6 +119,7 @@ export function UserLogin(props) {
             <Button
               variant="contained"
               color="primary"
+              className={classes.nextButton}
               onClick={() => {
                 var value = localStorage.getItem("inputName");
                 if (
@@ -120,8 +127,6 @@ export function UserLogin(props) {
                   value !== null &&
                   value !== ""
                 ) {
-                  //createStudentId(localStorage.getItem("inputName"));
-                  //handleClose();
                   dismissAll();
                   handleNext();
                 } else {
@@ -158,7 +163,8 @@ export function UserLogin(props) {
 
             <div>
             <Button
-              disabled={activeStep === 0}
+              variant="contained"
+              color="primary"
               onClick={handleBack}
               className={classes.backButton}
             >
@@ -166,6 +172,7 @@ export function UserLogin(props) {
             </Button>
 
             <Button
+              className={classes.nextButton}
               variant="contained"
               color="primary"
               onClick={handleNext}
@@ -199,6 +206,8 @@ export function UserLogin(props) {
         </div>
         <div>
             <Button
+              variant="contained"
+              color="primary"
               disabled={activeStep === 0}
               onClick={handleBack}
               className={classes.backButton}
@@ -209,6 +218,7 @@ export function UserLogin(props) {
             <Button
               variant="contained"
               color="primary"
+              className={classes.nextButton}
               onClick={() => {
                 handleNext();
                 handleClose();

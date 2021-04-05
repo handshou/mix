@@ -407,3 +407,25 @@ input:focus {
 renameText:focus {
   padding: 4px 4px 4px 4px;
 }
+
+.confirm_selection {
+  -webkit-animation: glow 0.8s infinite alternate;
+  -webkit-animation-iteration-count: 20;
+}
+
+@keyframes glow {
+  to {
+    text-shadow: 5px 5px 20px red;
+    color: red;
+    fill-opacity: 100%;
+  }
+}
+
+.confirm_selection {
+  text-align: center;
+  font-family: sans-serif;
+  line-height: 3;
+  margin-left: 20px; 
+  color: #ff7043;
+  fill-opacity: 80%;
+}

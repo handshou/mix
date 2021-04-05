@@ -1,28 +1,25 @@
 import { React, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import GroupIcon from "@material-ui/icons/Group";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import CreateIcon from "@material-ui/icons/Create";
-import DoneIcon from "@material-ui/icons/Done";
 import SaveIcon from "@material-ui/icons/Save";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import MenuItem from "@material-ui/core/MenuItem";
 import urlTutVid from "./tutorialGIFs/FullImportStep.mp4";
 import groupTutVid from "./tutorialGIFs/CreateGroup.mp4";
 import addingMember from "./tutorialGIFs/AddingMember.mp4";
 import deleteGroup from "./tutorialGIFs/DeletingGroup.mp4";
 import weeksNav from "./tutorialGIFs/ClickingWeeks.mp4";
+import { MenuList } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 
 export function TutorialPage() {
   const [activeStep, setActiveStep] = useState();
@@ -50,6 +47,34 @@ export function TutorialPage() {
       fontSize: theme.typography.pxToRem(15),
       color: theme.palette.text.secondary,
     },
+    buttonDesign: {
+      boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
+      color: "#000",
+      padding: "10px 10px",
+      backgroundColor: "#fbfbfb",
+      border: "none",
+      borderRadius: "45px",
+      transition: "all 0.3s ease 0s",
+      cursor: "pointer",
+      outline: "none",
+      "&:hover": {
+        boxShadow: "0px 10px 15px #ff5138",
+        transform: "translateY(-7px)",
+      },
+    },
+    sideNavBarActive: {
+      borderBottom: "5px solid #ff5138 !important",
+      backgroundColor: "#fbfbfb",
+    },
+    expandIconRoot: {
+      boxShadow: "grey 5px 5px 5px 0px",
+      borderRadius: "50%",
+      transition: "all 0.3s ease 0s",
+    "&:hover": {
+      boxShadow: "0px 10px 15px #ff5942",
+      transform: "translateY(-2px)",
+    },
+    }
   }));
 
   const classes = useStyles();
@@ -183,7 +208,7 @@ export function TutorialPage() {
             onChange={handleChange("panel1")}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<ExpandMoreIcon className={classes.expandIconRoot}/>}
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
@@ -690,7 +715,7 @@ export function TutorialPage() {
       >
         Hello {localStorage.getItem("studentName")}. How can we help you?
       </p>
-
+      <br></br>
       <div
         style={{
           display: "-webkit-inline-box",
@@ -698,30 +723,54 @@ export function TutorialPage() {
         }}
       >
         <div>
-          <List component="nav" aria-label="main mailbox folders">
-            <ListItem button onClick={() => setActiveStep(0)}>
-              <ListItemIcon>
-                <AccountBoxIcon />
-              </ListItemIcon>
-              <ListItemText primary="About Profiles" />
-            </ListItem>
-
+        <MenuList
+            style={{
+              display: "contents",
+              width: "10%",
+              boxShadow: "0 3px 5px 2px rgb(0 0 0 / 15%)",
+              color: "black",
+            }}
+          >
+            <MenuItem
+              selected={activeStep === 0 ? true : false}
+              onClick={() => setActiveStep(0)}
+              classes={{
+                root: classes.buttonDesign,
+                selected: classes.sideNavBarActive,
+              }}
+              style={{  marginTop: "10px", marginBottom: "10px" }}
+            >
+              <AccountBoxIcon /> &nbsp;&nbsp; About Profiles
+            </MenuItem>
             <Divider />
-            <ListItem button onClick={() => setActiveStep(1)}>
-              <ListItemIcon>
-                <CalendarTodayIcon />
-              </ListItemIcon>
-              <ListItemText primary="About Timetables" />
-            </ListItem>
 
+            <MenuItem
+              selected={activeStep === 1 ? true : false}
+              onClick={() => setActiveStep(1)}
+              classes={{
+                root: classes.buttonDesign,
+                selected: classes.sideNavBarActive,
+              }}
+              style={{  marginTop: "10px", marginBottom: "10px"}}
+            >
+              <CalendarTodayIcon /> &nbsp;&nbsp; About Timetables
+            </MenuItem>
             <Divider />
-            <ListItem button onClick={() => setActiveStep(2)}>
-              <ListItemIcon>
-                <GroupIcon />
-              </ListItemIcon>
-              <ListItemText primary="About Groups" />
-            </ListItem>
-          </List>
+
+            <MenuItem
+              selected={activeStep === 2 ? true : false}
+              onClick={() => setActiveStep(2)}
+              classes={{
+                root: classes.buttonDesign,
+                selected: classes.sideNavBarActive,
+              }}
+              style={{  marginTop: "10px", marginBottom: "10px"}}
+            >
+              <GroupIcon /> &nbsp;&nbsp; About Groups
+            </MenuItem>
+            <Divider />
+
+          </MenuList>
         </div>
 
         <div style={{ clear: "both" }} />

@@ -2,25 +2,25 @@ import { React, useState, useEffect } from "react";
 import PNGtooltip from "react-png-tooltip";
 import urlTut from "./tutorialGIFs/FullImportStep.mp4";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
+import IconButton from "@material-ui/core/IconButton";
+import "./Stylesheet/Layout.css";
 
 export function VisualTip() {
   return (
     <div>
       <PNGtooltip
         tooltip={
-          <OndemandVideoIcon
-            style={{
-              color: "#ff7043",
-              marginLeft: 15,
-            }}
-          ></OndemandVideoIcon>
+          <IconButton class="confirm_selection">What can I do here?</IconButton>
         }
       >
-        <div style={{ width: "150%" }}>
+        <div>
           <p>
-            You <b>must</b> import your NUSMods timetable into MixTime, to see
-            it on your Timetable Page. Follow the video here to import your
-            timetable:
+            Follow this video to import your timetable. If you need more
+            help, visit our{" "}
+            <a href="./TutorialPage">
+              <u>tutorial page</u>
+            </a>
+            .
           </p>
           <br></br>
 
