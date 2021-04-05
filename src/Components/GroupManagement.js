@@ -31,6 +31,9 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ExpandLess } from "@material-ui/icons";
+
+import "./Stylesheet/Layout.css";
+
 toast.configure();
 
 if (!firebase.apps.length) {
@@ -671,7 +674,7 @@ function GroupManagement(props) {
                             onClick={() => {
                               archiveGroup(group.groupId);
                             }}
-                            style={{ position: "absolute" }}
+                            style={{ position: "absolute", borderRadius: "10px", boxShadow: "grey 2px 2px 5px" }}
                           >
                             <ArchiveIcon />
                           </Link>
@@ -748,6 +751,7 @@ function GroupManagement(props) {
                                     onClick={() => {
                                       undoGroupRename(i);
                                     }}
+                                    class="undo_rename_glow"
                                   >
                                     <UndoIcon />
                                   </Link>
