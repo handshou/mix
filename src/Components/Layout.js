@@ -91,7 +91,7 @@ function Layout(props) {
       return;
     } else if (studentNameInput.length === 0) {
       toast.error("You are not allowed to leave the student name blank.");
-      setUpdateStudentNameDisabled(true);
+      // setUpdateStudentNameDisabled(true);
       return;
     }
 
