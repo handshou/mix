@@ -46,6 +46,9 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import { ExpandLess } from "@material-ui/icons";
+
+import "./Stylesheet/Layout.css";
 
 toast.configure();
 
@@ -820,7 +823,7 @@ function GroupManagement(props) {
                             onClick={() => {
                               archiveGroup(group.groupId);
                             }}
-                            style={{ position: "absolute" }}
+                            style={{ position: "absolute", borderRadius: "10px", boxShadow: "grey 2px 2px 5px" }}
                           >
                             <ArchiveIcon />
                           </Link>
@@ -897,6 +900,7 @@ function GroupManagement(props) {
                                     onClick={() => {
                                       undoGroupRename(i);
                                     }}
+                                    class="undo_rename_glow"
                                   >
                                     <UndoIcon />
                                   </Link>
