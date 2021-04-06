@@ -105,7 +105,7 @@ export default function CreatePersonalEvent(props) {
   const body = (
     <div style={modalStyle}>
       <p style={{ fontSize: "25px", color: "#ff5138" }}>
-        Add a 30 Minute event
+        Add a 30 Minute time block interval event
         <Tooltip
           title={
             <em style={{ fontSize: "12px" }}>
@@ -196,7 +196,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          Start Date and Time (30 Minutes Time Block): *{" "}
+          Start Date and Time (Input in 30 Minutes Time Block Interval): *{" "}
         </label>
         <input
           type="datetime-local"
@@ -225,7 +225,7 @@ export default function CreatePersonalEvent(props) {
             padding: "0.5em 1.5em 0.5em 0",
           }}
         >
-          End Date and Time (30 Minutes Time Block): *{" "}
+          End Date and Time (Input in 30 Minutes Time Block Interval): *{" "}
         </label>
         <input
           type="datetime-local"

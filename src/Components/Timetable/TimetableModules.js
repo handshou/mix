@@ -5,6 +5,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import HelpIcon from "@material-ui/icons/Help";
 import ClearIcon from "@material-ui/icons/Clear";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import firebase from "firebase";
 import firebaseConfig from "../../Firebase/firebaseConfig";
@@ -68,44 +70,50 @@ const TimetableModules = (props) => {
   };
 
   function updateEvent(id, title, type, fullData) {
-    const startTimeSplit = id.split("-")[0];
-    const eventTypeSplit = id.split("-")[2];
-    const studentIdSplit = id.split("-")[3];
-    const endTimeSplit = id.split("-")[4];
-
-    var data = {
-      endTime: new Date(Number(endTimeSplit)).getTime(),
-      eventName: module.eventName,
-      eventType: eventTypeSplit,
-      startTime: new Date(Number(startTimeSplit)).getTime(),
-    };
-
-    let newTimetableData = [];
-
-    newTimetableData = fullData.filter(
-      (event) =>
-        event.startTime != startTimeSplit ||
-        event.eventName != title ||
-        event.eventType != type
+    var updateEventPrompt = window.confirm(
+      `Are you sure you want to update the event?\nYou cannot undo this.`
     );
 
-    newTimetableData = [...newTimetableData];
-    newTimetableData.push(data);
+    if (updateEventPrompt) {
+      const startTimeSplit = id.split("-")[0];
+      const eventTypeSplit = id.split("-")[2];
+      const studentIdSplit = id.split("-")[3];
+      const endTimeSplit = id.split("-")[4];
 
-    var database;
-    if (!firebase.apps.length) {
-      const firebaseApp = firebase.initializeApp(firebaseConfig);
-      database = firebaseApp.database();
-    } else {
-      firebase.app();
-      database = firebase.app().database();
+      var data = {
+        endTime: new Date(Number(endTimeSplit)).getTime(),
+        eventName: module.eventName,
+        eventType: eventTypeSplit,
+        startTime: new Date(Number(startTimeSplit)).getTime(),
+      };
+
+      let newTimetableData = [];
+
+      newTimetableData = fullData.filter(
+        (event) =>
+          event.startTime != startTimeSplit ||
+          event.eventName != title ||
+          event.eventType != type
+      );
+
+      newTimetableData = [...newTimetableData];
+      newTimetableData.push(data);
+
+      var database;
+      if (!firebase.apps.length) {
+        const firebaseApp = firebase.initializeApp(firebaseConfig);
+        database = firebaseApp.database();
+      } else {
+        firebase.app();
+        database = firebase.app().database();
+      }
+      overrideStudentEventsToDB(studentIdSplit, newTimetableData, database);
+
+      setRefreshKey(refreshKey + 1);
+      setOpen(false);
+
+      toast.success("Event has been updated sucessfully.");
     }
-    overrideStudentEventsToDB(studentIdSplit, newTimetableData, database);
-
-    setRefreshKey(refreshKey + 1);
-    setOpen(false);
-
-    toast.success("Event has been updated sucessfully.");
   }
 
   const handleOpen = () => {
@@ -229,6 +237,7 @@ const TimetableModules = (props) => {
               style={{ boxShadow: "5px 5px 5px 0px grey" }}
               color="primary"
             >
+              <EditIcon fontSize="small" />
               Update
             </Button>
           </form>
@@ -240,14 +249,23 @@ const TimetableModules = (props) => {
         <p>Start Time: {startTime}</p>
         <p>End Time: {endTime}</p>
         <br></br>
-        <Button
-          onClick={() => deleteEvent(id, title, type, fullData)}
-          variant="contained"
-          style={{ boxShadow: "5px 5px 5px 0px grey" }}
-          color="primary"
+        <Tooltip
+          title={
+            <em style={{ fontSize: "12px" }}>
+              {"Click here to delete an event"}
+            </em>
+          }
         >
-          Delete
-        </Button>
+          <Button
+            onClick={() => deleteEvent(id, title, type, fullData)}
+            variant="contained"
+            style={{ boxShadow: "5px 5px 5px 0px grey" }}
+            color="primary"
+          >
+            <DeleteIcon fontSize="small" />
+            Delete
+          </Button>
+        </Tooltip>
         &nbsp;
         <Button
           onClick={handleClose}
