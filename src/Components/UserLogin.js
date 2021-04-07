@@ -157,7 +157,7 @@ export function UserLogin(props) {
             </ol>
             <br></br>
             <p>See video <b>here</b> for steps:</p>
-            <video autoPlay loop>
+            <video controls>
               <source src={urlTut} type="video/mp4"/>
             </video>
 
@@ -200,7 +200,7 @@ export function UserLogin(props) {
             </ol>
             <br></br>
             <p>See video <b>here</b> for steps:</p>
-            <video autoPlay loop>
+            <video controls>
               <source src={groupTut} type="video/mp4"/>
             </video>
         </div>

@@ -18,8 +18,8 @@ import groupTutVid from "./tutorialGIFs/CreateGroup.mp4";
 import addingMember from "./tutorialGIFs/AddingMember.mp4";
 import deleteGroup from "./tutorialGIFs/DeletingGroup.mp4";
 import weeksNav from "./tutorialGIFs/ClickingWeeks.mp4";
+import nameChange from "./tutorialGIFs/NameChangeVideo.mp4";
 import { MenuList } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
 
 export function TutorialPage() {
   const [activeStep, setActiveStep] = useState();
@@ -68,13 +68,12 @@ export function TutorialPage() {
     },
     expandIconRoot: {
       boxShadow: "grey 5px 5px 5px 0px",
-      borderRadius: "50%",
       transition: "all 0.3s ease 0s",
-    "&:hover": {
-      boxShadow: "0px 10px 15px #ff5942",
-      transform: "translateY(-2px)",
+      "&:hover": {
+        boxShadow: "0px 10px 15px #ff5942",
+        transform: "translateY(-2px)",
+      },
     },
-    }
   }));
 
   const classes = useStyles();
@@ -130,44 +129,96 @@ export function TutorialPage() {
             Depending on the groups you have joined, you can see each of the
             overlaying timetables from the <b>Group Timetable</b> tab.
           </p>
-
-          <br></br>
-          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
-            Your Account Details
-          </p>
-
-          <p>
-            Hello <b>{localStorage.getItem("studentName")}</b>, your User ID is{" "}
-            <b>{localStorage.getItem("studentId")}</b>. It is tied to your
-            profile and you cannot change it. Other MixTime users can add you
-            via this ID number.
-          </p>
-
-          <br></br>
-          <p style={{ fontSize: "1.5em", paddingBottom: "10px" }}>
-            Changing Names
-          </p>
-
-          <p>You can change your name as you like on MixTime.</p>
           <br></br>
           <p>
-            To <b>change</b> your name, follow these steps:
+            You <b>must</b> import your NUSMods timetable into MixTime, to see
+            it on your <b>Timetable Page</b>.
           </p>
-          <ol>
-            <li>
-              1. On the top right of your screen, just beside your name, click
-              on the <CreateIcon></CreateIcon> button.
-            </li>
-            <li>2. Your name will change into a textbox.</li>
-            <li>3. Click on it, and change it to anything you need.</li>
-            <li>
-              4. When you are done, click on the <SaveIcon />.
-            </li>
-            <li>
-              5. Your name has been successfully changed. You should be able to
-              see the update now. If you can't, try to refresh your browser.
-            </li>
-          </ol>
+          <br></br>
+
+          <Accordion
+            expanded={expanded === "panel1"}
+            onChange={handleChange("panel1")}
+          >
+            <AccordionSummary
+              className={classes.expandIconRoot}
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography className={classes.heading}>
+                Your Account Details
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                Information on your <b>student ID</b>.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>
+                  Hello <b>{localStorage.getItem("studentName")}</b>, your User
+                  ID is <b>{localStorage.getItem("studentId")}</b>. 
+                  <br></br>
+                  It is tied
+                  to your profile and you cannot change it. Other MixTime users
+                  can add you via this ID number.
+                </p>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion
+            expanded={expanded === "panel2"}
+            onChange={handleChange("panel2")}
+          >
+            <AccordionSummary
+              className={classes.expandIconRoot}
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography className={classes.heading}>
+                Changing Names
+              </Typography>
+              <Typography className={classes.secondaryHeading}>
+                How to <b>change names</b> on MixTime.
+              </Typography>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Typography>
+                <p>You can change your name as you like on MixTime.</p>
+                <br></br>
+                <p>
+                  To <b>change</b> your name, follow these steps:
+                </p>
+                <ol>
+                  <li>
+                    1. On the top right of your screen, just beside your name,
+                    click on the <CreateIcon></CreateIcon> button.
+                  </li>
+                  <li>2. Your name will change into a textbox.</li>
+                  <li>3. Click on it, and change it to anything you need.</li>
+                  <li>
+                    4. When you are done, click on the <SaveIcon />.
+                  </li>
+                  <li>
+                    5. Your name has been successfully changed. You should be
+                    able to see the update now. If you can't, try to refresh
+                    your browser.
+                  </li>
+                </ol>
+                <br></br>
+                <p>
+                  See video steps <b>here</b>:
+                </p>
+                  <video key={nameChange} controls muted style={{ width: "70%" }}>
+                  <source src={nameChange} type="video/mp4" />
+                </video>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </div>
       </div>
     );
@@ -208,7 +259,8 @@ export function TutorialPage() {
             onChange={handleChange("panel1")}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon className={classes.expandIconRoot}/>}
+              className={classes.expandIconRoot}
+              expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
@@ -276,6 +328,7 @@ export function TutorialPage() {
             onChange={handleChange("panel2")}
           >
             <AccordionSummary
+              className={classes.expandIconRoot}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
@@ -325,6 +378,7 @@ export function TutorialPage() {
             onChange={handleChange("panel3")}
           >
             <AccordionSummary
+              className={classes.expandIconRoot}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
@@ -358,7 +412,13 @@ export function TutorialPage() {
                   be no lessons appearing on that page. To get to each page,
                   simply click on the corresponding page number.
                 </p>
-                <video key={weeksNav} autoPlay loop muted style={{ width: "70%" }}>
+                <video
+                  key={weeksNav}
+                  autoPlay
+                  loop
+                  muted
+                  style={{ width: "70%" }}
+                >
                   <source src={weeksNav} type="video/mp4" />
                 </video>
               </Typography>
@@ -405,6 +465,7 @@ export function TutorialPage() {
             onChange={handleChange("panel1")}
           >
             <AccordionSummary
+              className={classes.expandIconRoot}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
@@ -465,6 +526,7 @@ export function TutorialPage() {
             onChange={handleChange("panel2")}
           >
             <AccordionSummary
+              className={classes.expandIconRoot}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
@@ -527,6 +589,7 @@ export function TutorialPage() {
             onChange={handleChange("panel3")}
           >
             <AccordionSummary
+              className={classes.expandIconRoot}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
@@ -574,6 +637,7 @@ export function TutorialPage() {
             onChange={handleChange("panel4")}
           >
             <AccordionSummary
+              className={classes.expandIconRoot}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
@@ -633,6 +697,7 @@ export function TutorialPage() {
             onChange={handleChange("panel5")}
           >
             <AccordionSummary
+              className={classes.expandIconRoot}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2bh-content"
               id="panel2bh-header"
@@ -723,11 +788,11 @@ export function TutorialPage() {
         }}
       >
         <div>
-        <MenuList
+          <MenuList
             style={{
               display: "contents",
               width: "10%",
-              boxShadow: "0 3px 5px 2px rgb(0 0 0 / 15%)",
+              boxShadow: "0 5px 10px 5px rgb(0 0 0 / 15%)",
               color: "black",
             }}
           >
@@ -738,7 +803,7 @@ export function TutorialPage() {
                 root: classes.buttonDesign,
                 selected: classes.sideNavBarActive,
               }}
-              style={{  marginTop: "10px", marginBottom: "10px" }}
+              style={{ marginTop: "10px", marginBottom: "10px" }}
             >
               <AccountBoxIcon /> &nbsp;&nbsp; About Profiles
             </MenuItem>
@@ -751,7 +816,7 @@ export function TutorialPage() {
                 root: classes.buttonDesign,
                 selected: classes.sideNavBarActive,
               }}
-              style={{  marginTop: "10px", marginBottom: "10px"}}
+              style={{ marginTop: "10px", marginBottom: "10px" }}
             >
               <CalendarTodayIcon /> &nbsp;&nbsp; About Timetables
             </MenuItem>
@@ -764,12 +829,11 @@ export function TutorialPage() {
                 root: classes.buttonDesign,
                 selected: classes.sideNavBarActive,
               }}
-              style={{  marginTop: "10px", marginBottom: "10px"}}
+              style={{ marginTop: "10px", marginBottom: "10px" }}
             >
               <GroupIcon /> &nbsp;&nbsp; About Groups
             </MenuItem>
             <Divider />
-
           </MenuList>
         </div>
 
