@@ -230,6 +230,14 @@ function GroupManagement(props) {
       toast.error("You are not allowed to enter ,");
       return;
     }
+    if (memberId.includes(" ")) {
+      toast.error("You are not allowed to enter blank spaces");
+      return;
+    }
+    if (memberId.includes(";")) {
+      toast.error("You are not allowed to enter ;");
+      return;
+    }
 
     setModalMemberId(memberId);
 
@@ -530,7 +538,7 @@ function GroupManagement(props) {
       groupNameTextboxArr[cardNumber].val ===
       localStorage.getItem("originalGroupName")
     ) {
-      toast.success("Undo change cancelled.");
+      toast.success("Change cancelled.");
     } else {
       toast.success("You have successfully undo changes on group rename.");
     }
@@ -823,7 +831,11 @@ function GroupManagement(props) {
                             onClick={() => {
                               archiveGroup(group.groupId);
                             }}
-                            style={{ position: "absolute", borderRadius: "10px", boxShadow: "grey 2px 2px 5px" }}
+                            style={{
+                              position: "absolute",
+                              borderRadius: "10px",
+                              boxShadow: "grey 2px 2px 5px",
+                            }}
                           >
                             <ArchiveIcon />
                           </Link>
@@ -848,6 +860,14 @@ function GroupManagement(props) {
                                 disabled={groupNameTextboxArr[i].disable}
                                 value={groupNameTextboxArr[i].val}
                                 onChange={editGroupName}
+                                onKeyDown={(e) => {
+                                  try {
+                                    let keypress = e.code;
+                                    if (keypress === "Escape") {
+                                      undoGroupRename(i);
+                                    }
+                                  } catch {}
+                                }}
                                 readOnly={groupNameTextboxArr[i].readOnly}
                                 size={groupNameTextboxArr[i].val.length - 2}
                                 style={
