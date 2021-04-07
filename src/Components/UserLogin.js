@@ -13,8 +13,8 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import urlTut from './tutorialGIFs/ImportURL.mp4';
-import groupTut from './tutorialGIFs/CreateGroup.mp4';
+import urlTut from "./tutorialGIFs/ImportURL.mp4";
+import groupTut from "./tutorialGIFs/CreateGroup.mp4";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { ChangeHistoryOutlined } from "@material-ui/icons";
@@ -85,11 +85,13 @@ export function UserLogin(props) {
     return (
       <div>
         <p>
-          It seems like this is the first time here. Please enter your name to begin.
+          It seems like this is the first time here. Please enter your name to
+          begin.
         </p>
         <div>
           Enter Your Name:
-          <OutlinedInput required
+          <OutlinedInput
+            required
             placeholder={"e.g, John Doe"}
             style={{
               width: 300,
@@ -139,88 +141,107 @@ export function UserLogin(props) {
 
   function importTimetableModal() {
     return (
-      <div> 
-            <p>You <b>must</b> import your NUSMods timetable into MixTime, to see it on your MixTime timetable page.</p>
-            <br></br>
-            <p>To <b>import your timetable</b>, follow these steps:</p>
-            <ol>
-              <li>1. Click on the "Share/Sync" button.</li>
-              <li>2. Click on the Copy icon.</li>
-              <li>3. Paste your link into our URL text-box below.</li>
-              <li>4. Click on the Update Timetable button.</li>
-              <li>5. Your timetable has been successfully added. You can see it from the "My Timetable" tab.</li>
-            </ol>
-            <br></br>
-            <p>See video <b>here</b> for steps:</p>
-            <video autoPlay loop>
-              <source src={urlTut} type="video/mp4"/>
-            </video>
+      <div>
+        <p>
+          You <b>must</b> import your NUSMods timetable into MixTime, to see it
+          on your MixTime timetable page.
+        </p>
+        <br></br>
+        <p>
+          To <b>import your timetable</b>, follow these steps:
+        </p>
+        <ol>
+          <li>1. Click on the "Share/Sync" button.</li>
+          <li>2. Click on the Copy icon.</li>
+          <li>3. Paste your link into our URL text-box below.</li>
+          <li>4. Click on the Update Timetable button.</li>
+          <li>
+            5. Your timetable has been successfully added. You can see it from
+            the "My Timetable" tab.
+          </li>
+        </ol>
+        <br></br>
+        <p>
+          See video <b>here</b> for steps:
+        </p>
+        <video autoPlay loop>
+          <source src={urlTut} type="video/mp4" />
+        </video>
 
-            <div>
-            <Button
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              className={classes.backButton}
-            >
-              Back
-            </Button>
+        <div>
+          <Button
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            className={classes.backButton}
+          >
+            Back
+          </Button>
 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleNext}
-            >
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </div>
+          <Button variant="contained" color="primary" onClick={handleNext}>
+            {activeStep === steps.length - 1 ? "Finish" : "Next"}
+          </Button>
+        </div>
       </div>
     );
   }
 
   function createGroup() {
-    return(
+    return (
       <div>
-        <div> 
-          <p>You can create a group on MixTime, by adding your group members MixTime IDs. Your own ID is found on the top right corner of the window.</p>
+        <div>
+          <p>
+            You can create a group on MixTime, by adding your group members
+            MixTime IDs. Your own ID is found on the top right corner of the
+            window.
+          </p>
           <br></br>
-          <p>To <b>create a group</b>, follow these steps:</p>
-            <ol>
-              <li>1. Head over to the "Manage Groups" page.</li>
-              <li>2. Click on the (+) icon.</li>
-              <li>3. A pop-up window will appear, enter your group name first.</li>
-              <li>4. Enter your group size (Note, the group size  includes you).</li>
-              <li>5. Enter your group members IDs.</li>
-            </ol>
-            <br></br>
-            <p>See video <b>here</b> for steps:</p>
-            <video autoPlay loop>
-              <source src={groupTut} type="video/mp4"/>
-            </video>
+          <p>
+            To <b>create a group</b>, follow these steps:
+          </p>
+          <ol>
+            <li>1. Head over to the "Manage Groups" page.</li>
+            <li>2. Click on the (+) icon.</li>
+            <li>
+              3. A pop-up window will appear, enter your group name first.
+            </li>
+            <li>
+              4. Enter your group size (Note, the group size includes you).
+            </li>
+            <li>5. Enter your group members IDs.</li>
+          </ol>
+          <br></br>
+          <p>
+            See video <b>here</b> for steps:
+          </p>
+          <video autoPlay loop>
+            <source src={groupTut} type="video/mp4" />
+          </video>
         </div>
         <div>
-            <Button
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              className={classes.backButton}
-            >
-              Back
-            </Button>
+          <Button
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            className={classes.backButton}
+          >
+            Back
+          </Button>
 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                handleNext();
-                handleClose();
-                dismissAll();
-                createStudentId(localStorage.getItem("inputName"));
-              }}
-            >
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              handleNext();
+              handleClose();
+              dismissAll();
+              createStudentId(localStorage.getItem("inputName"));
+            }}
+          >
+            {activeStep === steps.length - 1 ? "Finish" : "Next"}
+          </Button>
+        </div>
       </div>
-    );}
+    );
+  }
 
   //Step Content
   function getStepContent(stepIndex) {
@@ -292,6 +313,8 @@ export function UserLogin(props) {
 
     if (props.triggerNameRefresh !== undefined) {
       props.triggerNameRefresh();
+
+      toast.success("You have successfully signed up.");
     }
   };
 
@@ -328,8 +351,7 @@ export function UserLogin(props) {
           <br></br>
           <div>
             {activeStep === steps.length ? (
-              <div>
-              </div>
+              <div></div>
             ) : (
               <div>
                 <Typography className={classes.instructions}>

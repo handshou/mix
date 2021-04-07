@@ -97,7 +97,7 @@ function Layout(props) {
 
     localStorage.setItem("studentName", event.target.value);
     setStudentName(localStorage.getItem("studentName"));
-    setStudentNameTextbox({ disable: false, val: studentName });
+    setStudentNameTextbox({ disable: false, val: studentName });    
   }
 
   const [studentNameTextbox, setStudentNameTextbox] = useState({
