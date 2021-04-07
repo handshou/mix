@@ -195,7 +195,7 @@ const TimetableModules = (props) => {
           <Button
             onClick={handleClose}
             variant="contained"
-            style={{ float: "right", borderRadius: "15px" }}
+            style={{ float: "right", borderRadius: "15px", boxShadow: "5px 5px 5px 0px grey" }}
             color="secondary"
           >
             <ClearIcon fontSize="small" />
@@ -279,7 +279,7 @@ const TimetableModules = (props) => {
     );
 
     return (
-      <div key={`${id}-${index}`} style={{ backgroundColor: pickColour(type) }}>
+      <div key={`${id}-${index}`} style={{ backgroundColor: pickColour(type), boxShadow: "2px 1px 2px grey" }}>
         <button onClick={handleOpen}>
           <div>{title}</div>
           <div>{type}</div>

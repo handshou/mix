@@ -105,7 +105,7 @@ export default function CreatePersonalEvent(props) {
   const body = (
     <div style={modalStyle}>
       <p style={{ fontSize: "25px", color: "#ff5138" }}>
-        Add a 30 Minute time block interval event
+        Add a 30 Minutes Time Block Interval Event
         <Tooltip
           title={
             <em style={{ fontSize: "12px" }}>
@@ -122,7 +122,7 @@ export default function CreatePersonalEvent(props) {
         <Button
           onClick={handleClose}
           variant="contained"
-          style={{ float: "right", borderRadius: "15px" }}
+          style={{ float: "right", borderRadius: "15px", boxShadow: "5px 5px 5px 0px grey" }}
           color="secondary"
         >
           <ClearIcon fontSize="small" />
