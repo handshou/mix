@@ -1,6 +1,4 @@
 import { React, useState, useEffect } from "react";
-import firebase from "firebase";
-import firebaseConfig from "../../Firebase/firebaseConfig";
 import UserLogin from "../UserLogin";
 
 import importURL from "../tutorialGIFs/ImportURL.mp4";
@@ -21,33 +19,30 @@ import {
   getModDetails,
   addStudentEventsToDB,
   overrideStudentEventsToDB,
+  loadTimetable,
 } from "../../Functions/apiFunctions.js";
-import { Button, OutlinedInput } from "@material-ui/core";
+
+import { useDatabase } from "../../Contexts/DatabaseContext";
+import { useUpdateMyModules } from "../../Contexts/MyModulesContext";
+
+import { Button, TextField } from "@material-ui/core";
 import "./timetable.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
-if (!firebase.apps.length) {
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  var database = firebaseApp.database();
-} else {
-  // If firebase is already initialized
-  firebase.app();
-  var database = firebase.app().database();
-}
+const exportLinkMessage = "Export from NUSMods.com Share/Sync";
 
 const EnterURL = (props) => {
-  // handle new user
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [studentName, setStudentName] = useState(
-    localStorage.getItem("studentName")
-  );
-  const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
+  const database = useDatabase();
+  const updateMyModules = useUpdateMyModules();
+
+  const studentId = localStorage.getItem("studentId");
 
   // handle URL
   const [enteredURL, setEnteredURL] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [helperText, setHelperText] = useState(exportLinkMessage);
+  const [error, setError] = useState(false);
   // Array which contains array of classes and slots occupied for the module
   // 00: (2) ["ACC3619", "SEC:A3"]
   // 01: (3) ["GES1041", "TUT:D6", "LEC:1"]
@@ -67,6 +62,11 @@ const EnterURL = (props) => {
   // hard coded  value until we find a way to properly implement semester recording
   const [currentSemester, setCurrentSemester] = useState(2);
 
+  // tooltip mouseover
+  const [mouseOver, setMouseOver] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState(false);
+
   // checker to see if api is set, can be removed later on
   useEffect(() => {
     // console.log(modAndClassArray);
@@ -82,11 +82,12 @@ const EnterURL = (props) => {
     if (modAndClassArray !== undefined && modAndClassArray.length > 0)
       try {
         getModuleDetails();
-      } catch (error) {
-        setErrorMessage(error);
+      } catch (err) {
+        setError(true);
+        setHelperText(err);
       }
     else {
-      setErrorMessage("");
+      setHelperText(exportLinkMessage);
     }
   }, [modAndClassArray]);
 
@@ -99,9 +100,8 @@ const EnterURL = (props) => {
     var studentsRef = database.ref(`Students/${studentId}/events`);
     studentsRef.once("value").then((snapshot) => {
       setExistingEvents(snapshot.val());
-      if (props.triggerMyTimetableForceRefresh !== undefined) {
-        props.triggerMyTimetableForceRefresh();
-      }
+      // reload
+      // loadTimetable(updateMyModules, studentId, database);
     });
   }, [, userEventArray]);
 
@@ -109,8 +109,9 @@ const EnterURL = (props) => {
     // catches invalid URLs
     try {
       convertModsIntoEvents();
-    } catch (error) {
-      setErrorMessage(error);
+    } catch (err) {
+      setError(true);
+      setHelperText(err);
     }
   }, [modAndClassDetails]);
 
@@ -256,11 +257,12 @@ const EnterURL = (props) => {
   };
 
   let triggerNameRefresh = () => {};
+  function handleMouseOver(event) {
+    setMouseOver(true);
+  }
 
-  if (props.triggerLayoutForceRefresh !== undefined) {
-    triggerNameRefresh = () => {
-      props.triggerLayoutForceRefresh();
-    };
+  function handleMouseOut(event) {
+    setMouseOver(false);
   }
 
   return (
@@ -269,89 +271,58 @@ const EnterURL = (props) => {
         display: "flex",
         flexDirection: "row",
         color: "red",
-        alignItems: "center",
+        alignItems: "baseline",
         marginTop: "1em",
         marginBottom: "1em",
+        width: "1000px",
       }}
     >
-      <UserLogin
-        triggerNameRefresh={() => {
-          triggerNameRefresh();
-        }}
-      ></UserLogin>
-
-      <div>
-        Enter NUSMODs Sharing URL:
+      <UserLogin />
+      <div onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
         <Tooltip
+          open={error || mouseOver}
           title={
             <div>
-              <em style={{ fontSize: "12px" }}>{"What is this?"}</em>
-              <p></p>
-              <em style={{ fontSize: "12px" }}>
-                {
-                  "Using the shared link on NUSMods, you can import in your modules into MixTime"
-                }
-              </em>
-              <p></p>
-              <em style={{ fontSize: "12px" }}>
-                {
-                  "For tutorial guidance, there will be a video beside the 'OVERRIDE TIMETABLE' button"
-                }
+              <em style={{ fontSize: "1.5em" }}>
+                {"How to get NUSMods Share/Sync?"}
               </em>
             </div>
           }
         >
-          <IconButton aria-label="delete">
-            <HelpIcon fontSize="small" />
+          <IconButton style={{ color: error ? "red" : "#000" }}>
+            <VisualTip error={error} />
+            {/* <HelpIcon fontSize="small" /> */}
           </IconButton>
         </Tooltip>
       </div>
-
-      <OutlinedInput
-        placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
-        style={{
-          width: 500,
-          marginLeft: 10,
-          marginRight: 30,
-          border:
-            errorMessage !== undefined && errorMessage.length < 1
-              ? ""
-              : "1px solid #da337a",
-          boxShadow:
-            errorMessage !== undefined && errorMessage.length < 1
-              ? ""
-              : "0px 0px 8px #da337a",
-        }}
+      <TextField
+        error={error}
+        style={{ margin: "1em" }}
+        id="outlined-basic"
+        label="Share/Sync Timetable Link "
+        fullWidth
+        margin="dense"
+        helperText={helperText}
+        variant="outlined"
+        defaultValue={"https://nusmods.com/timetable/sem-2/share?GEM1000..."}
+        placeholder={"https://nusmods.com/timetable/sem-2/share?GEM1000..."}
         onChange={(e) => {
           setEnteredURL(e.target.value);
-          setErrorMessage("");
+          setHelperText(exportLinkMessage);
+          setError(false);
         }}
-      ></OutlinedInput>
-
-      {errorMessage !== undefined && errorMessage.length < 1 ? (
-        <div />
-      ) : (
-        <div
-          style={{
-            marginLeft: 10,
-            marginRight: 30,
-            color: "red",
-            fontSize: 20,
-          }}
-        >
-          {errorMessage}
-        </div>
-      )}
-
+      />
       <Tooltip
         title={
-          <em style={{ fontSize: "12px" }}>
-            {"Click here to add your NUSmods classes personal timetable"}
-          </em>
+          <em style={{ fontSize: "1.5em" }}>{"Add Modules to Timetable"}</em>
         }
       >
         <Button
-          style={{ boxShadow: "5px 5px 5px 0px grey" }}
+          style={{
+            boxShadow: "3px 3px 3px 0px #bbb",
+            margin: "1em",
+            width: "18em",
+          }}
           variant="contained"
           color="primary"
           onClick={() => {
@@ -359,24 +330,25 @@ const EnterURL = (props) => {
             // catches invalid URLs
             try {
               setModAndClassArray(convertURLtoArray(enteredURL));
-            } catch (error) {
-              setErrorMessage(error);
+            } catch (err) {
+              setHelperText(err);
+              setError(true);
             }
           }}
         >
           Import NUSMODS Timetable
         </Button>
       </Tooltip>
-      {/* 
+      {/*
       <Tooltip
-        title={
-          <em style={{ fontSize: "12px" }}>
-            {"Click here to override your timetable completely"}
-          </em>
-        }
+        title={<em style={{ fontSize: "1.5em" }}>{"Override Timetable"}</em>}
       >
         <Button
-          style={{ boxShadow: "5px 5px 5px 0px grey", marginLeft: 30 }}
+          style={{
+            boxShadow: "3px 3px 3px 0px #bbb",
+            margin: "1em",
+            width: "15em",
+          }}
           variant="contained"
           color="secondary"
           onClick={() => {
@@ -384,12 +356,13 @@ const EnterURL = (props) => {
             // catches invalid URLs
             try {
               setModAndClassArray(convertURLtoArray(enteredURL));
-            } catch (error) {
-              setErrorMessage(error);
+            } catch (err) {
+              setHelperText(err);
+              setError(true);
             }
           }}
         >
-          Override Timetable
+          Replace All
         </Button>
       </Tooltip>
       */}
@@ -397,7 +370,11 @@ const EnterURL = (props) => {
         title={<em>{"Click here to clear your imported NUSMods timetable"}</em>}
       >
         <Button
-          style={{ boxShadow: "5px 5px 5px 0px grey", marginLeft: 30 }}
+          style={{
+            boxShadow: "3px 3px 3px 0px #bbb",
+            margin: "1em",
+            width: "15em",
+          }}
           variant="contained"
           color="secondary"
           onClick={() => {

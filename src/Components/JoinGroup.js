@@ -5,6 +5,7 @@ import firebase from "firebase";
 import firebaseConfig from "../Firebase/firebaseConfig";
 import { Button } from "@material-ui/core";
 import { toast } from "react-toastify";
+import { useDatabase } from "../Contexts/DatabaseContext";
 import { getGroupMembersOfGroup } from "../Functions/apiFunctions";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -56,6 +57,8 @@ function JoinGroup(props) {
   ] = useState();
   const [errorMessage, setErrorMessage] = useState("");
 
+  const database = useDatabase();
+
   // help make sure user is logged in
   const [refreshKey, setRefreshKey] = useState(0);
   useEffect(() => {
@@ -71,16 +74,6 @@ function JoinGroup(props) {
   }, [refreshKey]);
 
   let getStudentName = (studentId) => {
-    var database;
-    if (!firebase.apps.length) {
-      const firebaseApp = firebase.initializeApp(firebaseConfig);
-      database = firebaseApp.database();
-    } else {
-      // If firebase is already initialized
-      firebase.app();
-      database = firebase.app().database();
-    }
-
     var studentsRef = database.ref(
       `Students/${localStorage.getItem("studentId")}/name`
     );
@@ -90,15 +83,6 @@ function JoinGroup(props) {
   };
 
   let createStudentId = (studentName) => {
-    var database;
-    if (!firebase.apps.length) {
-      const firebaseApp = firebase.initializeApp(firebaseConfig);
-      database = firebaseApp.database();
-    } else {
-      // If firebase is already initialized
-      firebase.app();
-      database = firebase.app().database();
-    }
     var query = database.ref("Students/").orderByKey();
     query.once("value").then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
@@ -111,15 +95,6 @@ function JoinGroup(props) {
   };
 
   let createStudentRecord = (studentName) => {
-    var database;
-    if (!firebase.apps.length) {
-      const firebaseApp = firebase.initializeApp(firebaseConfig);
-      database = firebaseApp.database();
-    } else {
-      // If firebase is already initialized
-      firebase.app();
-      database = firebase.app().database();
-    }
     var studentsRef = database.ref(`Students/`);
     studentsRef
       .child(localStorage.getItem("studentId"))
@@ -139,12 +114,6 @@ function JoinGroup(props) {
       localStorage.getItem("studentId") != null &&
       groupIdToJoin !== undefined
     ) {
-      var database;
-      if (!firebase.apps.length) {
-      } else {
-        firebase.app();
-        var database = firebase.app().database();
-      }
       let groupMembers = await getGroupMembersOfGroup(groupIdToJoin, database);
       setGroupData(groupMembers);
       setGroupIdToJoin(groupIdToJoin);
@@ -152,12 +121,6 @@ function JoinGroup(props) {
   }, []);
 
   const addMemberToGroup = () => {
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
     if (groupData !== undefined && groupData.members !== undefined) {
       let groupMembers = groupData.members;
       if (localStorage.getItem("studentId") != null) {
@@ -372,7 +335,7 @@ function JoinGroup(props) {
                         return (
                           <div>
                             <PersonIcon /> #{memberId}
-                            {/* 
+                            {/*
                             <PersonIcon /> #{memberId + ", " + "Namelol"}
                           */}
                           </div>

@@ -7,9 +7,13 @@ import ClearIcon from "@material-ui/icons/Clear";
 import AddIcon from "@material-ui/icons/Add";
 import moment from "moment";
 
-import firebase from "firebase";
-import firebaseConfig from "../../Firebase/firebaseConfig";
-import { overrideStudentEventsToDB } from "../../Functions/apiFunctions";
+import { useDatabase } from "../../Contexts/DatabaseContext";
+import { useUpdateMyModules } from "../../Contexts/MyModulesContext";
+import {
+  overrideStudentEventsToDB,
+  getStudentEvents,
+  loadTimetable,
+} from "../../Functions/apiFunctions";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,9 +32,10 @@ function getModalStyle() {
 }
 
 export default function CreatePersonalEvent(props) {
-  const [refreshKey, setRefreshKey] = useState(0);
-
   let localTimetableData = [];
+  const updateMyModules = useUpdateMyModules();
+  const studentId = localStorage.getItem("studentId");
+
   if (props !== undefined && props.timetableData !== undefined) {
     localTimetableData = props.timetableData;
   }
@@ -50,7 +55,7 @@ export default function CreatePersonalEvent(props) {
     setModule({ ...module, [name]: value });
   };
 
-  const saveModule = () => {
+  const saveModule = async () => {
     var addEventPrompt = window.confirm(
       `Are you sure you want to add the event?\nYou cannot undo this.`
     );
@@ -63,41 +68,25 @@ export default function CreatePersonalEvent(props) {
         startTime: new Date(module.startTime).getTime(),
       };
 
-      let newTimetableData = [...localTimetableData];
-      newTimetableData.push(data);
+      const newTimetableData = [];
 
-      var database;
-      if (!firebase.apps.length) {
-        const firebaseApp = firebase.initializeApp(firebaseConfig);
-        database = firebaseApp.database();
-      } else {
-        firebase.app();
-        database = firebase.app().database();
-      }
-      overrideStudentEventsToDB(
+      overrideStudentEventsToDB(studentId, newTimetableData, database);
+
+      const newEvents = await getStudentEvents(
         localStorage.getItem("studentId"),
-        newTimetableData,
         database
       );
+      console.log(newEvents);
+      updateMyModules(newEvents);
 
-      setRefreshKey(refreshKey + 1);
+      // reload
+      // loadTimetable(updateMyModules, studentId, database);
+
       setOpen(false);
 
       toast.success("A new event has been sucessfully added.");
     }
-    else {
-      setOpen(false);
-      toast.success("Adding of event is cancelled.");
-    }
   };
-
-  useEffect(() => {
-    setRefreshKey(0);
-
-    if (props.triggerMyTimetableForceRefresh !== undefined) {
-      props.triggerMyTimetableForceRefresh();
-    }
-  }, [refreshKey]);
 
   const [open, setOpen] = useState(false);
 
@@ -108,6 +97,8 @@ export default function CreatePersonalEvent(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const database = useDatabase();
 
   let newDate = new Date();
   let todayDate = moment(newDate).format("DD-MM-YYYY");

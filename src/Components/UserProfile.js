@@ -1,4 +1,6 @@
 import {React, Fragment, useState, useEffect} from 'react';
+import { Button, Input } from "@material-ui/core";
+
 import Body from './Body';
 import {
   convertURLtoArray,
@@ -6,23 +8,10 @@ import {
   convertWeekDayTimeToTimestamp,
 } from '../Functions/urlFunctions.js';
 import {getModDetails} from '../Functions/apiFunctions.js';
-import {Button, Input} from '@material-ui/core';
-
-import firebase from 'firebase';
-import firebaseConfig from '../Firebase/firebaseConfig';
-
-var database;
-
-if (!firebase.apps.length) {
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  database = firebaseApp.database();
-} else {
-  // If firebase is already initialized
-  firebase.app();
-  database = firebase.app().database();
-}
+import { useDatabase } from "../Contexts/DatabaseContext";
 
 function UserProfile(props) {
+  const database = useDatabase();
   const [userList, setUserList] = useState({});
   const [enteredURL, setEnteredURL] = useState('');
   const [errorMessage, setErrorMessage] = useState('');

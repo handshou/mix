@@ -1,14 +1,4 @@
 import axios from "axios";
-import firebase from "firebase";
-import firebaseConfig from "../Firebase/firebaseConfig";
-
-if (!firebase.apps.length) {
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  var database = firebaseApp.database();
-} else {
-  // If firebase is already initialized
-  firebase.app();
-}
 
 // obtained from https://api.nusmods.com/v2/
 const apiEndPoint = "https://api.nusmods.com/v2";
@@ -88,7 +78,7 @@ export const overrideStudentEventsToDB = (studentId, eventArray, database) => {
 
 // takes in a studentId,
 // returns an array of all the student's groups.
-export const getStudentGroups = async (studentId, database) => {
+export const getStudentGroups = async (updateMyGroups, studentId, database) => {
   var tempStudentGroups = [];
   var studentGroupRef = database.ref(`Groups/`);
 
@@ -107,7 +97,7 @@ export const getStudentGroups = async (studentId, database) => {
       }
     }
   });
-  return tempStudentGroups;
+  updateMyGroups(tempStudentGroups);
 };
 
 // Takes in a group ID to get the details of the group
@@ -145,4 +135,84 @@ export const getStudentEvents = async (studentId, database) => {
     }
     return addStudentId(result, studentId);
   }
+};
+
+export const getStudentGroupEvents = async (
+  updateGroupModules,
+  myGroups,
+  database
+) => {
+  const anyGroups =
+    myGroups !== null && myGroups !== undefined && myGroups.length > 0;
+  const exists = (arrayElement) =>
+    arrayElement !== null &&
+    arrayElement !== undefined &&
+    arrayElement.length > 0;
+
+  if (anyGroups) {
+    // hacky way for array of student events per member per group
+    let studentEventsPerGroupPerStudent = await Promise.all(
+      myGroups.map(async (studentGroup) => {
+        let result = {};
+        const group = await Promise.all(
+          studentGroup.members.map(async (memberId) => {
+            result[studentGroup.groupId] = {};
+            const studentEvents = await getStudentEvents(memberId, database);
+            result[studentGroup.groupId][memberId] = studentEvents;
+            return result;
+          })
+        );
+        return group;
+      })
+    );
+
+    // hacky flattening
+    const flattened = studentEventsPerGroupPerStudent.map((group) => group[0]);
+    let reformatData = {};
+    Object.values(flattened).forEach((r) => {
+      reformatData[Object.keys(r)[0]] = Object.values(r)[0];
+    });
+
+    // this is how reformatData is supposed to look like
+    // reformatData = {
+    //   // groupId
+    //   50: {
+    //     // studentId
+    //     16: [{mod},{mod},{mod}],
+    //     17: [{mod},{mod},{mod}],
+    //   },
+    //   70: {
+    //     15: [{mod},{mod},{mod}],
+    //     16: [{mod},{mod},{mod}],
+    //   },
+    // };
+
+    updateGroupModules(reformatData);
+  }
+};
+
+export const loadTimetable = (updateMyModules, studentId, database) => {
+  function addStudentId(studentEvents, studentId) {
+    return studentEvents?.map((e) => ({ ...e, studentId }));
+  }
+  if (studentId !== null) {
+    let studentsRef = database.ref(`Students/${studentId}/events`);
+    studentsRef.once("value").then((snapshot) => {
+      updateMyModules(addStudentId(snapshot.val(), studentId));
+    });
+  }
+};
+
+export const getStudentName = async (studentId, database) => {
+  let studentsRef = database.ref(`Students/${studentId}/name`);
+  return await studentsRef.once("value").then((snapshot) => {
+    return snapshot.val();
+  });
+};
+
+export const getGroupMemberName = async (database) => {
+  let studentNameRef = database.ref("Students/");
+  return await studentNameRef.once("value").then((snapshot) => {
+    return snapshot.val();
+  });
 };

@@ -1,12 +1,17 @@
 import React from "react";
-import "./App.css";
+import firebase from "firebase";
 
+import DatabaseContext from "./Contexts/DatabaseContext";
 import Routes from "./Router/Routes";
+
+import "./App.css";
 
 function App() {
   return (
     <div>
-      <Routes />
+      <DatabaseContext>
+        <Routes />
+      </DatabaseContext>
     </div>
   );
 }

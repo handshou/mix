@@ -1,5 +1,7 @@
 const baseDate = toDate("Jan 11 2021 0:00 GMT+8").getTime();
 
+// TODO: since this can return beyond week 14, ensure weekSwitcher works in
+// this case
 function getCurrentWeek() {
   const today = new Date();
   if (baseDate > today) return 0;
@@ -8,10 +10,14 @@ function getCurrentWeek() {
 
 function getModules(data) {
   try {
+    console.log({ data });
     const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
+    // prevent dirty data from database
     if (data == null) return [];
-
+    if (data[0] == null) return [];
     return data.map((d) => {
+      // prevent dirty data from database
+      if (d == undefined) return {};
       const { startTime, endTime, eventName, eventType, studentId = "" } = d;
       return {
         id: `${startTime}-${eventName}-${eventType}-${studentId}-${endTime}`,

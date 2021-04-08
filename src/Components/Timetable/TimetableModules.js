@@ -1,19 +1,22 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useRef } from "react";
 import Modal from "@material-ui/core/Modal";
 import { Button } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import HelpIcon from "@material-ui/icons/Help";
 import ClearIcon from "@material-ui/icons/Clear";
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
-import firebase from "firebase";
-import firebaseConfig from "../../Firebase/firebaseConfig";
-import { overrideStudentEventsToDB } from "../../Functions/apiFunctions";
+import { useDatabase } from "../../Contexts/DatabaseContext";
+import {
+  loadTimetable,
+  overrideStudentEventsToDB,
+} from "../../Functions/apiFunctions";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUpdateMyModules } from "../../Contexts/MyModulesContext";
 
 toast.configure();
 
@@ -46,12 +49,14 @@ function getModalStyle() {
 
 const TimetableModules = (props) => {
   let localTimetableData = [];
+  const studentId = localStorage.getItem("studentId");
+  const updateMyModules = useUpdateMyModules();
   if (props !== undefined && props.fullData !== undefined) {
     localTimetableData = props.fullData;
   }
 
   const { data, fullData } = props;
-  const [refreshKey, setRefreshKey] = useState(0);
+  // const [refreshKey, setRefreshKey] = useState(0);
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
 
@@ -63,6 +68,8 @@ const TimetableModules = (props) => {
   };
 
   const [module, setModule] = useState(initialState);
+
+  const database = useDatabase();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -99,17 +106,8 @@ const TimetableModules = (props) => {
       newTimetableData = [...newTimetableData];
       newTimetableData.push(data);
 
-      var database;
-      if (!firebase.apps.length) {
-        const firebaseApp = firebase.initializeApp(firebaseConfig);
-        database = firebaseApp.database();
-      } else {
-        firebase.app();
-        database = firebase.app().database();
-      }
       overrideStudentEventsToDB(studentIdSplit, newTimetableData, database);
 
-      setRefreshKey(refreshKey + 1);
       setOpen(false);
 
       toast.success("Event has been updated sucessfully.");
@@ -140,24 +138,17 @@ const TimetableModules = (props) => {
         (event) =>
           event.startTime != startTimeSplit ||
           event.eventName != title ||
-          event.eventType != type
+          event.eventType != type ||
+          event.studentId != studentId // update only works on my own modules
       );
 
-      var database;
-      if (!firebase.apps.length) {
-        const firebaseApp = firebase.initializeApp(firebaseConfig);
-        database = firebaseApp.database();
-      } else {
-        firebase.app();
-        database = firebase.app().database();
-      }
-      overrideStudentEventsToDB(
-        localStorage.getItem("studentId"),
-        newData,
-        database
-      );
+      overrideStudentEventsToDB(studentId, newData, database);
 
-      setRefreshKey(refreshKey + 1);
+      // reload
+      // loadTimetable(updateMyModules, studentId, database);
+
+      // updateMyModules(newData);
+      // setRefreshKey(refreshKey + 1);
       setOpen(false);
 
       toast.success("The event has been deleted successfully.");
@@ -167,13 +158,13 @@ const TimetableModules = (props) => {
     }
   }
 
-  useEffect(() => {
-    setRefreshKey(0);
+  // useEffect(() => {
+  //   setRefreshKey(0);
 
-    if (props.triggerMyTimetableForceRefresh !== undefined) {
-      props.triggerMyTimetableForceRefresh();
-    }
-  }, [refreshKey]);
+  //   if (props.triggerMyTimetableForceRefresh !== undefined) {
+  //     props.triggerMyTimetableForceRefresh();
+  //   }
+  // }, [refreshKey]);
 
   // create a new component for modules
   const modules = data.map((module, index) => {
@@ -199,7 +190,11 @@ const TimetableModules = (props) => {
           <Button
             onClick={handleClose}
             variant="contained"
-            style={{ float: "right", borderRadius: "15px", boxShadow: "5px 5px 5px 0px grey" }}
+            style={{
+              float: "right",
+              borderRadius: "15px",
+              boxShadow: "5px 5px 5px 0px grey",
+            }}
             color="secondary"
           >
             <ClearIcon fontSize="small" />
@@ -283,7 +278,13 @@ const TimetableModules = (props) => {
     );
 
     return (
-      <div key={`${id}-${index}`} style={{ backgroundColor: pickColour(type), boxShadow: "2px 1px 2px grey" }}>
+      <div
+        key={`${id}-${index}`}
+        style={{
+          backgroundColor: pickColour(type),
+          boxShadow: "2px 1px 2px grey",
+        }}
+      >
         <button onClick={handleOpen}>
           <div>{title}</div>
           <div>{type}</div>

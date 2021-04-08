@@ -4,19 +4,25 @@ import urlTut from "./tutorialGIFs/FullImportStep.mp4";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import IconButton from "@material-ui/core/IconButton";
 import "./Stylesheet/Layout.css";
+import HelpIcon from "@material-ui/icons/Help";
 
-export function VisualTip() {
+export function VisualTip(props) {
+  const { error = false } = props;
   return (
     <div>
       <PNGtooltip
         tooltip={
-          <IconButton class="confirm_selection"><u>What can I do here?</u></IconButton>
+          <HelpIcon
+            style={{
+              margin: "0.5em",
+            }}
+          />
         }
       >
         <div>
           <p>
-            Follow this video to import your timetable. If you need more
-            help, visit our{" "}
+            Follow this video to import your timetable. If you need more help,
+            visit our{" "}
             <a href="./TutorialPage">
               <u>tutorial page</u>
             </a>

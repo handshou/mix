@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useCallback } from "react";
 import {
   getModules,
   getStartEndTimeByWeek,
@@ -14,19 +14,16 @@ function createDay(name, modules) {
 }
 
 export default function Timetable(props) {
-  let {
-    weekNumber = 1,
-    timetableData,
-    children,
-    triggerMyTimetableForceRefresh,
-  } = props;
+  let { weekNumber = 1, timetableData: test = {}, children } = props;
+  console.log({ test });
+  const timetableData = Object.values(test).flat();
+  console.log({ timetableData });
   weekNumber = parseInt(weekNumber);
 
   // TimetableTimings
   const modules = getModules(timetableData);
   const weekTime = getStartEndTimeByWeek(modules, weekNumber);
   const times = generateRows(weekTime.startTime, weekTime.endTime, 30, null);
-
   // TimetableDays
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const timetableDays = days.map((day) => {
@@ -44,7 +41,7 @@ export default function Timetable(props) {
       {children}
       <div
         style={{
-          display: "grid",
+          display: "block",
           overflow: "auto",
           margin: "1em",
         }}
@@ -72,13 +69,7 @@ export default function Timetable(props) {
                 </th>
                 {day.modules.map((cell, i) => (
                   <td key={`${cell.id}-${i}`} align="center">
-                    <TimetableModules
-                      data={cell}
-                      fullData={timetableData}
-                      triggerMyTimetableForceRefresh={() => {
-                        triggerMyTimetableForceRefresh();
-                      }}
-                    />
+                    {<TimetableModules data={cell} fullData={timetableData} />}
                   </td>
                 ))}
               </tr>

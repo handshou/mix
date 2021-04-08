@@ -1,7 +1,11 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useMemo } from "react";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import firebase from "firebase";
+import {
+  useMyModules,
+  useMyWeek,
+  useUpdateMyWeek,
+} from "../../Contexts/MyModulesContext";
 
 import {
   Legend,
@@ -11,107 +15,46 @@ import {
   CreatePersonalEvent,
 } from "../../Components/Timetable";
 
-import { getCurrentWeek } from "../../Components/Timetable/utils";
-
 import "../../Components/Timetable/timetable.css";
 
-const useStyles = makeStyles({
-  paper: {
-    marginTop: "-0.5em",
-    backgroundColor: "#FFF",
-  },
-});
+export function MyTimetable() {
+  const myWeek = useMyWeek();
+  const updateMyWeek = useUpdateMyWeek();
+  const myModules = useMyModules();
 
-export function MyTimetable(props) {
-  const [week, setWeek] = useState(getCurrentWeek());
-  const [timetableData, setTimetableData] = useState([]);
-
-  let triggerLayoutForceRefresh = () => {};
-  if (props.triggerLayoutForceRefresh !== undefined) {
-    triggerLayoutForceRefresh = () => {
-      props.triggerLayoutForceRefresh();
-    };
-  }
-
-  function addStudentId(studentEvents, studentId) {
-    return studentEvents.map((e) => ({ ...e, studentId }));
-  }
-
-  let loadTimetable = () => {
-    // ensure database is initialised first
-    if (!firebase.apps.length) {
-      let studentId = localStorage.getItem("studentId");
-      if (studentId !== null) {
-        var studentsRef = database.ref(`Students/${studentId}/events`);
-        studentsRef.once("value").then((snapshot) => {
-          setTimetableData(snapshot.val());
-        });
-      }
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-      let studentId = localStorage.getItem("studentId");
-      if (studentId !== null) {
-        var studentsRef = database.ref(`Students/${studentId}/events`);
-        studentsRef.once("value").then((snapshot) => {
-          setTimetableData(addStudentId(snapshot.val(), studentId));
-        });
-      }
-    }
-  };
-
-  let triggerMyTimetableForceRefresh = () => {
-    loadTimetable();
-  };
-
-  useEffect(() => {
-    loadTimetable();
-  }, []);
+  const legend = useMemo(() => <Legend />, [Legend]);
+  const createPersonalEvent = useMemo(
+    () => <CreatePersonalEvent timetableData={myModules} />,
+    [myModules]
+  );
 
   // lift week in WeekSwitcher
   const handleWeekChange = (event, value) => {
     // use event as first element, ordering requirement to extract value
-    setWeek(value);
+    updateMyWeek(value);
   };
 
-  const classes = useStyles();
+  const classes = makeStyles({
+    paper: {
+      marginTop: "-0.5em",
+      backgroundColor: "#FFF",
+    },
+  })();
 
   return (
     <Paper className={classes.paper} square>
       {" "}
-      <Timetable
-        weekNumber={week}
-        timetableData={timetableData}
-        triggerMyTimetableForceRefresh={() => {
-          triggerMyTimetableForceRefresh();
-        }}
-      >
+      <Timetable weekNumber={myWeek} timetableData={myModules}>
         <div className="header">
-          <div id="legend">
-            <Legend />
-          </div>
+          <div id="legend">{legend}</div>
           <div id="week-switcher">
-            <WeekSwitcher handleChange={handleWeekChange} week={week} />
+            <WeekSwitcher handleChange={handleWeekChange} week={myWeek} />
           </div>
-          <div id="action-button">
-            <CreatePersonalEvent
-              timetableData={timetableData}
-              triggerMyTimetableForceRefresh={() => {
-                triggerMyTimetableForceRefresh();
-              }}
-            />
-          </div>
+          <div id="action-button">{createPersonalEvent}</div>
         </div>
       </Timetable>
       <div id="url-input">
-        <EnterURL
-          triggerLayoutForceRefresh={() => {
-            triggerLayoutForceRefresh();
-          }}
-          triggerMyTimetableForceRefresh={() => {
-            triggerMyTimetableForceRefresh();
-          }}
-        />
+        <EnterURL />
       </div>
     </Paper>
   );
