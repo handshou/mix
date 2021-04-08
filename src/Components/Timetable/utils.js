@@ -10,7 +10,6 @@ function getCurrentWeek() {
 
 function getModules(data) {
   try {
-    console.log({ data });
     const weekInMilliSeconds = 1000 * 3600 * 24 * 7;
     // prevent dirty data from database
     if (data == null) return [];

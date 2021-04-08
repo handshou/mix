@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useMemo } from "react";
 import { useDatabase } from "./DatabaseContext";
+import { useMyModules } from "./MyModulesContext";
 import { useMyGroups } from "./MyGroupsContext";
 import { getStudentGroupEvents } from "../Functions/apiFunctions.js";
 
@@ -17,12 +18,13 @@ export function useUpdateGroupModules() {
 export default function GroupModulesProvider({ children }) {
   const studentId = localStorage.getItem("studentId");
   const database = useDatabase();
+  const myModules = useMyModules();
   const myGroups = useMyGroups();
   const getGroupEvents = useMemo(
     () => getStudentGroupEvents(updateGroupModules, myGroups, database),
-    [myGroups, database]
+    [myModules, myGroups, database]
   );
-  const [groupModules, setGroupModules] = useState(getGroupEvents);
+  const [groupModules, setGroupModules] = useState();
   let count = 0;
 
   // build group modules
@@ -32,45 +34,24 @@ export default function GroupModulesProvider({ children }) {
       myGroups.forEach((myGroup) => {
         buildGroupModules[myGroup.groupId] = {};
         buildGroupModules["length"] = myGroups.length;
-        if (myGroup.members && Array.isArray(myGroup.members))
+        if (myGroup.members && Array.isArray(myGroup.members)) {
           // set length property in group object for members
           buildGroupModules[myGroup.groupId]["length"] = 0;
-        myGroup.members.forEach((member) => {
-          buildGroupModules[myGroup.groupId][member] = null;
-          buildGroupModules[myGroup.groupId]["length"]++;
-        });
+          myGroup.members.forEach((member) => {
+            buildGroupModules[myGroup.groupId][member] = null;
+            buildGroupModules[myGroup.groupId]["length"]++;
+          });
+          // check prevents override after database listeners update member modules
+          if (typeof groupModules !== "object") {
+            count++;
+            setGroupModules((oldGroupModules) => {
+              return buildGroupModules;
+            });
+          }
+        }
       });
-      // check prevents override after database listeners update member modules
-      if (count === 0 || typeof groupModules !== "object") {
-        count++;
-        setGroupModules((oldGroupModules) => {
-          return buildGroupModules;
-        });
-      }
     }
-  }, [myGroups, studentId]);
-
-  // myGroups.map((group) => {
-  //   group?.members?.map((member) => {
-  //     const eventsRef = database.ref(`Students/${member}/events`);
-  //     eventsRef?.on(
-  //       "value",
-  //       function (events) {
-  //         if (member)
-  //           setGroupModules([
-  //             ...groupModules,
-  //             { [member]: events?.val?.() },
-  //           ]);
-  //       },
-  //       function (err) {
-  //         console.error(err);
-  //       }
-  //     );
-  //     return function cleanup() {
-  //       eventsRef.off();
-  //     };
-  //   });
-  // });
+  }, [myModules, myGroups, studentId]);
 
   // set group modules
   useEffect(() => {
@@ -99,7 +80,7 @@ export default function GroupModulesProvider({ children }) {
 
                   if (!Array.isArray(newGroupModules) && conditiontrue) {
                     setGroupModules((prevGroupModules) => {
-                      return (prevGroupModules[myGroup.groupId][member] =
+                      return (groupModules[myGroup.groupId][member] =
                         events?.val?.() || []);
                     });
                   }
@@ -110,14 +91,13 @@ export default function GroupModulesProvider({ children }) {
               }
             );
             return function cleanup() {
+              setGroupModules();
               eventsRef.off();
             };
           });
       });
     }
-  }, [myGroups, studentId]);
-
-  // console.log({ groupModules });
+  }, [myModules, myGroups, studentId]);
 
   function updateGroupModules(modules) {
     setGroupModules(modules);
@@ -136,13 +116,6 @@ export default function GroupModulesProvider({ children }) {
   //   },
   //   length: 2
   // }
-
-  // function addGroupModules(group, member, modules) {
-  //   groupModules[group];
-  //   setGroupModules(...groupModules, [...modules]);
-  // }
-
-  // console.log({ groupModules });
 
   return (
     <GroupModulesContext.Provider value={groupModules}>

@@ -14,10 +14,10 @@ function createDay(name, modules) {
 }
 
 export default function Timetable(props) {
-  let { weekNumber = 1, timetableData: test = {}, children } = props;
-  console.log({ test });
-  const timetableData = Object.values(test).flat();
-  console.log({ timetableData });
+  let { weekNumber = 1, timetableData: test, children } = props;
+  let timetableData = [];
+  if (test) timetableData = Object.values(test).flat();
+
   weekNumber = parseInt(weekNumber);
 
   // TimetableTimings

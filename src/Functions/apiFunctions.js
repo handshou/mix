@@ -154,6 +154,7 @@ export const getStudentGroupEvents = async (
     let studentEventsPerGroupPerStudent = await Promise.all(
       myGroups.map(async (studentGroup) => {
         let result = {};
+        if (!Array.isArray(studentGroup.members)) return;
         const group = await Promise.all(
           studentGroup.members.map(async (memberId) => {
             result[studentGroup.groupId] = {};
@@ -167,9 +168,13 @@ export const getStudentGroupEvents = async (
     );
 
     // hacky flattening
-    const flattened = studentEventsPerGroupPerStudent.map((group) => group[0]);
+    const flattened = studentEventsPerGroupPerStudent.map((group) => {
+      if (Array.isArray(group)) return group[0];
+    });
     let reformatData = {};
     Object.values(flattened).forEach((r) => {
+      // hacky method for dirty database
+      if (!r) return;
       reformatData[Object.keys(r)[0]] = Object.values(r)[0];
     });
 

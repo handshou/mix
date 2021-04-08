@@ -16,7 +16,10 @@ import {
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useUpdateMyModules } from "../../Contexts/MyModulesContext";
+import {
+  useUpdateMyModules,
+  useMyModules,
+} from "../../Contexts/MyModulesContext";
 
 toast.configure();
 
@@ -51,11 +54,12 @@ const TimetableModules = (props) => {
   let localTimetableData = [];
   const studentId = localStorage.getItem("studentId");
   const updateMyModules = useUpdateMyModules();
+  const fullData = useMyModules();
   if (props !== undefined && props.fullData !== undefined) {
     localTimetableData = props.fullData;
   }
 
-  const { data, fullData } = props;
+  const { data } = props;
   // const [refreshKey, setRefreshKey] = useState(0);
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
@@ -138,10 +142,12 @@ const TimetableModules = (props) => {
         (event) =>
           event.startTime != startTimeSplit ||
           event.eventName != title ||
-          event.eventType != type ||
-          event.studentId != studentId // update only works on my own modules
+          event.eventType != type
+        // event.studentId != studentId // update only works on my own modules
       );
 
+      console.log({ fullData });
+      console.log({ newData });
       overrideStudentEventsToDB(studentId, newData, database);
 
       // reload
