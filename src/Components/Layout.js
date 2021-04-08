@@ -91,13 +91,14 @@ function Layout(props) {
       return;
     } else if (studentNameInput.length === 0) {
       toast.error("You are not allowed to leave the student name blank.");
-      // setUpdateStudentNameDisabled(true);
+      setUpdateStudentNameDisabled(true);
+      setStudentName("");
       return;
     }
 
+    setStudentName(event.target.value);
+    setStudentNameTextbox({ disable: false, val: event.target.value });    
     localStorage.setItem("studentName", event.target.value);
-    setStudentName(localStorage.getItem("studentName"));
-    setStudentNameTextbox({ disable: false, val: studentName });    
   }
 
   const [studentNameTextbox, setStudentNameTextbox] = useState({
@@ -116,7 +117,7 @@ function Layout(props) {
   function enableStudentNameEdit() {
     setStudentNameTextbox({
       disable: false,
-      val: studentName,
+      val: localStorage.getItem("studentName"),
       readOnly: false,
     });
     setRefreshKey(refreshKey + 1);
