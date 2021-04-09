@@ -29,9 +29,10 @@ firebase emulators:start
 Do these steps before starting frontend:
 
 1. Ensure its running on port 4000
-1. Go to localhost:4000
-1. Click is4261 import JSON
-1. Select JSON file at ./.../...
+1. Go to localhost:4000/database/is4261/data
+1. Click ... for more options, then click import JSON
+1. Browse for JSON file at ./Firebase/is4261-default-rtdb-export.json
+1. Click import
 1. End offline database
 
 ### Online
