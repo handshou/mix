@@ -84,7 +84,7 @@ const TimetableModules = (props) => {
     setModule({ ...module, [name]: value });
   };
 
-  function updateEvent(id, title, type, fullData) {
+  function updateEvent(id, title, type, studentId) {
     var updateEventPrompt = window.confirm(
       `Are you sure you want to update the event?\nYou cannot undo this.`
     );
@@ -92,29 +92,39 @@ const TimetableModules = (props) => {
     if (updateEventPrompt) {
       const startTimeSplit = id.split("-")[0];
       const eventTypeSplit = id.split("-")[2];
-      const studentIdSplit = id.split("-")[3];
       const endTimeSplit = id.split("-")[4];
 
-      var data = {
-        endTime: new Date(Number(endTimeSplit)).getTime(),
-        eventName: module.eventName,
-        eventType: eventTypeSplit,
-        startTime: new Date(Number(startTimeSplit)).getTime(),
-      };
+      database
+        .ref(`Students/${studentId}/events`)
+        .orderByChild(`startTime`)
+        .limitToFirst(1)
+        .equalTo(Number(startTimeSplit))
+        .on("child_added", function (snapshot) {
+          const databaseModule = snapshot.val();
+          if (
+            databaseModule.endTime === Number(endTimeSplit) &&
+            databaseModule.eventType === type &&
+            databaseModule.eventName === title
+          ) {
+            console.log({ databaseModule });
+            database
+              .ref(`Students/${studentId}/events`)
+              .child(`${snapshot.key}`)
+              .set({
+                ...snapshot.val(),
+                eventName: module.eventName,
+              });
 
-      let newTimetableData = [];
-
-      newTimetableData = fullData.filter(
-        (event) =>
-          event.startTime != startTimeSplit ||
-          event.eventName != title ||
-          event.eventType != type
-      );
-
-      newTimetableData = [...newTimetableData];
-      newTimetableData.push(data);
-
-      overrideStudentEventsToDB(studentIdSplit, newTimetableData, database);
+            // triggers update after execution
+            getStudentGroupEvents(updateGroupModules, myGroups, database);
+            console.log("Updated");
+            database
+              .ref(`Students/${studentId}/events`)
+              .orderByChild(`startTime`)
+              .equalTo(Number(startTimeSplit))
+              .off();
+          }
+        });
 
       setOpen(false);
 
@@ -134,7 +144,7 @@ const TimetableModules = (props) => {
     setOpen(false);
   };
 
-  function deleteEvent(id, title, type, studentId, fullData) {
+  function deleteEvent(id, title, type, studentId) {
     var deleteEventPrompt = window.confirm(
       `Are you sure you want to delete the event?\nYou cannot undo this.`
     );
@@ -143,30 +153,24 @@ const TimetableModules = (props) => {
       const startTimeSplit = id.split("-")[0];
       const endTimeSplit = id.split("-")[4];
 
-      const newData = fullData.filter(
-        (event) =>
-          event.startTime != startTimeSplit ||
-          event.eventName != title ||
-          event.eventType != type
-        // event.studentId != studentId // update only works on my own modules
-      );
-
       database
         .ref(`Students/${studentId}/events`)
         .orderByChild(`startTime`)
+        .limitToFirst(1)
         .equalTo(Number(startTimeSplit))
         .on("child_added", function (snapshot) {
-          const module = snapshot.val();
-          console.log({ module });
+          const databaseModule = snapshot.val();
           if (
-            module.endTime === Number(endTimeSplit) &&
-            module.eventType === type &&
-            module.eventName === title
+            databaseModule.endTime === Number(endTimeSplit) &&
+            databaseModule.eventType === type &&
+            databaseModule.eventName === title
           ) {
             database
               .ref(`Students/${studentId}/events`)
               .child(`${snapshot.key}`)
               .remove();
+
+            // triggers update after execution
             getStudentGroupEvents(updateGroupModules, myGroups, database);
             console.log("Removed");
             database
@@ -177,21 +181,6 @@ const TimetableModules = (props) => {
           }
         });
 
-      function checkEvent(key, title, type, endTimeSplit) {
-        database
-          .ref(`Students/${studentId}/events/${key}`)
-          .once("value", function (snapshot) {
-            console.log(snapshot.val());
-          });
-      }
-
-      // overrideStudentEventsToDB(studentId, newData, database);
-
-      // reload
-      // loadTimetable(updateMyModules, studentId, database);
-
-      // updateMyModules(newData);
-      // setRefreshKey(refreshKey + 1);
       setOpen(false);
 
       toast.success("The event has been deleted successfully.");
@@ -281,7 +270,7 @@ const TimetableModules = (props) => {
             ></input>
             <br></br>
             <Button
-              onClick={() => updateEvent(id, title, type, fullData)}
+              onClick={() => updateEvent(id, title, type, studentId)}
               variant="contained"
               style={{ boxShadow: "5px 5px 5px 0px grey" }}
               color="primary"
@@ -307,7 +296,7 @@ const TimetableModules = (props) => {
           }
         >
           <Button
-            onClick={() => deleteEvent(id, title, type, studentId, fullData)}
+            onClick={() => deleteEvent(id, title, type, studentId)}
             variant="contained"
             style={{ boxShadow: "5px 5px 5px 0px grey" }}
             color="primary"
