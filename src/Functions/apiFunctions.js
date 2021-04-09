@@ -129,9 +129,13 @@ export const getStudentEvents = async (studentId, database) => {
     // guard condition for no student events
     if (result === null) return;
 
-    // append studentId to each student event
+    // hacky fix for dirty data without studentId, append studentId to
+    // each student event
     function addStudentId(studentEvents, studentId) {
-      return studentEvents.map((e) => ({ ...e, studentId }));
+      return studentEvents.map((e) => {
+        if (e.studentId) return e;
+        return { ...e, studentId };
+      });
     }
     return addStudentId(result, studentId);
   }
@@ -221,3 +225,5 @@ export const getGroupMemberName = async (database) => {
     return snapshot.val();
   });
 };
+
+export const removeEventFromStudent = (studentId, database) => {};

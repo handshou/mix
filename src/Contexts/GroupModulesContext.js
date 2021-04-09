@@ -18,11 +18,10 @@ export function useUpdateGroupModules() {
 export default function GroupModulesProvider({ children }) {
   const studentId = localStorage.getItem("studentId");
   const database = useDatabase();
-  const myModules = useMyModules();
   const myGroups = useMyGroups();
   const getGroupEvents = useMemo(
     () => getStudentGroupEvents(updateGroupModules, myGroups, database),
-    [myModules, myGroups, database]
+    [myGroups, database]
   );
   const [groupModules, setGroupModules] = useState();
   let count = 0;
@@ -51,7 +50,7 @@ export default function GroupModulesProvider({ children }) {
         }
       });
     }
-  }, [myModules, myGroups, studentId]);
+  }, [myGroups, studentId]);
 
   // set group modules
   useEffect(() => {
@@ -74,11 +73,7 @@ export default function GroupModulesProvider({ children }) {
                   events != [] &&
                   events != undefined;
                 if (conditiontrue) {
-                  const newGroupModules = (groupModules[myGroup.groupId][
-                    member
-                  ] = events?.val?.() || []);
-
-                  if (!Array.isArray(newGroupModules) && conditiontrue) {
+                  if (conditiontrue) {
                     setGroupModules((prevGroupModules) => {
                       return (groupModules[myGroup.groupId][member] =
                         events?.val?.() || []);
@@ -91,13 +86,12 @@ export default function GroupModulesProvider({ children }) {
               }
             );
             return function cleanup() {
-              setGroupModules();
               eventsRef.off();
             };
           });
       });
     }
-  }, [myModules, myGroups, studentId]);
+  }, [myGroups, studentId]);
 
   function updateGroupModules(modules) {
     setGroupModules(modules);

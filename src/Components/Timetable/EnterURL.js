@@ -205,6 +205,7 @@ const EnterURL = (props) => {
     let newEventArray = [];
     newtimeslotArray.forEach((timeslot) => {
       if (
+        studentId !== undefined &&
         timeslot !== undefined &&
         timeslot.weeks !== undefined &&
         timeslot.day !== undefined &&
@@ -222,6 +223,7 @@ const EnterURL = (props) => {
             timeslot.endTime
           );
           newEventArray.push({
+            studentId: studentId,
             eventName: timeslot.moduleCode,
             eventType: timeslot.lessonType,
             startTime: startTimestamp,

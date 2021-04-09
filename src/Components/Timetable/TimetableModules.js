@@ -11,6 +11,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { useDatabase } from "../../Contexts/DatabaseContext";
 import {
   loadTimetable,
+  getStudentGroupEvents,
   overrideStudentEventsToDB,
 } from "../../Functions/apiFunctions";
 
@@ -20,6 +21,8 @@ import {
   useUpdateMyModules,
   useMyModules,
 } from "../../Contexts/MyModulesContext";
+import { useUpdateGroupModules } from "../../Contexts/GroupModulesContext";
+import { useMyGroups } from "../../Contexts/MyGroupsContext";
 
 toast.configure();
 
@@ -53,7 +56,8 @@ function getModalStyle() {
 const TimetableModules = (props) => {
   let localTimetableData = [];
   const studentId = localStorage.getItem("studentId");
-  const updateMyModules = useUpdateMyModules();
+  const updateGroupModules = useUpdateGroupModules();
+  const myGroups = useMyGroups();
   const fullData = useMyModules();
   if (props !== undefined && props.fullData !== undefined) {
     localTimetableData = props.fullData;
@@ -130,13 +134,14 @@ const TimetableModules = (props) => {
     setOpen(false);
   };
 
-  function deleteEvent(id, title, type, fullData) {
+  function deleteEvent(id, title, type, module_studentId, fullData) {
     var deleteEventPrompt = window.confirm(
       `Are you sure you want to delete the event?\nYou cannot undo this.`
     );
 
     if (deleteEventPrompt) {
       const startTimeSplit = id.split("-")[0];
+      const endTimeSplit = id.split("-")[4];
 
       const newData = fullData.filter(
         (event) =>
@@ -146,9 +151,43 @@ const TimetableModules = (props) => {
         // event.studentId != studentId // update only works on my own modules
       );
 
-      console.log({ fullData });
-      console.log({ newData });
-      overrideStudentEventsToDB(studentId, newData, database);
+      console.log({ startTimeSplit });
+      console.log({ endTimeSplit });
+      console.log({ title });
+      console.log({ type });
+      console.log({ module_studentId });
+      database
+        .ref(`Students/${module_studentId}/events`)
+        .orderByChild(`startTime`)
+        .equalTo(Number(startTimeSplit))
+        .on("child_added", function (snapshot) {
+          const module = snapshot.val();
+          console.log({ module });
+          if (
+            module.endTime === Number(endTimeSplit) &&
+            module.eventType === type &&
+            module.eventName === title
+          ) {
+            database
+              .ref(`Students/${module_studentId}/events`)
+              .child(`${snapshot.key}`)
+              .remove();
+            getStudentGroupEvents(updateGroupModules, myGroups, database);
+            console.log("Removed");
+          }
+        });
+
+      // console.log({ dbResult });
+
+      function checkEvent(key, title, type, endTimeSplit) {
+        database
+          .ref(`Students/${module_studentId}/events/${key}`)
+          .once("value", function (snapshot) {
+            console.log(snapshot.val());
+          });
+      }
+
+      // overrideStudentEventsToDB(studentId, newData, database);
 
       // reload
       // loadTimetable(updateMyModules, studentId, database);
@@ -174,7 +213,14 @@ const TimetableModules = (props) => {
 
   // create a new component for modules
   const modules = data.map((module, index) => {
-    const { studentId = 0, id, title, type, startTime, endTime } = module;
+    const {
+      studentId: module_studentId,
+      id,
+      title,
+      type,
+      startTime,
+      endTime,
+    } = module;
 
     const body = (
       <div style={modalStyle}>
@@ -253,6 +299,7 @@ const TimetableModules = (props) => {
         <p>Event Status: {type}</p>
         <p>Start Time: {startTime}</p>
         <p>End Time: {endTime}</p>
+        <p>Student Id: {module_studentId}</p>
         <br></br>
         <Tooltip
           title={
@@ -262,7 +309,9 @@ const TimetableModules = (props) => {
           }
         >
           <Button
-            onClick={() => deleteEvent(id, title, type, fullData)}
+            onClick={() =>
+              deleteEvent(id, title, type, module_studentId, fullData)
+            }
             variant="contained"
             style={{ boxShadow: "5px 5px 5px 0px grey" }}
             color="primary"
