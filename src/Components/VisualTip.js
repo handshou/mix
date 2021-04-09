@@ -10,7 +10,7 @@ export function VisualTip() {
     <div>
       <PNGtooltip
         tooltip={
-          <IconButton class="confirm_selection">What can I do here?</IconButton>
+          <IconButton class="confirm_selection"><u>What can I do here?</u></IconButton>
         }
       >
         <div>

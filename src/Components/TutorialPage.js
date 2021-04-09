@@ -160,7 +160,8 @@ export function TutorialPage() {
                   Hello <b>{localStorage.getItem("studentName")}</b>, your User
                   ID is <b>{localStorage.getItem("studentId")}</b>. 
                   <br></br>
-                  It is tied
+                  <br></br>
+                  Your User ID is tied
                   to your profile and you cannot change it. Other MixTime users
                   can add you via this ID number.
                 </p>
