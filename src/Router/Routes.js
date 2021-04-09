@@ -11,6 +11,8 @@ import JoinGroup from "../Components/JoinGroup";
 
 import TutorialPage from "../Components/TutorialPage";
 
+import ViewArchivedGroups from "../Components/ViewArchivedGroups";
+
 export default () => {
   const [forceRefresh, setForceRefresh] = useState(0);
   useEffect(() => {
@@ -54,6 +56,7 @@ export default () => {
             />
           </Route>
           <Route path="/TutorialPage" exact component={TutorialPage} />
+          <Route path="/ViewArchivedGroups" exact component={ViewArchivedGroups} />
         </Switch>
       </div>
     </Router>

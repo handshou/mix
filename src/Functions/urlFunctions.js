@@ -1,10 +1,13 @@
 // converts valid NUSMODS timetable into a 2d array of mods and slots
 // throws error message --> Should catch in parent
 export const convertURLtoArray = (URL) => {
-  // very basic validation for URL to ensure its the right URL
+  // validation for URL to ensure its the right URL
   if (
+    // Checks is NUSMods Timetable URL
     URL.includes("https://nusmods.com/timetable/") &&
+    // Checks if its NUSMods Sharing URL
     URL.includes("/share?") &&
+    // Ensure that there are modules to be added
     URL.split("?")[1] !== undefined
   ) {
     let split = URL.split("?")[1];

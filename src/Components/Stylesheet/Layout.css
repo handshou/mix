@@ -408,9 +408,15 @@ renameText:focus {
   padding: 4px 4px 4px 4px;
 }
 
-.confirm_selection {
+.undo_rename_glow {
   -webkit-animation: glow 0.8s infinite alternate;
   -webkit-animation-iteration-count: 20;
+  text-align: center;
+  font-family: sans-serif;
+  line-height: initial;
+  margin-left: 20px; 
+  color: black;
+  fill-opacity: 80%;
 }
 
 @keyframes glow {

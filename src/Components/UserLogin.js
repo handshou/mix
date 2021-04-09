@@ -13,8 +13,8 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import urlTut from './tutorialGIFs/ImportURL.mp4';
-import groupTut from './tutorialGIFs/CreateGroup.mp4';
+import urlTut from "./tutorialGIFs/ImportURL.mp4";
+import groupTut from "./tutorialGIFs/CreateGroup.mp4";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { ChangeHistoryOutlined } from "@material-ui/icons";
@@ -91,11 +91,13 @@ export function UserLogin(props) {
     return (
       <div>
         <p>
-          It seems like this is the first time here. Please enter your name to begin.
+          It seems like this is the first time here. Please enter your name to
+          begin.
         </p>
         <div>
           Enter Your Name:
-          <OutlinedInput required
+          <OutlinedInput
+            required
             placeholder={"e.g, John Doe"}
             defaultValue={localStorage.getItem("inputName")}
             style={{
@@ -185,10 +187,29 @@ export function UserLogin(props) {
   }
 
   function createGroup() {
-    return(
+    return (
       <div>
-        <div> 
-          <p>You can create a group on MixTime, by adding your group members MixTime IDs. Your own ID is found on the top right corner of the window.</p>
+        <div>
+          <p>
+            You can create a group on MixTime, by adding your group members
+            MixTime IDs. Your own ID is found on the top right corner of the
+            window.
+          </p>
+          <br></br>
+          <p>
+            To <b>create a group</b>, follow these steps:
+          </p>
+          <ol>
+            <li>1. Head over to the "Manage Groups" page.</li>
+            <li>2. Click on the (+) icon.</li>
+            <li>
+              3. A pop-up window will appear, enter your group name first.
+            </li>
+            <li>
+              4. Enter your group size (Note, the group size includes you).
+            </li>
+            <li>5. Enter your group members IDs.</li>
+          </ol>
           <br></br>
           <p>To <b>create a group</b>, follow these steps:</p>
             <ol>
@@ -230,7 +251,8 @@ export function UserLogin(props) {
             </Button>
           </div>
       </div>
-    );}
+    );
+  }
 
   //Step Content
   function getStepContent(stepIndex) {
@@ -302,6 +324,8 @@ export function UserLogin(props) {
 
     if (props.triggerNameRefresh !== undefined) {
       props.triggerNameRefresh();
+
+      toast.success("You have successfully signed up.");
     }
   };
 
@@ -338,8 +362,7 @@ export function UserLogin(props) {
           <br></br>
           <div>
             {activeStep === steps.length ? (
-              <div>
-              </div>
+              <div></div>
             ) : (
               <div>
                 <Typography className={classes.instructions}>

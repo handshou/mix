@@ -74,10 +74,31 @@ function Layout(props) {
     setStudentName(localStorage.getItem("studentName"));
   }, [props.forceRefresh]);
 
+  const [updateStudentNameDisabled, setUpdateStudentNameDisabled] = useState(false);
+
   function editStudentName(event) {
+    setUpdateStudentNameDisabled(false);
+
+    var studentNameInput = event.target.value;
+    if (studentNameInput.includes(",") || studentNameInput.includes(".") || studentNameInput.includes("!") || 
+    studentNameInput.includes("@") || studentNameInput.includes("#") || studentNameInput.includes("$") || studentNameInput.includes("&") 
+    || studentNameInput.includes("'") || studentNameInput.includes("(") || studentNameInput.includes(")") || studentNameInput.includes("*") || studentNameInput.includes("+")
+    || studentNameInput.includes("/") || studentNameInput.includes(":") || studentNameInput.includes(";") || studentNameInput.includes("<") || studentNameInput.includes("=")
+    || studentNameInput.includes(">") || studentNameInput.includes("?") || studentNameInput.includes("[") || studentNameInput.includes("]") || studentNameInput.includes("_")
+    || studentNameInput.includes("{") || studentNameInput.includes("}") || studentNameInput.includes("|") || studentNameInput.includes("~") || studentNameInput.includes("^")) {
+      toast.error("You are not allowed to enter special characters (!#$%&'()*+,-./:;<=>?@[\]^_`{|}~).");
+      setUpdateStudentNameDisabled(true);
+      return;
+    } else if (studentNameInput.length === 0) {
+      toast.error("You are not allowed to leave the student name blank.");
+      setUpdateStudentNameDisabled(true);
+      setStudentName("");
+      return;
+    }
+
+    setStudentName(event.target.value);
+    setStudentNameTextbox({ disable: false, val: event.target.value });    
     localStorage.setItem("studentName", event.target.value);
-    setStudentName(localStorage.getItem("studentName"));
-    setStudentNameTextbox({ disable: false, val: studentName });
   }
 
   const [studentNameTextbox, setStudentNameTextbox] = useState({
@@ -96,7 +117,7 @@ function Layout(props) {
   function enableStudentNameEdit() {
     setStudentNameTextbox({
       disable: false,
-      val: studentName,
+      val: localStorage.getItem("studentName"),
       readOnly: false,
     });
     setRefreshKey(refreshKey + 1);
@@ -105,7 +126,7 @@ function Layout(props) {
   function updateStudentName() {
     setStudentNameTextbox({ disable: true, val: studentName, readOnly: true });
 
-    if (studentNameTextbox.val !== localStorage.getItem("studentName")) {
+    if (studentNameTextbox.val !== localStorage.getItem("studentName") && updateStudentNameDisabled === false) {
       toast.success("Student name has been updated successfully.");
     }
 
@@ -124,9 +145,9 @@ function Layout(props) {
                     <Tooltip
                       title={
                         <em>
-                          {
-                            "This is your Student Name. The number #" + localStorage.getItem("studentId") + " is your User ID."
-                          }
+                          {"This is your Student Name. The number #" +
+                            localStorage.getItem("studentId") +
+                            " is your User ID."}
                         </em>
                       }
                     >
@@ -142,11 +163,12 @@ function Layout(props) {
                         type="text"
                         disabled={studentNameTextbox.disable}
                         value={studentName}
-                        onChange={editStudentName}
+                        onChange={(e) => editStudentName(e)}
                         readOnly={studentNameTextbox.readOnly}
                         size={studentNameTextbox.val.length - 3}
                         style={
-                          studentNameTextbox.readOnly === false
+                          studentNameTextbox.readOnly === false ||
+                          updateStudentNameDisabled === true
                             ? {
                                 padding: "4px 4px 4px 4px",
                                 borderRadius: "4px",
@@ -186,14 +208,25 @@ function Layout(props) {
                         //   style={{ width: "fit-content" }}
                         // >
                         <Link
-                          onClick={() => {
-                            updateStudentName();
+                          onClick={(e) => {
+                            updateStudentName(e);
                           }}
+                          style={
+                            updateStudentNameDisabled === true
+                              ? { pointerEvents: "none" }
+                              : {}
+                          }
                         >
-                          <span style={{ color: "black" }}>
-                            {/* <abbr title="Save Changes"><SaveIcon /></abbr> */}
-                            <SaveIcon />
-                          </span>
+                          {updateStudentNameDisabled === false ? (
+                            <span style={{ color: "black" }}>
+                              {/* <abbr title="Save Changes"><SaveIcon /></abbr> */}
+                              <SaveIcon />
+                            </span>
+                          ) : (
+                            <span style={{ color: "lightgrey" }}>
+                              <SaveIcon />
+                            </span>
+                          )}
                         </Link>
                       )
                       // </Button>
@@ -268,7 +301,12 @@ function Layout(props) {
               component={Link}
               to="/GroupManagement"
               itemID="/GroupManagement"
-              selected={location.pathname === "/GroupManagement" ? true : false}
+              selected={
+                location.pathname === "/GroupManagement" ||
+                location.pathname === "/ViewArchivedGroups"
+                  ? true
+                  : false
+              }
               classes={{
                 root: classes.buttonDesign,
                 selected: classes.sideNavBarActive,

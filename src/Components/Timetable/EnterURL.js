@@ -91,6 +91,11 @@ const EnterURL = (props) => {
   }, [modAndClassArray]);
 
   useEffect(() => {
+    if (errorMessage !== undefined && errorMessage.length > 1)
+      toast.error(errorMessage);
+  }, [errorMessage]);
+
+  useEffect(() => {
     var studentsRef = database.ref(`Students/${studentId}/events`);
     studentsRef.once("value").then((snapshot) => {
       setExistingEvents(snapshot.val());
@@ -98,7 +103,7 @@ const EnterURL = (props) => {
         props.triggerMyTimetableForceRefresh();
       }
     });
-  }, [userEventArray]);
+  }, [, userEventArray]);
 
   useEffect(() => {
     // catches invalid URLs
@@ -118,15 +123,27 @@ const EnterURL = (props) => {
           existingEvents,
           database
         );
-        toast.success("The timetable has been updated.");
+        toast.success("Your NUSMods timetable has been updated.");
+        setFunctionSelector(0);
       } else if (functionSelector === 2) {
         overrideStudentEventsToDB(
           localStorage.getItem("studentId"),
           userEventArray,
           database
         );
-        toast.success("The timetable has been replaced.");
+        toast.success("Your NUSMods timetable has been replaced.");
+        setFunctionSelector(0);
       }
+    }
+    // usereventarray can be empty
+    if (functionSelector === 3) {
+      overrideStudentEventsToDB(
+        localStorage.getItem("studentId"),
+        userEventArray,
+        database
+      );
+      toast.success("Your NUSMods timetable has been cleared.");
+      setFunctionSelector(0);
     }
   }, [userEventArray]);
 
@@ -134,7 +151,6 @@ const EnterURL = (props) => {
   const getModuleDetails = async () => {
     let apiPromises = modAndClassArray.map((modAndClasses) => {
       // only need module code for api to ping details
-      // safeguard for button
       if (
         modAndClasses &&
         modAndClasses.length > 0 &&
@@ -146,8 +162,8 @@ const EnterURL = (props) => {
       }
     });
     // .allSettled() used instead of .all()
+    // safeguards for invalid/dirty Mod&class pairs
     // allowed failed requests to go through but prevents immediate failure
-    // additional implmentation to catch errors is required
     Promise.allSettled(apiPromises).then((details) => {
       setModAndClassDetails(details);
     });
@@ -220,6 +236,25 @@ const EnterURL = (props) => {
     setUserEventArray(newEventArray);
   };
 
+  const clearNUSModsTimetable = () => {
+    let nonNUSModsEventArray = [];
+    if (existingEvents && existingEvents.length > 0) {
+      existingEvents.map((event) => {
+        // retain custom event types only
+        if (
+          event.eventType == "Personal Events" ||
+          event.eventType == "Others" ||
+          event.eventType == "Private"
+        ) {
+          nonNUSModsEventArray.push(event);
+        }
+      });
+    }
+    console.log("nonNUSModsEventArray");
+    console.log(nonNUSModsEventArray);
+    setUserEventArray(nonNUSModsEventArray);
+  };
+
   let triggerNameRefresh = () => {};
 
   if (props.triggerLayoutForceRefresh !== undefined) {
@@ -261,17 +296,43 @@ const EnterURL = (props) => {
           </IconButton>
         </Tooltip>
       </div>
-      <div style={{ color: "red" }}>
-        {errorMessage && errorMessage.length < 1 ? "" : errorMessage}
-      </div>
+
       <OutlinedInput
         placeholder={"https://nusmods.com/timetable/sem-2/share?....."}
-        style={{ width: 500, marginLeft: 10, marginRight: 30 }}
+        style={{
+          width: 500,
+          marginLeft: 10,
+          marginRight: 30,
+          border:
+            errorMessage !== undefined && errorMessage.length < 1
+              ? ""
+              : "1px solid #da337a",
+          boxShadow:
+            errorMessage !== undefined && errorMessage.length < 1
+              ? ""
+              : "0px 0px 8px #da337a",
+        }}
         onChange={(e) => {
           setEnteredURL(e.target.value);
           setErrorMessage("");
         }}
       ></OutlinedInput>
+
+      {errorMessage !== undefined && errorMessage.length < 1 ? (
+        <div />
+      ) : (
+        <div
+          style={{
+            marginLeft: 10,
+            marginRight: 30,
+            color: "red",
+            fontSize: 20,
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
+
       <Tooltip
         title={
           <em>{"Click here to add your NUSmods classes personal timetable"}</em>
@@ -291,9 +352,10 @@ const EnterURL = (props) => {
             }
           }}
         >
-          Add Timetable
+          Import NUSMODS Timetable
         </Button>
       </Tooltip>
+      {/* 
       <Tooltip
         title={<em>{"Click here to override your timetable completely"}</em>}
       >
@@ -312,6 +374,27 @@ const EnterURL = (props) => {
           }}
         >
           Override Timetable
+        </Button>
+      </Tooltip>
+      */}
+      <Tooltip
+        title={<em>{"Click here to clear your imported NUSMods timetable"}</em>}
+      >
+        <Button
+          style={{ boxShadow: "5px 5px 5px 0px grey", marginLeft: 30 }}
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setFunctionSelector(3);
+            // catches invalid URLs
+            try {
+              clearNUSModsTimetable();
+            } catch (error) {
+              setErrorMessage(error);
+            }
+          }}
+        >
+          Clear Imported Timetable
         </Button>
       </Tooltip>
       <VisualTip></VisualTip>
