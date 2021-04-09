@@ -411,9 +411,6 @@ renameText:focus {
 .undo_rename_glow {
   -webkit-animation: glow 0.8s infinite alternate;
   -webkit-animation-iteration-count: 20;
-}
-
-.undo_rename_glow {
   text-align: center;
   font-family: sans-serif;
   line-height: initial;
@@ -428,4 +425,15 @@ renameText:focus {
     color: red;
     fill-opacity: 100%;
   }
+}
+
+.confirm_selection {
+  -webkit-animation: glow 0.8s infinite alternate;
+  -webkit-animation-iteration-count: 20;
+  text-align: center;
+  font-family: sans-serif;
+  line-height: 3;
+  margin-left: 20px; 
+  color: #ff7043;
+  fill-opacity: 80%;
 }

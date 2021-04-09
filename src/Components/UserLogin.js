@@ -49,7 +49,13 @@ export function UserLogin(props) {
     },
     backButton: {
       marginRight: theme.spacing(1),
+      boxShadow: "grey 5px 5px 5px 0px",
     },
+    
+    nextButton: {
+      boxShadow: "grey 5px 5px 5px 0px",
+    },
+
     instructions: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
@@ -93,6 +99,10 @@ export function UserLogin(props) {
           <OutlinedInput
             required
             placeholder={"e.g, John Doe"}
+            defaultValue={localStorage.getItem("inputName")}
+            autoFocus={typeof localStorage.getItem("inputName") !== "undefined" &&
+            localStorage.getItem("inputName") !== null &&
+            localStorage.getItem("inputName") !== "" ? true : false}
             style={{
               width: 300,
               marginLeft: 30,
@@ -105,8 +115,7 @@ export function UserLogin(props) {
           ></OutlinedInput>
           <div>
             <Button
-              //disabled={activeStep === 0}
-              //onClick={handleBack}
+              disabled
               className={classes.backButton}
             >
               Back
@@ -115,6 +124,7 @@ export function UserLogin(props) {
             <Button
               variant="contained"
               color="primary"
+              className={classes.nextButton}
               onClick={() => {
                 var value = localStorage.getItem("inputName");
                 if (
@@ -122,8 +132,6 @@ export function UserLogin(props) {
                   value !== null &&
                   value !== ""
                 ) {
-                  //createStudentId(localStorage.getItem("inputName"));
-                  //handleClose();
                   dismissAll();
                   handleNext();
                 } else {
@@ -141,46 +149,42 @@ export function UserLogin(props) {
 
   function importTimetableModal() {
     return (
-      <div>
-        <p>
-          You <b>must</b> import your NUSMods timetable into MixTime, to see it
-          on your MixTime timetable page.
-        </p>
-        <br></br>
-        <p>
-          To <b>import your timetable</b>, follow these steps:
-        </p>
-        <ol>
-          <li>1. Click on the "Share/Sync" button.</li>
-          <li>2. Click on the Copy icon.</li>
-          <li>3. Paste your link into our URL text-box below.</li>
-          <li>4. Click on the Update Timetable button.</li>
-          <li>
-            5. Your timetable has been successfully added. You can see it from
-            the "My Timetable" tab.
-          </li>
-        </ol>
-        <br></br>
-        <p>
-          See video <b>here</b> for steps:
-        </p>
-        <video autoPlay loop>
-          <source src={urlTut} type="video/mp4" />
-        </video>
+      <div> 
+            <p>You <b>must</b> import your NUSMods timetable into MixTime, to see it on your MixTime timetable page.</p>
+            <br></br>
+            <p>To <b>import your timetable</b>, follow these steps:</p>
+            <ol>
+              <li>1. Click on the "Share/Sync" button.</li>
+              <li>2. Click on the Copy icon.</li>
+              <li>3. Paste your link into our URL text-box below.</li>
+              <li>4. Click on the Update Timetable button.</li>
+              <li>5. Your timetable has been successfully added. You can see it from the "My Timetable" tab.</li>
+            </ol>
+            <br></br>
+            <p>See video <b>here</b> for steps:</p>
+            <video controls>
+              <source src={urlTut} type="video/mp4"/>
+            </video>
 
-        <div>
-          <Button
-            disabled={activeStep === 0}
-            onClick={handleBack}
-            className={classes.backButton}
-          >
-            Back
-          </Button>
+            <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleBack}
+              className={classes.backButton}
+            >
+              Back
+            </Button>
 
-          <Button variant="contained" color="primary" onClick={handleNext}>
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
-          </Button>
-        </div>
+            <Button
+              className={classes.nextButton}
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+            >
+              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            </Button>
+          </div>
       </div>
     );
   }
@@ -195,50 +199,45 @@ export function UserLogin(props) {
             window.
           </p>
           <br></br>
-          <p>
-            To <b>create a group</b>, follow these steps:
-          </p>
-          <ol>
-            <li>1. Head over to the "Manage Groups" page.</li>
-            <li>2. Click on the (+) icon.</li>
-            <li>
-              3. A pop-up window will appear, enter your group name first.
-            </li>
-            <li>
-              4. Enter your group size (Note, the group size includes you).
-            </li>
-            <li>5. Enter your group members IDs.</li>
-          </ol>
-          <br></br>
-          <p>
-            See video <b>here</b> for steps:
-          </p>
-          <video autoPlay loop>
-            <source src={groupTut} type="video/mp4" />
-          </video>
+          <p>To <b>create a group</b>, follow these steps:</p>
+            <ol>
+              <li>1. Head over to the "Manage Groups" page.</li>
+              <li>2. Click on the (+) icon.</li>
+              <li>3. A pop-up window will appear, enter your group name first.</li>
+              <li>4. Enter your group size (Note, the group size  includes you).</li>
+              <li>5. Enter your group members IDs.</li>
+            </ol>
+            <br></br>
+            <p>See video <b>here</b> for steps:</p>
+            <video controls>
+              <source src={groupTut} type="video/mp4"/>
+            </video>
         </div>
         <div>
-          <Button
-            disabled={activeStep === 0}
-            onClick={handleBack}
-            className={classes.backButton}
-          >
-            Back
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              className={classes.backButton}
+            >
+              Back
+            </Button>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleNext();
-              handleClose();
-              dismissAll();
-              createStudentId(localStorage.getItem("inputName"));
-            }}
-          >
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
-          </Button>
-        </div>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.nextButton}
+              onClick={() => {
+                handleNext();
+                handleClose();
+                dismissAll();
+                createStudentId(localStorage.getItem("inputName"));
+              }}
+            >
+              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            </Button>
+          </div>
       </div>
     );
   }
