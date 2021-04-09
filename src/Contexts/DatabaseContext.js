@@ -4,7 +4,7 @@ import firebaseConfig from "../Firebase/firebaseConfig";
 const DatabaseContext = React.createContext();
 const UpdateDatabaseContext = React.createContext();
 
-const useLocalDatabase = true;
+const useLocalDatabase = false;
 
 export function useDatabase() {
   return useContext(DatabaseContext);
