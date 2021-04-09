@@ -325,6 +325,13 @@ function ViewArchivedGroups(props) {
   };
 
   let removeStudentFromGroup = (groupId, removeStudentId) => {
+    var database;
+    if (!firebase.apps.length) {
+    } else {
+      firebase.app();
+      var database = firebase.app().database();
+    }
+    
     //Leave Group
     if (
       parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))

@@ -100,6 +100,9 @@ export function UserLogin(props) {
             required
             placeholder={"e.g, John Doe"}
             defaultValue={localStorage.getItem("inputName")}
+            autoFocus={typeof localStorage.getItem("inputName") !== "undefined" &&
+            localStorage.getItem("inputName") !== null &&
+            localStorage.getItem("inputName") !== "" ? true : false}
             style={{
               width: 300,
               marginLeft: 30,
@@ -195,21 +198,6 @@ export function UserLogin(props) {
             MixTime IDs. Your own ID is found on the top right corner of the
             window.
           </p>
-          <br></br>
-          <p>
-            To <b>create a group</b>, follow these steps:
-          </p>
-          <ol>
-            <li>1. Head over to the "Manage Groups" page.</li>
-            <li>2. Click on the (+) icon.</li>
-            <li>
-              3. A pop-up window will appear, enter your group name first.
-            </li>
-            <li>
-              4. Enter your group size (Note, the group size includes you).
-            </li>
-            <li>5. Enter your group members IDs.</li>
-          </ol>
           <br></br>
           <p>To <b>create a group</b>, follow these steps:</p>
             <ol>
