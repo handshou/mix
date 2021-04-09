@@ -331,7 +331,7 @@ function ViewArchivedGroups(props) {
       firebase.app();
       var database = firebase.app().database();
     }
-    
+
     //Leave Group
     if (
       parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))
@@ -906,13 +906,22 @@ function ViewArchivedGroups(props) {
                                 <Button
                                   variant="contained"
                                   color="secondary"
-                                  style={{
-                                    float: "left",
-                                    // display: "inline",
-                                    // minWidth: "30px",
-                                    width: "20px",
-                                    backgroundColor: "green",
-                                  }}
+                                  style={
+                                    group.members.length > 1
+                                      ? {
+                                          float: "left",
+                                          minWidth: "20px",
+                                          backgroundColor: "green",
+                                          opacity: "0.4",
+                                        }
+                                      : {
+                                          float: "left",
+                                          minWidth: "20px",
+                                          backgroundColor: "green",
+                                          opacity: "1",
+                                          boxShadow: "5px 5px 5px 0 #bbb",
+                                        }
+                                  }
                                   onClick={() =>
                                     deleteGroup(
                                       group.groupId,

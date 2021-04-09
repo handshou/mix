@@ -413,7 +413,7 @@ renameText:focus {
   text-align: center;
   font-family: sans-serif;
   line-height: initial;
-  margin-left: 20px; 
+  margin-left: 20px;
   color: black;
   fill-opacity: 80%;
 }
@@ -432,7 +432,6 @@ renameText:focus {
   text-align: center;
   font-family: sans-serif;
   line-height: 3;
-  margin-left: 20px; 
   color: #ff7043;
   fill-opacity: 80%;
 }

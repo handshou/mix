@@ -1,5 +1,9 @@
 import { React, useState, useMemo } from "react";
 import Paper from "@material-ui/core/Paper";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import VisualTip from "../../Components/VisualTip";
+
 import { makeStyles } from "@material-ui/core/styles";
 import {
   useMyModules,
@@ -54,6 +58,22 @@ export default function MyTimetable() {
         </div>
       </Timetable>
       <div id="url-input">
+        <div>
+          <Tooltip
+            title={
+              <div>
+                <em style={{ fontSize: "1.2em" }}>
+                  {"How to get NUSMods Share/Sync?"}
+                </em>
+              </div>
+            }
+          >
+            <IconButton>
+              <VisualTip />
+            </IconButton>
+            {/* <HelpIcon fontSize="small" /> */}
+          </Tooltip>
+        </div>
         <EnterURL />
       </div>
     </Paper>

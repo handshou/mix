@@ -7,17 +7,10 @@ import "./Stylesheet/Layout.css";
 import HelpIcon from "@material-ui/icons/Help";
 
 export function VisualTip(props) {
-  const { error = false } = props;
   return (
     <div>
       <PNGtooltip
-        tooltip={
-          <HelpIcon
-            style={{
-              margin: "0.5em",
-            }}
-          />
-        }
+        tooltip={<u class="confirm_selection">What can I do here?</u>}
       >
         <div>
           <p>

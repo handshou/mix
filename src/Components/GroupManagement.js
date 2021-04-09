@@ -711,7 +711,7 @@ function GroupManagement(props) {
             >
               <Button
                 style={{
-                  boxShadow: "5px 5px 5px 0px grey",
+                  boxShadow: "5px 5px 5px 0 #bbb",
                   width: "fit-content",
                 }}
                 variant="contained"
@@ -979,6 +979,7 @@ function GroupManagement(props) {
                                     variant="contained"
                                     style={{
                                       // width: "fit-content",
+                                      boxShadow: "5px 5px 5px 0 #bbb",
                                       backgroundColor: "#DC3545",
                                       color: "white",
                                       float: "right",
@@ -1020,6 +1021,7 @@ function GroupManagement(props) {
                                             minWidth: "20px",
                                             backgroundColor: "green",
                                             opacity: "1",
+                                            boxShadow: "5px 5px 5px 0 #bbb",
                                           }
                                     }
                                     onClick={() =>
@@ -1045,6 +1047,7 @@ function GroupManagement(props) {
                                     variant="contained"
                                     style={{
                                       // width: "fit-content",
+                                      boxShadow: "5px 5px 5px 0 #bbb",
                                       backgroundColor: "#DC3545",
                                       color: "white",
                                     }}
@@ -1061,11 +1064,10 @@ function GroupManagement(props) {
                                   <Button
                                     variant="contained"
                                     color="primary"
-                                    style={
-                                      {
-                                        // width: "fit-content"
-                                      }
-                                    }
+                                    style={{
+                                      // width: "fit-content"
+                                      boxShadow: "5px 5px 5px 0 #bbb",
+                                    }}
                                     onClick={() => {
                                       openAddMemberModal(
                                         group.groupId,
@@ -1271,6 +1273,7 @@ function GroupManagement(props) {
                                                 minWidth: "20px",
                                                 backgroundColor: "green",
                                                 opacity: "1",
+                                                boxShadow: "5px 5px 5px 0 #bbb",
                                               }
                                         }
                                         onClick={() =>
@@ -1298,6 +1301,7 @@ function GroupManagement(props) {
                                         variant="contained"
                                         style={{
                                           // width: "fit-content",
+                                          boxShadow: "5px 5px 5px 0 #bbb",
                                           backgroundColor: "#DC3545",
                                           color: "white",
                                         }}
@@ -1314,11 +1318,10 @@ function GroupManagement(props) {
                                       <Button
                                         variant="contained"
                                         color="primary"
-                                        style={
-                                          {
-                                            // width: "fit-content"
-                                          }
-                                        }
+                                        style={{
+                                          // width: "fit-content"
+                                          boxShadow: "5px 5px 5px 0 #bbb",
+                                        }}
                                         onClick={() => {
                                           openAddMemberModal(
                                             group.groupId,
@@ -1433,6 +1436,7 @@ function GroupManagement(props) {
                         color="primary"
                         style={{
                           width: "fit-content",
+                          boxShadow: "5px 5px 5px 0 #bbb",
                         }}
                       >
                         Copy To Clipboard
@@ -1464,6 +1468,10 @@ function GroupManagement(props) {
                 }}
               >
                 <WhatsappShareButton
+                  style={{
+                    borderRadius: "32px",
+                    boxShadow: "3px 3px 3px 0 #bbb",
+                  }}
                   url={
                     "Use the link to join my MixTime Group" +
                     "\n" +
@@ -1482,6 +1490,10 @@ function GroupManagement(props) {
                 }}
               >
                 <TelegramShareButton
+                  style={{
+                    borderRadius: "32px",
+                    boxShadow: "3px 3px 3px 0 #bbb",
+                  }}
                   url={
                     "Use the link to join my MixTime Group" +
                     "\n" +
@@ -1551,6 +1563,7 @@ function GroupManagement(props) {
                   outline: "none",
                   border: "1px solid #da337a",
                   backgroundColor: "initial !important",
+                  boxShadow: "0 0 8px 0 #da337a",
                 }}
                 value={modalMemberId}
                 onChange={(e) => {
@@ -1564,6 +1577,7 @@ function GroupManagement(props) {
                 color="primary"
                 style={{
                   width: "fit-content",
+                  boxShadow: "5px 5px 5px 0 #bbb",
                 }}
                 onClick={() => {
                   addMemberToGroupUsingModal();

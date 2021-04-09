@@ -274,27 +274,10 @@ const EnterURL = (props) => {
         alignItems: "baseline",
         marginTop: "1em",
         marginBottom: "1em",
-        width: "1000px",
+        width: "70vw",
       }}
     >
       <UserLogin />
-      <div onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
-        <Tooltip
-          open={error || mouseOver}
-          title={
-            <div>
-              <em style={{ fontSize: "1.2em" }}>
-                {"How to get NUSMods Share/Sync?"}
-              </em>
-            </div>
-          }
-        >
-          <IconButton style={{ color: error ? "red" : "#000" }}>
-            <VisualTip error={error} />
-            {/* <HelpIcon fontSize="small" /> */}
-          </IconButton>
-        </Tooltip>
-      </div>
       <TextField
         error={error}
         style={{ margin: "1em" }}
@@ -321,7 +304,7 @@ const EnterURL = (props) => {
           style={{
             boxShadow: "3px 3px 3px 0px #bbb",
             margin: "1em",
-            width: "18em",
+            width: "45em",
           }}
           variant="contained"
           color="primary"
@@ -377,7 +360,7 @@ const EnterURL = (props) => {
           style={{
             boxShadow: "3px 3px 3px 0px #bbb",
             margin: "1em",
-            width: "15em",
+            width: "45em",
           }}
           variant="contained"
           color="secondary"
@@ -394,7 +377,6 @@ const EnterURL = (props) => {
           Clear Imported Timetable
         </Button>
       </Tooltip>
-      <VisualTip></VisualTip>
     </div>
   );
 };

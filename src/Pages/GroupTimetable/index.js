@@ -1,9 +1,10 @@
-import { React, Fragment, useState } from "react";
+import { React, Fragment, useState, useMemo } from "react";
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
 import Tabs from "@material-ui/core/Tabs";
 import TabPanel from "@material-ui/lab/TabPanel";
+
 import { makeStyles } from "@material-ui/core/styles";
 
 import {
@@ -12,8 +13,14 @@ import {
   useUpdateGroupsWeek,
 } from "../../Contexts/MyGroupsContext";
 import { useGroupModules } from "../../Contexts/GroupModulesContext";
+import { useMyModules } from "../../Contexts/MyModulesContext";
 
-import { Timetable, WeekSwitcher } from "../../Components/Timetable";
+import {
+  Timetable,
+  WeekSwitcher,
+  Legend,
+  CreatePersonalEvent,
+} from "../../Components/Timetable";
 
 const useStyles = makeStyles({
   paper: {
@@ -22,6 +29,7 @@ const useStyles = makeStyles({
 });
 
 export default function GroupTimetable(props) {
+  const myModules = useMyModules();
   const myGroups = useMyGroups();
   const groupsWeek = useGroupsWeek();
   const updateGroupsWeek = useUpdateGroupsWeek();
@@ -41,6 +49,12 @@ export default function GroupTimetable(props) {
     myGroups !== null && myGroups !== undefined && myGroups.length > 0;
 
   const classes = useStyles();
+
+  const legend = useMemo(() => <Legend />, [Legend]);
+  const createPersonalEvent = useMemo(
+    () => <CreatePersonalEvent timetableData={myModules} />,
+    [myModules]
+  );
 
   return (
     <Fragment>
@@ -92,7 +106,13 @@ export default function GroupTimetable(props) {
                         weekNumber={groupsWeek}
                         timetableData={studentEvents[studentGroup.groupId]}
                         triggerMyTimetableForceRefresh={() => {}}
-                      />
+                      >
+                        <div className="header">
+                          <div id="legend">{legend}</div>
+                          <div id="week-switcher"></div>
+                          <div id="action-button">{createPersonalEvent}</div>
+                        </div>
+                      </Timetable>
                     ) : (
                       <div>No events found</div>
                     )}
