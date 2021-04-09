@@ -93,44 +93,49 @@ const TimetableModules = (props) => {
       const startTimeSplit = id.split("-")[0];
       const eventTypeSplit = id.split("-")[2];
       const endTimeSplit = id.split("-")[4];
+      // console.log({ startTimeSplit });
+      // console.log({ endTimeSplit });
+      // console.log({ type });
+      // console.log({ title });
 
-      database
-        .ref(`Students/${studentId}/events`)
+      const studentEventsRef = database.ref(`Students/${studentId}/events`);
+      // this query is flawed, there is edge case if two modules have same
+      // start time - server only returns one result
+      const studentEventsQuery = studentEventsRef
         .orderByChild(`startTime`)
         .limitToFirst(1)
-        .equalTo(Number(startTimeSplit))
-        .on("child_added", function (snapshot) {
+        .equalTo(Number(startTimeSplit));
+
+      const studentEventsListener = studentEventsQuery.on(
+        "child_added",
+        function (snapshot) {
           const databaseModule = snapshot.val();
+          // console.log({ databaseModule });
           if (
             databaseModule.endTime === Number(endTimeSplit) &&
             databaseModule.eventType === type &&
             databaseModule.eventName === title
           ) {
-            console.log({ databaseModule });
-            database
-              .ref(`Students/${studentId}/events`)
-              .child(`${snapshot.key}`)
-              .set({
-                ...snapshot.val(),
-                eventName: module.eventName,
-              });
+            studentEventsQuery.off("child_added");
+            studentEventsRef.child(`${snapshot.key}`).set({
+              ...snapshot.val(),
+              eventName: module.eventName,
+            });
 
             // triggers update after execution
             getStudentGroupEvents(updateGroupModules, myGroups, database);
-            console.log("Updated");
-            database
-              .ref(`Students/${studentId}/events`)
-              .orderByChild(`startTime`)
-              .equalTo(Number(startTimeSplit))
-              .off();
+            console.log("[TimetableModules] Update module: Updated");
+          } else {
+            studentEventsQuery.off("child_added");
+            console.log("[TimetableModules] Update module: Module not found");
           }
-        });
+        }
+      );
 
       setOpen(false);
 
       toast.success("Event has been updated sucessfully.");
-    }
-    else {
+    } else {
       setOpen(false);
       toast.success("Updating of event is cancelled.");
     }
@@ -153,33 +158,35 @@ const TimetableModules = (props) => {
       const startTimeSplit = id.split("-")[0];
       const endTimeSplit = id.split("-")[4];
 
-      database
-        .ref(`Students/${studentId}/events`)
+      const studentEventsRef = database.ref(`Students/${studentId}/events`);
+      // this query is flawed, there is edge case if two modules have same
+      // start time - server only returns one result
+      const studentEventsQuery = studentEventsRef
         .orderByChild(`startTime`)
         .limitToFirst(1)
-        .equalTo(Number(startTimeSplit))
-        .on("child_added", function (snapshot) {
+        .equalTo(Number(startTimeSplit));
+      const studentEventsQueryListener = studentEventsQuery.on(
+        "child_added",
+        function (snapshot) {
           const databaseModule = snapshot.val();
           if (
             databaseModule.endTime === Number(endTimeSplit) &&
             databaseModule.eventType === type &&
             databaseModule.eventName === title
           ) {
-            database
-              .ref(`Students/${studentId}/events`)
-              .child(`${snapshot.key}`)
-              .remove();
+            // turn off listener if found matching event
+            studentEventsQuery.off("child_added");
+            studentEventsRef.child(`${snapshot.key}`).remove();
 
             // triggers update after execution
             getStudentGroupEvents(updateGroupModules, myGroups, database);
-            console.log("Removed");
-            database
-              .ref(`Students/${studentId}/events`)
-              .orderByChild(`startTime`)
-              .equalTo(Number(startTimeSplit))
-              .off();
+            console.log("[TimetableModules] Delete module: Removed");
+          } else {
+            studentEventsQuery.off("child_added");
+            console.log("[TimetableModules] Delete module: Module not found");
           }
-        });
+        }
+      );
 
       setOpen(false);
 

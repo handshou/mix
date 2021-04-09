@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import Modal from "@material-ui/core/Modal";
 import { Button } from "@material-ui/core";
 import { Tooltip, IconButton } from "@material-ui/core";
@@ -9,11 +9,6 @@ import moment from "moment";
 
 import { useDatabase } from "../../Contexts/DatabaseContext";
 import { useUpdateMyModules } from "../../Contexts/MyModulesContext";
-import {
-  overrideStudentEventsToDB,
-  getStudentEvents,
-  loadTimetable,
-} from "../../Functions/apiFunctions";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -55,29 +50,34 @@ export default function CreatePersonalEvent(props) {
     setModule({ ...module, [name]: value });
   };
 
-  const saveModule = async () => {
+  const saveModule = async (e) => {
     var addEventPrompt = window.confirm(
       `Are you sure you want to add the event?\nYou cannot undo this.`
     );
-
+    e.preventDefault();
     if (addEventPrompt) {
       var data = {
         endTime: new Date(module.endTime).getTime(),
         eventName: module.eventName,
         eventType: module.eventType,
         startTime: new Date(module.startTime).getTime(),
+        studentId: studentId,
       };
 
-      const newTimetableData = [];
+      // database reference student events
+      const myEventsRef = database.ref(`Students/${studentId}/events`);
+      const myEventsQuery = myEventsRef.orderByKey().limitToLast(1);
 
-      overrideStudentEventsToDB(studentId, newTimetableData, database);
-
-      const newEvents = await getStudentEvents(
-        localStorage.getItem("studentId"),
-        database
+      // create the module from data after the last event key
+      const studentEventsListener = myEventsQuery.on(
+        "child_added",
+        function (lastEvent) {
+          console.log("last event key", lastEvent.key);
+          let newEventKey = Number(lastEvent.key) + 1;
+          myEventsQuery.off("child_added");
+          myEventsRef.child(newEventKey).set(data);
+        }
       );
-      console.log(newEvents);
-      updateMyModules(newEvents);
 
       // reload
       // loadTimetable(updateMyModules, studentId, database);
