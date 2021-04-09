@@ -7,6 +7,10 @@ const apiEndPoint = "https://api.nusmods.com/v2";
 const acadYear = "2020-2021";
 
 function shallowEqual(object1, object2) {
+  if (object1 == null && object2 == null) return true;
+  if (object1 == null) return false;
+  if (object2 == null) return false;
+
   const keys1 = Object.keys(object1);
   const keys2 = Object.keys(object2);
 

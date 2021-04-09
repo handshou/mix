@@ -100,8 +100,6 @@ const EnterURL = (props) => {
     var studentsRef = database.ref(`Students/${studentId}/events`);
     studentsRef.once("value").then((snapshot) => {
       setExistingEvents(snapshot.val());
-      // reload
-      // loadTimetable(updateMyModules, studentId, database);
     });
   }, [, userEventArray]);
 
@@ -285,7 +283,7 @@ const EnterURL = (props) => {
           open={error || mouseOver}
           title={
             <div>
-              <em style={{ fontSize: "1.5em" }}>
+              <em style={{ fontSize: "1.2em" }}>
                 {"How to get NUSMods Share/Sync?"}
               </em>
             </div>
@@ -316,7 +314,7 @@ const EnterURL = (props) => {
       />
       <Tooltip
         title={
-          <em style={{ fontSize: "1.5em" }}>{"Add Modules to Timetable"}</em>
+          <em style={{ fontSize: "1.2em" }}>{"Add Modules to Timetable"}</em>
         }
       >
         <Button
@@ -369,7 +367,11 @@ const EnterURL = (props) => {
       </Tooltip>
       */}
       <Tooltip
-        title={<em>{"Click here to clear your imported NUSMods timetable"}</em>}
+        title={
+          <em style={{ fontSize: "1.2em" }}>
+            {"Click here to clear your imported NUSMods timetable"}
+          </em>
+        }
       >
         <Button
           style={{

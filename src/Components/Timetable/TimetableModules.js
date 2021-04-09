@@ -134,7 +134,7 @@ const TimetableModules = (props) => {
     setOpen(false);
   };
 
-  function deleteEvent(id, title, type, module_studentId, fullData) {
+  function deleteEvent(id, title, type, studentId, fullData) {
     var deleteEventPrompt = window.confirm(
       `Are you sure you want to delete the event?\nYou cannot undo this.`
     );
@@ -151,13 +151,8 @@ const TimetableModules = (props) => {
         // event.studentId != studentId // update only works on my own modules
       );
 
-      console.log({ startTimeSplit });
-      console.log({ endTimeSplit });
-      console.log({ title });
-      console.log({ type });
-      console.log({ module_studentId });
       database
-        .ref(`Students/${module_studentId}/events`)
+        .ref(`Students/${studentId}/events`)
         .orderByChild(`startTime`)
         .equalTo(Number(startTimeSplit))
         .on("child_added", function (snapshot) {
@@ -169,19 +164,22 @@ const TimetableModules = (props) => {
             module.eventName === title
           ) {
             database
-              .ref(`Students/${module_studentId}/events`)
+              .ref(`Students/${studentId}/events`)
               .child(`${snapshot.key}`)
               .remove();
             getStudentGroupEvents(updateGroupModules, myGroups, database);
             console.log("Removed");
+            database
+              .ref(`Students/${studentId}/events`)
+              .orderByChild(`startTime`)
+              .equalTo(Number(startTimeSplit))
+              .off();
           }
         });
 
-      // console.log({ dbResult });
-
       function checkEvent(key, title, type, endTimeSplit) {
         database
-          .ref(`Students/${module_studentId}/events/${key}`)
+          .ref(`Students/${studentId}/events/${key}`)
           .once("value", function (snapshot) {
             console.log(snapshot.val());
           });
@@ -214,7 +212,7 @@ const TimetableModules = (props) => {
   // create a new component for modules
   const modules = data.map((module, index) => {
     const {
-      studentId: module_studentId,
+      studentId: studentId,
       id,
       title,
       type,
@@ -299,7 +297,7 @@ const TimetableModules = (props) => {
         <p>Event Status: {type}</p>
         <p>Start Time: {startTime}</p>
         <p>End Time: {endTime}</p>
-        <p>Student Id: {module_studentId}</p>
+        <p>Student Id: {studentId}</p>
         <br></br>
         <Tooltip
           title={
@@ -309,9 +307,7 @@ const TimetableModules = (props) => {
           }
         >
           <Button
-            onClick={() =>
-              deleteEvent(id, title, type, module_studentId, fullData)
-            }
+            onClick={() => deleteEvent(id, title, type, studentId, fullData)}
             variant="contained"
             style={{ boxShadow: "5px 5px 5px 0px grey" }}
             color="primary"
