@@ -51,34 +51,44 @@ export default function CreatePersonalEvent(props) {
   };
 
   const saveModule = () => {
-    var data = {
-      endTime: new Date(module.endTime).getTime(),
-      eventName: module.eventName,
-      eventType: module.eventType,
-      startTime: new Date(module.startTime).getTime(),
-    };
-
-    let newTimetableData = [...localTimetableData];
-    newTimetableData.push(data);
-
-    var database;
-    if (!firebase.apps.length) {
-      const firebaseApp = firebase.initializeApp(firebaseConfig);
-      database = firebaseApp.database();
-    } else {
-      firebase.app();
-      database = firebase.app().database();
-    }
-    overrideStudentEventsToDB(
-      localStorage.getItem("studentId"),
-      newTimetableData,
-      database
+    var addEventPrompt = window.confirm(
+      `Are you sure you want to add the event?\nYou cannot undo this.`
     );
 
-    setRefreshKey(refreshKey + 1);
-    setOpen(false);
+    if (addEventPrompt) {
+      var data = {
+        endTime: new Date(module.endTime).getTime(),
+        eventName: module.eventName,
+        eventType: module.eventType,
+        startTime: new Date(module.startTime).getTime(),
+      };
 
-    toast.success("A new event has been sucessfully added.");
+      let newTimetableData = [...localTimetableData];
+      newTimetableData.push(data);
+
+      var database;
+      if (!firebase.apps.length) {
+        const firebaseApp = firebase.initializeApp(firebaseConfig);
+        database = firebaseApp.database();
+      } else {
+        firebase.app();
+        database = firebase.app().database();
+      }
+      overrideStudentEventsToDB(
+        localStorage.getItem("studentId"),
+        newTimetableData,
+        database
+      );
+
+      setRefreshKey(refreshKey + 1);
+      setOpen(false);
+
+      toast.success("A new event has been sucessfully added.");
+    }
+    else {
+      setOpen(false);
+      toast.success("Adding of event is cancelled.");
+    }
   };
 
   useEffect(() => {
@@ -122,7 +132,11 @@ export default function CreatePersonalEvent(props) {
         <Button
           onClick={handleClose}
           variant="contained"
-          style={{ float: "right", borderRadius: "15px", boxShadow: "5px 5px 5px 0px grey" }}
+          style={{
+            float: "right",
+            borderRadius: "15px",
+            boxShadow: "5px 5px 5px 0px grey",
+          }}
           color="secondary"
         >
           <ClearIcon fontSize="small" />

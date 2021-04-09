@@ -114,6 +114,10 @@ const TimetableModules = (props) => {
 
       toast.success("Event has been updated sucessfully.");
     }
+    else {
+      setOpen(false);
+      toast.success("Updating of event is cancelled.");
+    }
   }
 
   const handleOpen = () => {
