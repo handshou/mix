@@ -34,6 +34,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Mouse } from "@material-ui/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useDatabase } from "../Contexts/DatabaseContext";
 
 import {
   EmailShareButton,
@@ -82,6 +83,7 @@ const useStyles = makeStyles({
 
 function GroupManagement(props) {
   const classes = useStyles();
+  const database = useDatabase();
   // ========================================================== STUDENTS ==========================================================
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
   const [studentName, setStudentName] = useState(
@@ -111,17 +113,12 @@ function GroupManagement(props) {
   };
 
   let getStudentName = (studentId) => {
-    if (!firebase.apps.length) {
-      var studentsRef = database.ref(
-        `Students/${localStorage.getItem("studentId")}/name`
-      );
-      studentsRef.once("value").then((snapshot) => {
-        setStudentName(snapshot.val());
-      });
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
+    var studentsRef = database.ref(
+      `Students/${localStorage.getItem("studentId")}/name`
+    );
+    studentsRef.once("value").then((snapshot) => {
+      setStudentName(snapshot.val());
+    });
   };
 
   // ========================================================== GROUPS ==========================================================
