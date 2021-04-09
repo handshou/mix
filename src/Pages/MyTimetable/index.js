@@ -17,7 +17,7 @@ import {
 
 import "../../Components/Timetable/timetable.css";
 
-export function MyTimetable() {
+export default function MyTimetable() {
   const myWeek = useMyWeek();
   const updateMyWeek = useUpdateMyWeek();
   const myModules = useMyModules();

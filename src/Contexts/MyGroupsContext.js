@@ -35,7 +35,7 @@ export default function MyGroupsProvider({ children }) {
     useMemo(() => getCurrentWeek(), [new Date().getDay()])
   );
   const [myGroups, setMyGroups] = useState(initStudentGroups);
-  // custom refhook for go back 1-step capability
+  // custom refhook for go back 1-step, see comment about usePrevious fxn below
   // const prevMyGroups = usePrevious(myGroups);
 
   // load database listeners
@@ -72,6 +72,7 @@ export default function MyGroupsProvider({ children }) {
     setGroupsWeek(week);
   }
 
+  // kept comment for potential undo groups feature
   // function usePrevious(value) {
   //   const ref = useRef();
   //   useEffect(() => {

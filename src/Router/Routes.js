@@ -6,9 +6,9 @@ import MyModulesContext from "../Contexts/MyModulesContext";
 import MyGroupsContext from "../Contexts/MyGroupsContext";
 import GroupModulesContext from "../Contexts/GroupModulesContext";
 import GroupManagement from "../Components/GroupManagement";
-import GroupTimetable from "../Components/GroupTimetable";
 import UserProfile from "../Components/UserProfile";
-import { MyTimetable } from "../Pages/MyTimetable";
+import GroupTimetable from "../Pages/GroupTimetable";
+import MyTimetable from "../Pages/MyTimetable";
 
 import Layout from "../Components/Layout";
 import JoinGroup from "../Components/JoinGroup";

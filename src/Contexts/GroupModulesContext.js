@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect, useMemo } from "react";
 import { useDatabase } from "./DatabaseContext";
-import { useMyModules } from "./MyModulesContext";
 import { useMyGroups } from "./MyGroupsContext";
 import { getStudentGroupEvents } from "../Functions/apiFunctions.js";
 

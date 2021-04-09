@@ -10,10 +10,10 @@ import {
   useMyGroups,
   useGroupsWeek,
   useUpdateGroupsWeek,
-} from "../Contexts/MyGroupsContext";
-import { useGroupModules } from "../Contexts/GroupModulesContext";
+} from "../../Contexts/MyGroupsContext";
+import { useGroupModules } from "../../Contexts/GroupModulesContext";
 
-import { Timetable, WeekSwitcher } from "../Components/Timetable";
+import { Timetable, WeekSwitcher } from "../../Components/Timetable";
 
 const useStyles = makeStyles({
   paper: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-function GroupTimetable(props) {
+export default function GroupTimetable(props) {
   const myGroups = useMyGroups();
   const groupsWeek = useGroupsWeek();
   const updateGroupsWeek = useUpdateGroupsWeek();
@@ -108,5 +108,3 @@ function GroupTimetable(props) {
     </Fragment>
   );
 }
-
-export default GroupTimetable;
