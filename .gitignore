@@ -24,4 +24,6 @@ yarn-error.log*
 
 /src/Firebase/firebaseConfig.js
 .eslintcache
-src/Components/MyTimetable.js
+
+database-debug.log*
+ui-debug.log*

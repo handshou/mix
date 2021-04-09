@@ -4,6 +4,8 @@ import firebaseConfig from "../Firebase/firebaseConfig";
 const DatabaseContext = React.createContext();
 const UpdateDatabaseContext = React.createContext();
 
+const useLocalDatabase = true;
+
 export function useDatabase() {
   return useContext(DatabaseContext);
 }
@@ -24,8 +26,16 @@ export default function DatabaseProvider({ children }) {
   // critical to put setDatabase as a memo because re-render will trigger infinite loop
   const firebaseMemo = useMemo(() => {
     if (firebase.apps.length === 0) {
-      const firebaseApp = firebase.initializeApp(firebaseConfig).database();
-      setDatabase(firebaseApp);
+      if (useLocalDatabase) {
+        const firebaseApp = firebase
+          .initializeApp({ databaseURL: `http://localhost:9000/?ns=is4261` })
+          .database();
+        setDatabase(firebaseApp);
+      } else {
+        // online database
+        const firebaseApp = firebase.initializeApp(firebaseConfig).database();
+        setDatabase(firebaseApp);
+      }
     } else {
       firebase.app();
       setDatabase(firebase.app().database());
