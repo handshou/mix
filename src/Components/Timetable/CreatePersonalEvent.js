@@ -8,7 +8,6 @@ import AddIcon from "@material-ui/icons/Add";
 import moment from "moment";
 
 import { useDatabase } from "../../Contexts/DatabaseContext";
-import { useUpdateMyModules } from "../../Contexts/MyModulesContext";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,7 +27,6 @@ function getModalStyle() {
 
 export default function CreatePersonalEvent(props) {
   let localTimetableData = [];
-  const updateMyModules = useUpdateMyModules();
   const studentId = localStorage.getItem("studentId");
 
   if (props !== undefined && props.timetableData !== undefined) {

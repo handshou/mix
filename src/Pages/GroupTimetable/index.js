@@ -48,19 +48,30 @@ export default function GroupTimetable(props) {
   const anyGroups =
     myGroups !== null && myGroups !== undefined && myGroups.length > 0;
 
-  const classes = useStyles();
-
   const legend = useMemo(() => <Legend />, [Legend]);
   const createPersonalEvent = useMemo(
     () => <CreatePersonalEvent timetableData={myModules} />,
     [myModules]
   );
 
+  const classes = makeStyles({
+    paper: {
+      marginTop: "-0.5em",
+      backgroundColor: "#FFF",
+    },
+  })();
+
   return (
     <Fragment>
       <Paper className={classes.paper} square>
         {anyGroups && (
-          <WeekSwitcher handleChange={handleWeekChange} week={groupsWeek} />
+          <div className="header">
+            <div id="legend">{legend}</div>
+            <div id="week-switcher">
+              <WeekSwitcher handleChange={handleWeekChange} week={groupsWeek} />
+            </div>
+            <div id="action-button">{createPersonalEvent}</div>
+          </div>
         )}
         <div
           style={{
@@ -106,13 +117,7 @@ export default function GroupTimetable(props) {
                         weekNumber={groupsWeek}
                         timetableData={studentEvents[studentGroup.groupId]}
                         triggerMyTimetableForceRefresh={() => {}}
-                      >
-                        <div className="header">
-                          <div id="legend">{legend}</div>
-                          <div id="week-switcher"></div>
-                          <div id="action-button">{createPersonalEvent}</div>
-                        </div>
-                      </Timetable>
+                      />
                     ) : (
                       <div>No events found</div>
                     )}
