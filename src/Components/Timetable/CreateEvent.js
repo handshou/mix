@@ -103,6 +103,9 @@ export default function CreateEvent(props) {
       if (myGroup) {
         getStudentGroupEvents(updateGroupModules, myGroups, database);
       }
+    } else {
+      setOpen(false);
+      toast.success("Adding of event is cancelled.");
     }
   };
 
