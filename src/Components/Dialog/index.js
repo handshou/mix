@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-export default function Dialog(props) {
+export default function GenericDialog(props) {
   const [open, setOpen] = React.useState(true);
   const { title, children, buttons } = props;
 
