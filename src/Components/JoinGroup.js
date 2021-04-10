@@ -261,6 +261,7 @@ function JoinGroup(props) {
                       style={{
                         // width: "fit-content",
                         backgroundColor: "#DC3545",
+                        boxShadow: "5px 5px 5px 0 #bbb",
                         color: "white",
                       }}
                       onClick={() => {
@@ -354,6 +355,7 @@ function JoinGroup(props) {
                         style={{
                           // width: "fit-content",
                           backgroundColor: "#DC3545",
+                          boxShadow: "5px 5px 5px 0 #bbb",
                           color: "white",
                         }}
                         onClick={() => {
@@ -375,6 +377,9 @@ function JoinGroup(props) {
                       <Button
                         variant="contained"
                         color="primary"
+                        style={{
+                          boxShadow: "5px 5px 5px 0 #bbb",
+                        }}
                         onClick={() => {
                           addMemberToGroup();
                         }}

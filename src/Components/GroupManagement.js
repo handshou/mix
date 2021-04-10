@@ -1574,7 +1574,7 @@ function GroupManagement(props) {
                 color="primary"
                 style={{
                   width: "fit-content",
-                  boxShadow: "5px 5px 5px 0 #bbb",
+                  boxShadow: addMemberDisabled === true ? "" : "5px 5px 5px 0 #bbb",
                 }}
                 onClick={() => {
                   addMemberToGroupUsingModal();
