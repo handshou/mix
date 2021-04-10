@@ -5,8 +5,6 @@ import TimetableModule from "./TimetableModule";
 const TimetableCell = (props) => {
   const { data } = props;
 
-  const timetableModuleMemo = useMemo(() => {}, []);
-
   // create a new component for modules
   const modules = data.map((module, index) => (
     <TimetableModule
