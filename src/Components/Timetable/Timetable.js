@@ -1,11 +1,11 @@
-import { React, useCallback } from "react";
+import { React } from "react";
 import {
   getModules,
   getStartEndTimeByWeek,
   generateRows,
   filterModules,
 } from "./utils.js";
-import { TimetableModules } from "./TimetableModules";
+import { TimetableCell } from "./TimetableCell";
 
 import "./timetable.css";
 
@@ -85,7 +85,7 @@ export default function Timetable(props) {
                 </th>
                 {day.modules.map((cell, i) => (
                   <td key={`${cell.id}-${i}`} align="center">
-                    {<TimetableModules data={cell} fullData={timetableData} />}
+                    {<TimetableCell data={cell} fullData={timetableData} />}
                   </td>
                 ))}
               </tr>

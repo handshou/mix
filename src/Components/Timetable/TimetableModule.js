@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState } from "react";
 import Modal from "@material-ui/core/Modal";
 import { Button } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -53,22 +53,12 @@ function getModalStyle() {
   };
 }
 
-const TimetableModules = (props) => {
-  let localTimetableData = [];
-  const studentId = localStorage.getItem("studentId");
-  const updateGroupModules = useUpdateGroupModules();
-  const myGroups = useMyGroups();
-  const fullData = useMyModules();
-  if (props !== undefined && props.fullData !== undefined) {
-    localTimetableData = props.fullData;
-  }
-
-  const { data } = props;
-  // const [refreshKey, setRefreshKey] = useState(0);
-  const [modalStyle] = useState(getModalStyle);
-  const [open, setOpen] = useState(false);
+const TimetableModule = (props) => {
+  const { moduleInfo, index } = props;
+  const { studentId, id, title, type, startTime, endTime } = moduleInfo;
 
   const initialState = {
+    studentId: "",
     endTime: "",
     eventName: "",
     eventType: "",
@@ -78,6 +68,11 @@ const TimetableModules = (props) => {
   const [module, setModule] = useState(initialState);
 
   const database = useDatabase();
+  const updateGroupModules = useUpdateGroupModules();
+  const myGroups = useMyGroups();
+  const [modalStyle] = useState(getModalStyle);
+
+  const [open, setOpen] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -123,12 +118,10 @@ const TimetableModules = (props) => {
 
             // triggers update after execution
             getStudentGroupEvents(updateGroupModules, myGroups, database);
-            console.log("[TimetableModules] Update module: Updated");
+            console.log("[TimetableCell] Update module: Updated");
           } else {
             studentEventsQuery.off("child_added");
-            console.log(
-              "[TimetableModules] Update module: Module does not match"
-            );
+            console.log("[TimetableCell] Update module: Module does not match");
           }
         }
       );
@@ -180,12 +173,10 @@ const TimetableModules = (props) => {
 
             // triggers update after execution
             getStudentGroupEvents(updateGroupModules, myGroups, database);
-            console.log("[TimetableModules] Delete module: Removed");
+            console.log("[TimetableCell] Delete module: Removed");
           } else {
             studentEventsQuery.off("child_added");
-            console.log(
-              "[TimetableModules] Delete module: Module does not match"
-            );
+            console.log("[TimetableCell] Delete module: Module does not match");
           }
         }
       );
@@ -199,159 +190,133 @@ const TimetableModules = (props) => {
     }
   }
 
-  // useEffect(() => {
-  //   setRefreshKey(0);
-
-  //   if (props.triggerMyTimetableForceRefresh !== undefined) {
-  //     props.triggerMyTimetableForceRefresh();
-  //   }
-  // }, [refreshKey]);
-
-  // create a new component for modules
-  const modules = data.map((module, index) => {
-    const {
-      studentId: studentId,
-      id,
-      title,
-      type,
-      startTime,
-      endTime,
-    } = module;
-
-    const body = (
-      <div style={modalStyle}>
-        <p style={{ fontSize: "25px", color: "#ff5138" }}>
-          View Event Details
-          <Tooltip
-            title={
-              <em style={{ fontSize: "12px" }}>
-                {
-                  "Through this page, you are able to view the details of your event."
-                }
-              </em>
-            }
-          >
-            <IconButton aria-label="delete">
-              <HelpIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Button
-            onClick={handleClose}
-            variant="contained"
-            style={{
-              float: "right",
-              borderRadius: "15px",
-              boxShadow: "5px 5px 5px 0px grey",
-            }}
-            color="secondary"
-          >
-            <ClearIcon fontSize="small" />
-          </Button>
-        </p>{" "}
-        <p>
-          <form>
-            <label
-              for="eventName"
-              style={{
-                textAlign: "left",
-                display: "block",
-                padding: "0.5em 1.5em 0.5em 0",
-              }}
-            >
-              Title: *{" "}
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="eventName"
-              required="required"
-              // value={module.title}
-              onChange={handleInputChange}
-              name="eventName"
-              placeholder="Example: IS4261 6UGs Submission..."
-              style={{
-                width: "100%",
-                padding: "0.7em",
-                marginBottom: "0.5rem",
-                outline: "1px solid #ff5138",
-                boxShadow: "3px 3px 3px 0px #ff5138",
-              }}
-            ></input>
-            <br></br>
-            <Button
-              onClick={() => updateEvent(id, title, type, studentId)}
-              variant="contained"
-              style={{ boxShadow: "5px 5px 5px 0px grey" }}
-              color="primary"
-            >
-              <EditIcon fontSize="small" />
-              Update
-            </Button>
-          </form>
-        </p>
-        <br></br>
-        {/* <p>ID: {id}</p> */}
-        <p>Event Title: {title}</p>
-        <p>Event Status: {type}</p>
-        <p>Start Time: {startTime}</p>
-        <p>End Time: {endTime}</p>
-        <p>Student Id: {studentId}</p>
-        <br></br>
+  const body = (
+    <div style={modalStyle}>
+      <p style={{ fontSize: "25px", color: "#ff5138" }}>
+        View Event Details
         <Tooltip
           title={
             <em style={{ fontSize: "12px" }}>
-              {"Click here to delete an event"}
+              {
+                "Through this page, you are able to view the details of your event."
+              }
             </em>
           }
         >
+          <IconButton aria-label="delete">
+            <HelpIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Button
+          onClick={handleClose}
+          variant="contained"
+          style={{
+            float: "right",
+            borderRadius: "15px",
+            boxShadow: "5px 5px 5px 0px grey",
+          }}
+          color="secondary"
+        >
+          <ClearIcon fontSize="small" />
+        </Button>
+      </p>{" "}
+      <p>
+        <form>
+          <label
+            for="eventName"
+            style={{
+              textAlign: "left",
+              display: "block",
+              padding: "0.5em 1.5em 0.5em 0",
+            }}
+          >
+            Title: *{" "}
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="eventName"
+            required="required"
+            // value={module.title}
+            onChange={handleInputChange}
+            name="eventName"
+            placeholder="Example: IS4261 6UGs Submission..."
+            style={{
+              width: "100%",
+              padding: "0.7em",
+              marginBottom: "0.5rem",
+              outline: "1px solid #ff5138",
+              boxShadow: "3px 3px 3px 0px #ff5138",
+            }}
+          ></input>
+          <br></br>
           <Button
-            onClick={() => deleteEvent(id, title, type, studentId)}
+            onClick={() => updateEvent(id, title, type, studentId)}
             variant="contained"
             style={{ boxShadow: "5px 5px 5px 0px grey" }}
             color="primary"
           >
-            <DeleteIcon fontSize="small" />
-            Delete
+            <EditIcon fontSize="small" />
+            Update
           </Button>
-        </Tooltip>
-        &nbsp;
+        </form>
+      </p>
+      <br></br>
+      {/* <p>ID: {id}</p> */}
+      <p>Event Title: {title}</p>
+      <p>Event Status: {type}</p>
+      <p>Start Time: {startTime}</p>
+      <p>End Time: {endTime}</p>
+      <p>Student Id: {studentId}</p>
+      <br></br>
+      <Tooltip
+        title={
+          <em style={{ fontSize: "12px" }}>
+            {"Click here to delete an event"}
+          </em>
+        }
+      >
         <Button
-          onClick={handleClose}
+          onClick={() => deleteEvent(id, title, type, studentId)}
           variant="contained"
           style={{ boxShadow: "5px 5px 5px 0px grey" }}
-          color="secondary"
+          color="primary"
         >
-          Cancel
+          <DeleteIcon fontSize="small" />
+          Delete
         </Button>
-      </div>
-    );
-
-    return (
-      <div
-        key={`${id}-${index}`}
-        style={{
-          backgroundColor: pickColour(type),
-          boxShadow: "2px 1px 2px grey",
-        }}
+      </Tooltip>
+      &nbsp;
+      <Button
+        onClick={handleClose}
+        variant="contained"
+        style={{ boxShadow: "5px 5px 5px 0px grey" }}
+        color="secondary"
       >
-        <button onClick={handleOpen}>
-          <div>{title}</div>
-          <div>{type}</div>
-        </button>
-        <div>
-          <Modal open={open} onClose={handleClose}>
-            {body}
-          </Modal>
-        </div>
-      </div>
-    );
-  });
+        Cancel
+      </Button>
+    </div>
+  );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      {modules}
+    <div
+      key={`${id}-${index}`}
+      style={{
+        backgroundColor: pickColour(type),
+        boxShadow: "2px 1px 2px grey",
+      }}
+    >
+      <button onClick={handleOpen}>
+        <div>{title}</div>
+        <div>{type}</div>
+      </button>
+      <div>
+        <Modal open={open} onClose={handleClose}>
+          {body}
+        </Modal>
+      </div>
     </div>
   );
 };
 
-export { TimetableModules };
+export default TimetableModule;
