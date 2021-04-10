@@ -38,6 +38,11 @@ export default function MyTimetable() {
     updateMyWeek(value);
   };
 
+  const weekSwitcher = useMemo(
+    () => <WeekSwitcher handleChange={handleWeekChange} week={myWeek} />,
+    [myWeek]
+  );
+
   const classes = makeStyles({
     paper: {
       marginTop: "-0.5em",
@@ -51,9 +56,7 @@ export default function MyTimetable() {
       <Timetable weekNumber={myWeek} timetableData={myModules}>
         <div className="header">
           <div id="legend">{legend}</div>
-          <div id="week-switcher">
-            <WeekSwitcher handleChange={handleWeekChange} week={myWeek} />
-          </div>
+          <div id="week-switcher">{weekSwitcher}</div>
           <div id="action-button">{createPersonalEvent}</div>
         </div>
       </Timetable>

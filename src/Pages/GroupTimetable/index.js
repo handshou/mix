@@ -53,6 +53,10 @@ export default function GroupTimetable(props) {
     () => <CreatePersonalEvent timetableData={myModules} />,
     [myModules]
   );
+  const weekSwitcher = useMemo(
+    () => <WeekSwitcher handleChange={handleWeekChange} week={groupsWeek} />,
+    [groupsWeek]
+  );
 
   const classes = makeStyles({
     paper: {
@@ -67,9 +71,7 @@ export default function GroupTimetable(props) {
         {anyGroups && (
           <div className="header">
             <div id="legend">{legend}</div>
-            <div id="week-switcher">
-              <WeekSwitcher handleChange={handleWeekChange} week={groupsWeek} />
-            </div>
+            <div id="week-switcher">{weekSwitcher}</div>
             <div id="action-button">{createPersonalEvent}</div>
           </div>
         )}
