@@ -101,7 +101,7 @@ const EnterURL = (props) => {
     studentsRef.once("value").then((snapshot) => {
       setExistingEvents(snapshot.val());
     });
-  }, [, userEventArray]);
+  }, [userEventArray]);
 
   useEffect(() => {
     // catches invalid URLs

@@ -49,10 +49,10 @@ export default function CreatePersonalEvent(props) {
   };
 
   const saveModule = async (e) => {
+    e.preventDefault();
     var addEventPrompt = window.confirm(
       `Are you sure you want to add the event?\nYou cannot undo this.`
     );
-    e.preventDefault();
     if (addEventPrompt) {
       var data = {
         endTime: new Date(module.endTime).getTime(),
@@ -70,7 +70,10 @@ export default function CreatePersonalEvent(props) {
       const studentEventsListener = myEventsQuery.on(
         "child_added",
         function (lastEvent) {
-          console.log("last event key", lastEvent.key);
+          console.log(
+            "[CreatePersonalEvent] myEventsQuery: create event - ",
+            lastEvent.key
+          );
           let newEventKey = Number(lastEvent.key) + 1;
           myEventsQuery.off("child_added");
           myEventsRef.child(newEventKey).set(data);
