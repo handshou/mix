@@ -1,6 +1,6 @@
 import React from "react";
-import firebase from "firebase";
 
+import ErrorBoundary from "./Components/ErrorBoundary";
 import DatabaseContext from "./Contexts/DatabaseContext";
 import Routes from "./Router/Routes";
 
@@ -9,9 +9,11 @@ import "./App.css";
 function App() {
   return (
     <div>
-      <DatabaseContext>
-        <Routes />
-      </DatabaseContext>
+      <ErrorBoundary>
+        <DatabaseContext>
+          <Routes />
+        </DatabaseContext>
+      </ErrorBoundary>
     </div>
   );
 }
