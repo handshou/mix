@@ -1,0 +1,102 @@
+{
+  "8" : {
+    "groupId" : 8,
+    "groupName" : "Chousanx",
+    "members" : [ null, 6, 0, 3, 1, 18 ]
+  },
+  "10" : {
+    "groupId" : 10,
+    "groupName" : "Jroup",
+    "members" : [ null, 1 ]
+  },
+  "11" : {
+    "groupId" : 11,
+    "groupName" : "JingleBells",
+    "members" : [ 10 ]
+  },
+  "12" : {
+    "groupId" : 12,
+    "groupName" : "new grp",
+    "members" : [ 1 ]
+  },
+  "18" : {
+    "groupId" : 18,
+    "groupName" : "KopiOKosong",
+    "members" : [ 11, null, 6, 18 ]
+  },
+  "20" : {
+    "groupId" : 20,
+    "groupName" : "Group The Very Best",
+    "members" : [ null, 3, 17, 6 ]
+  },
+  "21" : {
+    "groupId" : 21,
+    "groupName" : "ChanelGirls",
+    "members" : [ null, 7, 18 ]
+  },
+  "23" : {
+    "groupId" : 23,
+    "groupName" : "BombGan",
+    "members" : [ 1, 64, 18 ]
+  },
+  "24" : {
+    "groupId" : 24,
+    "groupName" : "IS4261 project Froup",
+    "members" : [ 14, 15, 16, 17, 18, 23 ]
+  },
+  "25" : {
+    "groupId" : 25,
+    "groupName" : "Test",
+    "members" : [ 15, null, 17 ]
+  },
+  "26" : {
+    "groupId" : 26,
+    "groupName" : "Jroup",
+    "members" : [ 13 ]
+  },
+  "27" : {
+    "groupId" : 27,
+    "groupName" : "EasyFam",
+    "members" : [ null, null, 44, 45, null, 67 ]
+  },
+  "32" : {
+    "groupId" : 33,
+    "groupName" : "EasyFam",
+    "members" : [ null, 21, 16, 45 ]
+  },
+  "34" : {
+    "groupId" : 34,
+    "groupName" : "Superstar Team",
+    "members" : [ null, 21, 22, null, null, 30 ]
+  },
+  "35" : {
+    "groupId" : 35,
+    "groupName" : "Punggol Gang",
+    "members" : [ 20, 15, 16, null, 1, 2, null, 3, 5 ]
+  },
+  "36" : {
+    "groupId" : 36,
+    "groupName" : "Hens Farm",
+    "members" : [ 1, 2, 3, 4, 5, 9 ]
+  },
+  "37" : {
+    "groupId" : 37,
+    "groupName" : "IS4261 Team F",
+    "members" : [ 18, 19 ]
+  },
+  "40" : {
+    "groupId" : 40,
+    "groupName" : "Cheekaboo",
+    "members" : [ 2 ]
+  },
+  "41" : {
+    "groupId" : 41,
+    "groupName" : "MookataSoi98",
+    "members" : [ 7 ]
+  },
+  "42" : {
+    "groupId" : 42,
+    "groupName" : "ZumZam",
+    "members" : [ 4, 5, 6 ]
+  }
+}
