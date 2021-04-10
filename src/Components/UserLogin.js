@@ -107,6 +107,7 @@ export function UserLogin(props) {
               marginLeft: 30,
               marginRight: 30,
               marginTop: 20,
+              boxShadow: "0px 0px 8px #da337a",
             }}
             onChange={(name) => {
               localStorage.setItem("inputName", name.target.value);
