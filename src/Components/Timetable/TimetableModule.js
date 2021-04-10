@@ -58,11 +58,11 @@ const TimetableModule = (props) => {
   const { studentId, id, title, type, startTime, endTime } = moduleInfo;
 
   const initialState = {
-    studentId: "",
-    endTime: "",
-    eventName: "",
-    eventType: "",
-    startTime: "",
+    studentId: studentId,
+    endTime: endTime,
+    eventName: title,
+    eventType: type,
+    startTime: startTime,
   };
 
   const [module, setModule] = useState(initialState);
@@ -237,7 +237,7 @@ const TimetableModule = (props) => {
             className="form-control"
             id="eventName"
             required="required"
-            // value={module.title}
+            value={module.eventName}
             onChange={handleInputChange}
             name="eventName"
             placeholder="Example: IS4261 6UGs Submission..."
