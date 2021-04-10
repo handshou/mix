@@ -13,10 +13,26 @@ function createDay(name, modules) {
   return { name, modules };
 }
 
+const filterPrivateEventType = (timetableData) => {
+  return timetableData.filter((module) => {
+    if (module != null && module.eventType)
+      return module.eventType !== "Private";
+    return true;
+  });
+};
+
 export default function Timetable(props) {
-  let { weekNumber = 1, timetableData: test, children } = props;
+  let {
+    weekNumber = 1,
+    timetableData: test,
+    children,
+    showPrivate = false,
+  } = props;
   let timetableData = [];
   if (test) timetableData = Object.values(test).flat();
+  if (!showPrivate) {
+    timetableData = filterPrivateEventType(timetableData);
+  }
 
   weekNumber = parseInt(weekNumber);
 

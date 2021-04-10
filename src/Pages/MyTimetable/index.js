@@ -16,7 +16,7 @@ import {
   EnterURL,
   Timetable,
   WeekSwitcher,
-  CreatePersonalEvent,
+  CreateEvent,
 } from "../../Components/Timetable";
 
 import "../../Components/Timetable/timetable.css";
@@ -25,12 +25,10 @@ export default function MyTimetable() {
   const myWeek = useMyWeek();
   const updateMyWeek = useUpdateMyWeek();
   const myModules = useMyModules();
+  const myStudentId = localStorage.getItem("studentId");
 
   const legend = useMemo(() => <Legend />, [Legend]);
-  const createPersonalEvent = useMemo(
-    () => <CreatePersonalEvent timetableData={myModules} />,
-    [myModules]
-  );
+  const createPersonalEvent = useMemo(() => <CreateEvent />, [myModules]);
 
   // lift week in WeekSwitcher
   const handleWeekChange = (event, value) => {
@@ -53,7 +51,11 @@ export default function MyTimetable() {
   return (
     <Paper className={classes.paper} square>
       {" "}
-      <Timetable weekNumber={myWeek} timetableData={myModules}>
+      <Timetable
+        weekNumber={myWeek}
+        timetableData={myModules}
+        showPrivate={true}
+      >
         <div className="header">
           <div id="legend">{legend}</div>
           <div id="week-switcher">{weekSwitcher}</div>

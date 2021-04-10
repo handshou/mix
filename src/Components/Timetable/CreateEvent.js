@@ -8,6 +8,9 @@ import AddIcon from "@material-ui/icons/Add";
 import moment from "moment";
 
 import { useDatabase } from "../../Contexts/DatabaseContext";
+import { getStudentGroupEvents } from "../../Functions/apiFunctions";
+import { useMyGroups } from "../../Contexts/MyGroupsContext";
+import { useUpdateGroupModules } from "../../Contexts/GroupModulesContext";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,13 +28,12 @@ function getModalStyle() {
   };
 }
 
-export default function CreatePersonalEvent(props) {
-  let localTimetableData = [];
+export default function CreateEvent(props) {
   const studentId = localStorage.getItem("studentId");
-
-  if (props !== undefined && props.timetableData !== undefined) {
-    localTimetableData = props.timetableData;
-  }
+  const database = useDatabase();
+  const myGroups = useMyGroups();
+  const updateGroupModules = useUpdateGroupModules();
+  const { myGroup = null } = props;
 
   const [modalStyle] = useState(getModalStyle);
   const initialState = {
@@ -48,44 +50,59 @@ export default function CreatePersonalEvent(props) {
     setModule({ ...module, [name]: value });
   };
 
+  const createModuleForStudent = (studentId) => {
+    let data = {
+      endTime: new Date(module.endTime).getTime(),
+      eventName: module.eventName,
+      eventType: module.eventType,
+      startTime: new Date(module.startTime).getTime(),
+      studentId: studentId,
+    };
+
+    // database reference student events
+    const createEventsRef = database.ref(`Students/${studentId}/events`);
+    const createEventsQuery = createEventsRef.orderByKey().limitToLast(1);
+
+    // create the module from data after the last event key
+    const createStudentEventsListener = createEventsQuery.on(
+      "child_added",
+      function (lastEvent) {
+        console.log(
+          "[CreateEvent] myEventsQuery: create event - ",
+          lastEvent.key
+        );
+        let newEventKey = Number(lastEvent.key) + 1;
+        createEventsQuery.off("child_added");
+        createEventsRef.child(newEventKey).set(data);
+      }
+    );
+  };
+
   const saveModule = async (e) => {
     e.preventDefault();
     var addEventPrompt = window.confirm(
       `Are you sure you want to add the event?\nYou cannot undo this.`
     );
+
     if (addEventPrompt) {
-      var data = {
-        endTime: new Date(module.endTime).getTime(),
-        eventName: module.eventName,
-        eventType: module.eventType,
-        startTime: new Date(module.startTime).getTime(),
-        studentId: studentId,
-      };
-
-      // database reference student events
-      const myEventsRef = database.ref(`Students/${studentId}/events`);
-      const myEventsQuery = myEventsRef.orderByKey().limitToLast(1);
-
-      // create the module from data after the last event key
-      const studentEventsListener = myEventsQuery.on(
-        "child_added",
-        function (lastEvent) {
-          console.log(
-            "[CreatePersonalEvent] myEventsQuery: create event - ",
-            lastEvent.key
-          );
-          let newEventKey = Number(lastEvent.key) + 1;
-          myEventsQuery.off("child_added");
-          myEventsRef.child(newEventKey).set(data);
+      if (myGroup) {
+        const myMembers = myGroup?.members;
+        if (Array.isArray(myMembers)) {
+          myMembers.forEach((memberId) => {
+            if (memberId) createModuleForStudent(memberId);
+          });
         }
-      );
-
-      // reload
-      // loadTimetable(updateMyModules, studentId, database);
+      } else {
+        createModuleForStudent(studentId);
+      }
 
       setOpen(false);
-
-      toast.success("A new event has been sucessfully added.");
+      toast.success(
+        `A new ${myGroup ? "group " : ""}event has been sucessfully added.`
+      );
+      if (myGroup) {
+        getStudentGroupEvents(updateGroupModules, myGroups, database);
+      }
     }
   };
 
@@ -99,7 +116,10 @@ export default function CreatePersonalEvent(props) {
     setOpen(false);
   };
 
-  const database = useDatabase();
+  const timetableTypeMessage = (myGroup) => {
+    if (myGroup) return "Add a group event to your group timetable.";
+    return "Add an event to your personal timetable, you may choose either a 'Private' event status for your personal commitment or 'Others' event status for general event.";
+  };
 
   let newDate = new Date();
   let todayDate = moment(newDate).format("DD-MM-YYYY");
@@ -107,13 +127,11 @@ export default function CreatePersonalEvent(props) {
   const body = (
     <div style={modalStyle}>
       <p style={{ fontSize: "25px", color: "#ff5138" }}>
-        Add a 30 Minutes Time Block Interval Event
+        Add a 30 Minutes {myGroup ? "Group " : ""}Time Block Interval Event
         <Tooltip
           title={
             <em style={{ fontSize: "12px" }}>
-              {
-                "Add a event to your personal timetable, you may choose either a 'Private' event status for your personal commitment or 'Others' event status for general event."
-              }
+              {timetableTypeMessage(myGroup)}
             </em>
           }
         >
@@ -191,7 +209,7 @@ export default function CreatePersonalEvent(props) {
           <option selected hidden>
             Select your event status
           </option>
-          <option value="Private">Private</option>
+          {!myGroup && <option value="Private">Private</option>}
           <option value="Others">Others</option>
         </select>
         <label
@@ -302,7 +320,7 @@ export default function CreatePersonalEvent(props) {
             style={{ boxShadow: "5px 5px 5px 0px grey" }}
           >
             <AddIcon fontSize="small" style={{ color: "white" }} />
-            Add Event
+            {myGroup ? "Add Group Event" : "Add Event"}
           </Button>
         </Tooltip>
       </span>

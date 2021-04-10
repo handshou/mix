@@ -19,14 +19,8 @@ import {
   Timetable,
   WeekSwitcher,
   Legend,
-  CreatePersonalEvent,
+  CreateEvent,
 } from "../../Components/Timetable";
-
-const useStyles = makeStyles({
-  paper: {
-    backgroundColor: "#FFF",
-  },
-});
 
 export default function GroupTimetable(props) {
   const myModules = useMyModules();
@@ -50,8 +44,8 @@ export default function GroupTimetable(props) {
 
   const legend = useMemo(() => <Legend />, [Legend]);
   const createPersonalEvent = useMemo(
-    () => <CreatePersonalEvent timetableData={myModules} />,
-    [myModules]
+    () => <CreateEvent myGroup={Object.values(myGroups)[value]} />,
+    [value, myModules]
   );
   const weekSwitcher = useMemo(
     () => <WeekSwitcher handleChange={handleWeekChange} week={groupsWeek} />,
@@ -118,7 +112,6 @@ export default function GroupTimetable(props) {
                         key={studentGroup.groupId}
                         weekNumber={groupsWeek}
                         timetableData={studentEvents[studentGroup.groupId]}
-                        triggerMyTimetableForceRefresh={() => {}}
                       />
                     ) : (
                       <div>No events found</div>

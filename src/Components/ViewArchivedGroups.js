@@ -5,6 +5,7 @@ import firebaseConfig from "../Firebase/firebaseConfig";
 
 import { Button, setRef } from "@material-ui/core";
 
+import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -42,6 +43,9 @@ const useStyles = makeStyles({
     margin: "2%",
     //width: "25%",
     display: "inline",
+  },
+  paper: {
+    backgroundColor: "#FFF",
   },
   media: {
     height: 140,
@@ -633,7 +637,7 @@ function ViewArchivedGroups(props) {
   };
 
   return (
-    <Fragment>
+    <Paper className={classes.paper} square>
       {groupNameTextboxArr !== undefined &&
       groupNameTextboxArr.length === studentGroups.length ? (
         <div
@@ -993,7 +997,7 @@ function ViewArchivedGroups(props) {
       ) : (
         <div></div>
       )}
-    </Fragment>
+    </Paper>
   );
 }
 

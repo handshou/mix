@@ -5,6 +5,7 @@ import firebaseConfig from "../Firebase/firebaseConfig";
 
 import { Button, setRef, OutlinedInput } from "@material-ui/core";
 
+import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -65,6 +66,9 @@ const useStyles = makeStyles({
   root: {
     margin: "2%",
     display: "inline",
+  },
+  paper: {
+    backgroundColor: "#FFF",
   },
   media: {
     height: 140,
@@ -649,7 +653,7 @@ function GroupManagement(props) {
   const [addMemberDisabled, setAddMemberDisabled] = useState(false);
 
   return (
-    <Fragment>
+    <Paper className={classes.paper} square>
       <div
         style={{
           display: "flex",
@@ -1591,7 +1595,7 @@ function GroupManagement(props) {
           </div>
         </DialogContent>
       </Dialog>
-    </Fragment>
+    </Paper>
   );
 }
 
