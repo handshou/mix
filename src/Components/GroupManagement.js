@@ -337,7 +337,10 @@ function GroupManagement(props) {
       .ref(`Groups/`)
       .child(addMemberModalGroupId)
       .child("members")
-      .set(newList);
+      .set(newList)
+      .then(() => {
+        setGroupMembers([...newList]);
+      });
 
     toast.success(
       "Member ID: " +
@@ -349,9 +352,9 @@ function GroupManagement(props) {
     console.log("newList");
     console.log(newList);
 
-    setGroupMembers([...newList]);
     getGroupMembersInAGroup(addMemberModalGroupId);
     setModalMemberId(undefined);
+    getStudentGroups();
   };
 
   let removeStudentFromGroup = (groupId, removeStudentId) => {
@@ -1578,7 +1581,8 @@ function GroupManagement(props) {
                 color="primary"
                 style={{
                   width: "fit-content",
-                  boxShadow: addMemberDisabled === true ? "" : "5px 5px 5px 0 #bbb",
+                  boxShadow:
+                    addMemberDisabled === true ? "" : "5px 5px 5px 0 #bbb",
                 }}
                 onClick={() => {
                   addMemberToGroupUsingModal();
