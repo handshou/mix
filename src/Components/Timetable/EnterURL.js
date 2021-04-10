@@ -257,12 +257,11 @@ const EnterURL = (props) => {
   };
 
   let triggerNameRefresh = () => {};
-  function handleMouseOver(event) {
-    setMouseOver(true);
-  }
 
-  function handleMouseOut(event) {
-    setMouseOver(false);
+  if (props.triggerLayoutForceRefresh !== undefined) {
+    triggerNameRefresh = () => {
+      props.triggerLayoutForceRefresh();
+    };
   }
 
   return (
@@ -277,7 +276,11 @@ const EnterURL = (props) => {
         width: "70vw",
       }}
     >
-      <UserLogin />
+      <UserLogin
+        triggerNameRefresh={() => {
+          triggerNameRefresh();
+        }}
+      />
       <TextField
         error={error}
         style={{ margin: "1em" }}

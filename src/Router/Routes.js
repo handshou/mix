@@ -38,7 +38,11 @@ export default () => {
             <MyModulesContext>
               <Switch>
                 <Route path="/" exact>
-                  <MyTimetable />
+                  <MyTimetable
+                    triggerLayoutForceRefresh={() => {
+                      triggerLayoutForceRefresh();
+                    }}
+                  />
                 </Route>
                 <Route path="/GroupManagement" exact>
                   <GroupManagement />

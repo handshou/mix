@@ -21,7 +21,7 @@ import {
 
 import "../../Components/Timetable/timetable.css";
 
-export default function MyTimetable() {
+export default function MyTimetable(props) {
   const myWeek = useMyWeek();
   const updateMyWeek = useUpdateMyWeek();
   const myModules = useMyModules();
@@ -29,6 +29,9 @@ export default function MyTimetable() {
 
   const legend = useMemo(() => <Legend />, [Legend]);
   const createPersonalEvent = useMemo(() => <CreateEvent />, [myModules]);
+
+  // TO FIX: for new student name force refresh
+  const { triggerLayoutForceRefresh } = props;
 
   // lift week in WeekSwitcher
   const handleWeekChange = (event, value) => {
@@ -79,7 +82,11 @@ export default function MyTimetable() {
             {/* <HelpIcon fontSize="small" /> */}
           </Tooltip>
         </div>
-        <EnterURL />
+        <EnterURL
+          triggerLayoutForceRefresh={() => {
+            triggerLayoutForceRefresh();
+          }}
+        />
       </div>
     </Paper>
   );
