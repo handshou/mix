@@ -56,6 +56,7 @@ export const addStudentEventsToDB = (
   } else {
     mergedArray = eventArray;
   }
+  // TODO: checking if eventArray contains null or undefined elements in array
   let uniqueArray = [];
   // remove duplicates
   mergedArray.forEach((event) => {
@@ -70,7 +71,14 @@ export const addStudentEventsToDB = (
   });
 
   var studentsRef = database.ref(`Students/${studentId}/events`);
-  studentsRef.set(uniqueArray);
+  try {
+    studentsRef.set(uniqueArray);
+  } catch (error) {
+    console.error(
+      `[apiFunctions] addStudentEventsToDB - studentsRef.set(uniqueArray)`
+    );
+    throw new Error(error);
+  }
 };
 
 // (studentID, eventArray, firebaseDBObject)
