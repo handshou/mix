@@ -103,7 +103,6 @@ const TimetableModules = (props) => {
       // start time - server only returns one result
       const studentEventsQuery = studentEventsRef
         .orderByChild(`startTime`)
-        .limitToFirst(1)
         .equalTo(Number(startTimeSplit));
 
       const studentEventsListener = studentEventsQuery.on(
@@ -127,7 +126,9 @@ const TimetableModules = (props) => {
             console.log("[TimetableModules] Update module: Updated");
           } else {
             studentEventsQuery.off("child_added");
-            console.log("[TimetableModules] Update module: Module not found");
+            console.log(
+              "[TimetableModules] Update module: Module does not match"
+            );
           }
         }
       );
@@ -163,7 +164,6 @@ const TimetableModules = (props) => {
       // start time - server only returns one result
       const studentEventsQuery = studentEventsRef
         .orderByChild(`startTime`)
-        .limitToFirst(1)
         .equalTo(Number(startTimeSplit));
       const studentEventsQueryListener = studentEventsQuery.on(
         "child_added",
@@ -183,7 +183,9 @@ const TimetableModules = (props) => {
             console.log("[TimetableModules] Delete module: Removed");
           } else {
             studentEventsQuery.off("child_added");
-            console.log("[TimetableModules] Delete module: Module not found");
+            console.log(
+              "[TimetableModules] Delete module: Module does not match"
+            );
           }
         }
       );
