@@ -285,16 +285,10 @@ function GroupManagement(props) {
     setAddMemberDisabled(false);
   }
 
-  const removeAllOtherMembersFromGroup = (groupId) => {
-    groupMembers.push(parseInt(localStorage.getItem("studentId")));
-    setGroupMembers(groupMembers);
+  const removeAllOtherMembersFromGroup = (groupId) => {   
     if (!firebase.apps.length) {
       database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
     } else {
-      firebase.app();
-      var database = firebase.app().database();
-      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-
       var removeAllMembersPrompt = window.confirm(
         "Are you sure you want to remove all other members from Group ID: #" +
           groupId +
@@ -304,6 +298,13 @@ function GroupManagement(props) {
         toast.success("Removal of all members has been cancelled.");
         return;
       }
+      groupMembers.push(parseInt(localStorage.getItem("studentId")));
+      setGroupMembers(groupMembers);
+
+      firebase.app();
+      var database = firebase.app().database();
+      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+
       toast.success("All other group members have been removed successfully.");
       setRefreshKey(refreshKey + 1);
     }
