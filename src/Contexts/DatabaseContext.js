@@ -3,8 +3,7 @@ import firebaseConfig from "../Firebase/firebaseConfig";
 
 const DatabaseContext = React.createContext();
 const UpdateDatabaseContext = React.createContext();
-
-const useLocalDatabase = true;
+const LocalDatabaseContext = React.createContext();
 
 export function useDatabase() {
   return useContext(DatabaseContext);
@@ -16,6 +15,7 @@ export function useUpdateDatabase() {
 
 export default function DatabaseProvider({ children }) {
   const [database, setDatabase] = useState();
+  const [useLocalDatabase] = useState(true);
 
   function updateDatabase(database) {
     setDatabase(database);
@@ -48,10 +48,12 @@ export default function DatabaseProvider({ children }) {
   // console.log("firebase.apps.length", firebase.apps.length);
 
   return (
-    <DatabaseContext.Provider value={database}>
-      <UpdateDatabaseContext.Provider value={updateDatabase}>
-        {children}
-      </UpdateDatabaseContext.Provider>
-    </DatabaseContext.Provider>
+    <LocalDatabaseContext.Provider value={useLocalDatabase}>
+      <DatabaseContext.Provider value={database}>
+        <UpdateDatabaseContext.Provider value={updateDatabase}>
+          {children}
+        </UpdateDatabaseContext.Provider>
+      </DatabaseContext.Provider>
+    </LocalDatabaseContext.Provider>
   );
 }

@@ -1,8 +1,5 @@
 import { React, Fragment, useState, useEffect } from "react";
 
-import firebase from "firebase";
-import firebaseConfig from "../Firebase/firebaseConfig";
-
 import { Button, setRef } from "@material-ui/core";
 
 import Paper from "@material-ui/core/Paper";
@@ -20,23 +17,18 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import UnarchiveIcon from "@material-ui/icons/Unarchive";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-
 import Tooltip from "@material-ui/core/Tooltip";
-import { useHistory } from "react-router-dom";
+import { Unarchive } from "@material-ui/icons";
 
+import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Unarchive } from "@material-ui/icons";
-toast.configure();
 
-if (!firebase.apps.length) {
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  var database = firebaseApp.database();
-} else {
-  firebase.app();
-}
+import { useDatabase } from "../Contexts/DatabaseContext";
+
+toast.configure();
 
 const useStyles = makeStyles({
   root: {
@@ -63,6 +55,7 @@ const useStyles = makeStyles({
 });
 
 function ViewArchivedGroups(props) {
+  const database = useDatabase();
   const classes = useStyles();
   // ========================================================== STUDENTS ==========================================================
   const [studentId, setStudentId] = useState(localStorage.getItem("studentId"));
@@ -93,17 +86,12 @@ function ViewArchivedGroups(props) {
   };
 
   let getStudentName = (studentId) => {
-    if (!firebase.apps.length) {
-      var studentsRef = database.ref(
-        `Students/${localStorage.getItem("studentId")}/name`
-      );
-      studentsRef.once("value").then((snapshot) => {
-        setStudentName(snapshot.val());
-      });
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
+    var studentsRef = database.ref(
+      `Students/${localStorage.getItem("studentId")}/name`
+    );
+    studentsRef.once("value").then((snapshot) => {
+      setStudentName(snapshot.val());
+    });
   };
 
   // ========================================================== GROUPS ==========================================================
@@ -130,13 +118,6 @@ function ViewArchivedGroups(props) {
 
     var tempStudentGroups = [];
 
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
-
     var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
       var data = snapshot.val();
@@ -159,19 +140,11 @@ function ViewArchivedGroups(props) {
   const [groupMemberName, setGroupMemName] = useState([]);
   let getGroupMemberName = () => {
     setGroupMemName([]);
-    if (!firebase.apps.length) {
-      var studentNameRef = database.ref("Students/");
-      studentNameRef.once("value").then((snapshot) => {
-        setGroupMemName(snapshot);
-      });
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-      var studentNameRef = database.ref("Students/");
-      studentNameRef.once("value").then((snapshot) => {
-        setGroupMemName(snapshot);
-      });
-    }
+
+    var studentNameRef = database.ref("Students/");
+    studentNameRef.once("value").then((snapshot) => {
+      setGroupMemName(snapshot);
+    });
   };
 
   let getGMN = (studID) => {
@@ -191,7 +164,7 @@ function ViewArchivedGroups(props) {
       return;
     }
 
-    var query = firebase.database().ref("Groups/").orderByKey();
+    var query = database.ref("Groups/").orderByKey();
     query.once("value").then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var key = childSnapshot.key;
@@ -286,13 +259,9 @@ function ViewArchivedGroups(props) {
     }
 
     groupMembers.push(parseInt(memberId));
-    if (!firebase.apps.length) {
-      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-    }
+
+    database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+
     toast.success(
       "Member ID: " +
         memberId +
@@ -307,35 +276,23 @@ function ViewArchivedGroups(props) {
   const removeAllOtherMembersFromGroup = (groupId) => {
     groupMembers.push(parseInt(localStorage.getItem("studentId")));
     setGroupMembers(groupMembers);
-    if (!firebase.apps.length) {
-      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
 
-      var removeAllMembersPrompt = window.confirm(
-        "Are you sure you want to remove all other members from Group ID: #" +
-          groupId +
-          "?"
-      );
-      if (!removeAllMembersPrompt) {
-        toast.success("Removal of all members has been cancelled.");
-        return;
-      }
-      toast.success("All other group members have been removed successfully.");
-      setRefreshKey(refreshKey + 1);
+    database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+
+    var removeAllMembersPrompt = window.confirm(
+      "Are you sure you want to remove all other members from Group ID: #" +
+        groupId +
+        "?"
+    );
+    if (!removeAllMembersPrompt) {
+      toast.success("Removal of all members has been cancelled.");
+      return;
     }
+    toast.success("All other group members have been removed successfully.");
+    setRefreshKey(refreshKey + 1);
   };
 
   let removeStudentFromGroup = (groupId, removeStudentId) => {
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
-
     //Leave Group
     if (
       parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))
@@ -547,25 +504,18 @@ function ViewArchivedGroups(props) {
   }, []);
 
   function getArchivedGroupsFromDB() {
-    // if (!firebase.apps.length) {
-    var database = firebase.app().database();
     var studentsRef = database.ref(
       `Students/${localStorage.getItem("studentId")}/archivedGroups`
     );
     studentsRef.once("value").then((snapshot) => {
       setArchivedGroups(snapshot.val());
     });
-    // } else {
-    //   firebase.app();
-    //   var database = firebase.app().database();
-    //   var database = firebase.app().database();
     //   var studentsRef = database.ref(
     //     `Students/${localStorage.getItem("studentId")}/archivedGroups`
     //   );
     //   studentsRef.once("value").then((snapshot) => {
     //     setArchivedGroups(snapshot.val());
     //   });
-    // }
 
     if (archivedGroups !== undefined && archivedGroups.length !== 0) {
       for (var i = 0; i < studentGroups.length; i++) {
@@ -592,16 +542,11 @@ function ViewArchivedGroups(props) {
     archivedGroups.push(groupId);
     setArchivedGroups(archivedGroups);
 
-    if (!firebase.apps.length) {
-      var studentsRef = database.ref(`Students/`);
-      studentsRef
-        .child(localStorage.getItem("studentId"))
-        .child("archivedGroups")
-        .set(archivedGroups);
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
+    var studentsRef = database.ref(`Students/`);
+    studentsRef
+      .child(localStorage.getItem("studentId"))
+      .child("archivedGroups")
+      .set(archivedGroups);
 
     // console.log("temp archivedGroups!!!" + JSON.stringify(archivedGroups))
     // console.log("temp studentGroups!!!" + JSON.stringify(studentGroups))

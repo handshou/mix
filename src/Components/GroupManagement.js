@@ -1,8 +1,5 @@
 import { React, Fragment, useState, useEffect } from "react";
 
-import firebase from "firebase";
-import firebaseConfig from "../Firebase/firebaseConfig";
-
 import { Button, setRef, OutlinedInput } from "@material-ui/core";
 
 import Paper from "@material-ui/core/Paper";
@@ -34,9 +31,10 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Mouse } from "@material-ui/icons";
+import { ExpandLess } from "@material-ui/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useDatabase } from "../Contexts/DatabaseContext";
 
+import { useDatabase } from "../Contexts/DatabaseContext";
 import {
   EmailShareButton,
   EmailIcon,
@@ -49,18 +47,10 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
-import { ExpandLess } from "@material-ui/icons";
 
 import "./Stylesheet/Layout.css";
 
 toast.configure();
-
-if (!firebase.apps.length) {
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  var database = firebaseApp.database();
-} else {
-  firebase.app();
-}
 
 const useStyles = makeStyles({
   root: {
@@ -135,13 +125,6 @@ function GroupManagement(props) {
 
     var tempStudentGroups = [];
 
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
-
     var studentGroupRef = database.ref(`Groups/`);
     studentGroupRef.once("value").then((snapshot) => {
       var data = snapshot.val();
@@ -164,19 +147,11 @@ function GroupManagement(props) {
   const [groupMemberName, setGroupMemName] = useState([]);
   let getGroupMemberName = () => {
     setGroupMemName([]);
-    if (!firebase.apps.length) {
-      var studentNameRef = database.ref("Students/");
-      studentNameRef.once("value").then((snapshot) => {
-        setGroupMemName(snapshot);
-      });
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-      var studentNameRef = database.ref("Students/");
-      studentNameRef.once("value").then((snapshot) => {
-        setGroupMemName(snapshot);
-      });
-    }
+
+    var studentNameRef = database.ref("Students/");
+    studentNameRef.once("value").then((snapshot) => {
+      setGroupMemName(snapshot);
+    });
   };
 
   let getGMN = (studID) => {
@@ -195,14 +170,8 @@ function GroupManagement(props) {
       toast.success("The creation of group has been cancelled.");
       return;
     }
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
 
-    var query = firebase.database().ref("Groups/").orderByKey();
+    var query = database.ref("Groups/").orderByKey();
     query.once("value").then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var key = childSnapshot.key;
@@ -271,8 +240,6 @@ function GroupManagement(props) {
       return;
     }
 
-    firebase.app();
-    var database = firebase.app().database();
     var studentsRef = database.ref(`Students/${memberId}`);
     studentsRef.once("value").then((snapshot) => {
       if (snapshot.val() === null) {
@@ -285,29 +252,23 @@ function GroupManagement(props) {
     setAddMemberDisabled(false);
   }
 
-  const removeAllOtherMembersFromGroup = (groupId) => {   
-    if (!firebase.apps.length) {
-      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-    } else {
-      var removeAllMembersPrompt = window.confirm(
-        "Are you sure you want to remove all other members from Group ID: #" +
-          groupId +
-          "?"
-      );
-      if (!removeAllMembersPrompt) {
-        toast.success("Removal of all members has been cancelled.");
-        return;
-      }
-      groupMembers.push(parseInt(localStorage.getItem("studentId")));
-      setGroupMembers(groupMembers);
-
-      firebase.app();
-      var database = firebase.app().database();
-      database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
-
-      toast.success("All other group members have been removed successfully.");
-      setRefreshKey(refreshKey + 1);
+  const removeAllOtherMembersFromGroup = (groupId) => {
+    var removeAllMembersPrompt = window.confirm(
+      "Are you sure you want to remove all other members from Group ID: #" +
+        groupId +
+        "?"
+    );
+    if (!removeAllMembersPrompt) {
+      toast.success("Removal of all members has been cancelled.");
+      return;
     }
+    groupMembers.push(parseInt(localStorage.getItem("studentId")));
+    setGroupMembers(groupMembers);
+
+    database.ref(`Groups/`).child(groupId).child("members").set(groupMembers);
+
+    toast.success("All other group members have been removed successfully.");
+    setRefreshKey(refreshKey + 1);
   };
 
   const [modalMemberId, setModalMemberId] = useState();
@@ -323,13 +284,6 @@ function GroupManagement(props) {
           }
         }
       }
-    }
-
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
     }
 
     newList.push(parseInt(modalMemberId));
@@ -359,12 +313,6 @@ function GroupManagement(props) {
   };
 
   let removeStudentFromGroup = (groupId, removeStudentId) => {
-    var database;
-    if (!firebase.apps.length) {
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-    }
     //Leave Group
     if (
       parseInt(removeStudentId) == parseInt(localStorage.getItem("studentId"))
@@ -582,7 +530,6 @@ function GroupManagement(props) {
   }, []);
 
   function getArchivedGroupsFromDB() {
-    var database = firebase.app().database();
     var studentsRef = database.ref(
       `Students/${localStorage.getItem("studentId")}/archivedGroups`
     );
@@ -600,21 +547,13 @@ function GroupManagement(props) {
     setArchivedGroups(archivedGroups);
 
     console.log(archivedGroups);
-    if (!firebase.apps.length) {
-      var studentsRef = database.ref(`Students/`);
-      studentsRef
-        .child(localStorage.getItem("studentId"))
-        .child("archivedGroups")
-        .set(archivedGroups);
-    } else {
-      firebase.app();
-      var database = firebase.app().database();
-      var studentsRef = database.ref(`Students/`);
-      studentsRef
-        .child(localStorage.getItem("studentId"))
-        .child("archivedGroups")
-        .set(archivedGroups);
-    }
+
+    var studentsRef = database.ref(`Students/`);
+    studentsRef
+      .child(localStorage.getItem("studentId"))
+      .child("archivedGroups")
+      .set(archivedGroups);
+
     setRefreshKey(refreshKey + 1);
     toast.success("You have successfully archived the group.");
   }
