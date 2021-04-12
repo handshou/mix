@@ -139,7 +139,7 @@ export const getStudentEvents = async (studentId, database) => {
       return snapshot.val();
     });
     // guard condition for no student events
-    if (result === null) return;
+    if (result === null) return [];
 
     // hacky fix for dirty data without studentId, append studentId to
     // each student event
