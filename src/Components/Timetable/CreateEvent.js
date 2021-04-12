@@ -64,16 +64,45 @@ export default function CreateEvent(props) {
     const createEventsQuery = createEventsRef.orderByKey().limitToLast(1);
 
     // create the module from data after the last event key
-    const createStudentEventsListener = createEventsQuery.on(
-      "child_added",
-      function (lastEvent) {
+    const createStudentEventsListenerCallback = () =>
+      createEventsQuery.on("child_added", function (lastEvent) {
         console.log(
-          "[CreateEvent] myEventsQuery: create event - ",
+          "[CreateEvent] createEventsQuery: create event - ",
           lastEvent.key
         );
         let newEventKey = Number(lastEvent.key) + 1;
         createEventsQuery.off("child_added");
         createEventsRef.child(newEventKey).set(data);
+      });
+
+    // check if any events exist
+    const checkExistingEventsListener = createEventsQuery.on(
+      "value",
+      function (snapshot) {
+        if (snapshot.val()) {
+          console.log(
+            `[CreateEvent] createEventsQuery: found at least one event`
+          );
+          createEventsQuery.off("value");
+          createStudentEventsListenerCallback();
+        } else {
+          console.log(`[CreateEvent] createEventsQuery: found no events`);
+          createEventsQuery.off("value");
+          createEventsRef
+            .child("0")
+            .set(data)
+            .then(
+              console.log(
+                "[CreateEvent] createEventsQuery: created first event"
+              )
+            )
+            .catch((err) => {
+              console.error(err);
+              console.log(
+                `[CreateEvent] createEventsQuery: event creation error`
+              );
+            });
+        }
       }
     );
   };
