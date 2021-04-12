@@ -13,7 +13,7 @@ import {
   useUpdateGroupsWeek,
 } from "../../Contexts/MyGroupsContext";
 import { useGroupModules } from "../../Contexts/GroupModulesContext";
-import { useMyModules } from "../../Contexts/MyModulesContext";
+import { useMaximumWeek, useMyModules } from "../../Contexts/MyModulesContext";
 
 import {
   Timetable,
@@ -29,6 +29,7 @@ export default function GroupTimetable(props) {
   const updateGroupsWeek = useUpdateGroupsWeek();
   const [value, setValue] = useState(0);
   const studentEvents = useGroupModules();
+  const maximumWeek = useMaximumWeek();
 
   const handleWeekChange = (event, value) => {
     // use event as first element, ordering requirement to extract value
@@ -48,7 +49,13 @@ export default function GroupTimetable(props) {
     [value, myModules]
   );
   const weekSwitcher = useMemo(
-    () => <WeekSwitcher handleChange={handleWeekChange} week={groupsWeek} />,
+    () => (
+      <WeekSwitcher
+        handleChange={handleWeekChange}
+        week={groupsWeek}
+        maximumWeek={maximumWeek}
+      />
+    ),
     [groupsWeek]
   );
 

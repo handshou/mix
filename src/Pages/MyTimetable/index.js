@@ -9,6 +9,7 @@ import {
   useMyModules,
   useMyWeek,
   useUpdateMyWeek,
+  useMaximumWeek,
 } from "../../Contexts/MyModulesContext";
 
 import {
@@ -26,6 +27,7 @@ export default function MyTimetable(props) {
   const updateMyWeek = useUpdateMyWeek();
   const myModules = useMyModules();
   const myStudentId = localStorage.getItem("studentId");
+  const maximumWeek = useMaximumWeek();
 
   const legend = useMemo(() => <Legend />, [Legend]);
   const createPersonalEvent = useMemo(() => <CreateEvent />, [myModules]);
@@ -40,7 +42,13 @@ export default function MyTimetable(props) {
   };
 
   const weekSwitcher = useMemo(
-    () => <WeekSwitcher handleChange={handleWeekChange} week={myWeek} />,
+    () => (
+      <WeekSwitcher
+        handleChange={handleWeekChange}
+        week={myWeek}
+        maximumWeek={maximumWeek}
+      />
+    ),
     [myWeek]
   );
 
