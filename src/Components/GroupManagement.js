@@ -75,6 +75,8 @@ const useStyles = makeStyles({
   },
 });
 
+const windowLocationHost = `http://${window.location.host}/mix/#`;
+
 function GroupManagement(props) {
   const classes = useStyles();
   const database = useDatabase();
@@ -1351,10 +1353,7 @@ function GroupManagement(props) {
                       backgroundColor: "lightGray",
                     }}
                     value={
-                      "http://" +
-                      window.location.host +
-                      "/JoinGroup/" +
-                      addMemberModalGroupId
+                      windowLocationHost + "/JoinGroup/" + addMemberModalGroupId
                     }
                     onFocus={(event) => {
                       event.target.select();
@@ -1364,8 +1363,7 @@ function GroupManagement(props) {
                     text={
                       "Use the link to join my MixTime Group" +
                       "\n" +
-                      "http://" +
-                      window.location.host +
+                      windowLocationHost +
                       "/JoinGroup/" +
                       addMemberModalGroupId
                     }
@@ -1419,8 +1417,7 @@ function GroupManagement(props) {
                   url={
                     "Use the link to join my MixTime Group" +
                     "\n" +
-                    "http://" +
-                    window.location.host +
+                    windowLocationHost +
                     "/JoinGroup/" +
                     addMemberModalGroupId
                   }
@@ -1441,8 +1438,7 @@ function GroupManagement(props) {
                   url={
                     "Use the link to join my MixTime Group" +
                     "\n" +
-                    "http://" +
-                    window.location.host +
+                    windowLocationHost +
                     "/JoinGroup/" +
                     addMemberModalGroupId
                   }
@@ -1460,8 +1456,7 @@ function GroupManagement(props) {
                   url={
                     "Use the link to join my MixTime Group" +
                     "\n" +
-                    "http://" +
-                    window.location.host +
+                    windowLocationHost +
                     "/JoinGroup/" +
                     addMemberModalGroupId
                   }
@@ -1469,8 +1464,7 @@ function GroupManagement(props) {
                   body={
                     "Use the link to join my MixTime Group" +
                     "\n" +
-                    "http://" +
-                    window.location.host +
+                    windowLocationHost +
                     "/JoinGroup/" +
                     addMemberModalGroupId
                   }

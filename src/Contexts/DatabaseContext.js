@@ -15,7 +15,7 @@ export function useUpdateDatabase() {
 
 export default function DatabaseProvider({ children }) {
   const [database, setDatabase] = useState();
-  const [useLocalDatabase] = useState(true);
+  const [useLocalDatabase] = useState(false);
 
   function updateDatabase(database) {
     setDatabase(database);
