@@ -13,7 +13,8 @@ import {
   useUpdateGroupsWeek,
 } from "../../Contexts/MyGroupsContext";
 import { useGroupModules } from "../../Contexts/GroupModulesContext";
-import { useMaximumWeek, useMyModules } from "../../Contexts/MyModulesContext";
+import { useMyModules } from "../../Contexts/MyModulesContext";
+import { useMaximumWeek } from "../../Contexts/WeekContext";
 
 import {
   Timetable,

@@ -9,8 +9,8 @@ import {
   useMyModules,
   useMyWeek,
   useUpdateMyWeek,
-  useMaximumWeek,
 } from "../../Contexts/MyModulesContext";
+import { useMaximumWeek } from "../../Contexts/WeekContext";
 
 import {
   Legend,

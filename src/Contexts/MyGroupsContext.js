@@ -2,6 +2,7 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import { useDatabase } from "../Contexts/DatabaseContext";
 import { getStudentGroups } from "../Functions/apiFunctions.js";
 import { getCurrentWeek } from "../Components/Timetable/utils";
+import { useMaximumWeek } from "../Contexts/WeekContext";
 
 const MyGroupsContext = React.createContext();
 const UpdateMyGroupsContext = React.createContext();
@@ -27,6 +28,7 @@ export function useUpdateGroupsWeek() {
 export default function MyGroupsProvider({ children }) {
   const studentId = localStorage.getItem("studentId");
   const database = useDatabase();
+  const maximumWeek = useMaximumWeek();
   const initStudentGroups = useMemo(
     () => getStudentGroups(updateMyGroups, studentId, database),
     [studentId, database]
@@ -69,7 +71,9 @@ export default function MyGroupsProvider({ children }) {
   }
 
   function updateGroupsWeek(week) {
-    setGroupsWeek(week);
+    if (week <= 0) setGroupsWeek(1);
+    if (week >= maximumWeek) setGroupsWeek(maximumWeek);
+    else setGroupsWeek(week);
   }
 
   // kept comment for potential undo groups feature

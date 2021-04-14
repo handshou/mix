@@ -5,6 +5,7 @@ import firebase from "firebase";
 import MyModulesContext from "../Contexts/MyModulesContext";
 import MyGroupsContext from "../Contexts/MyGroupsContext";
 import GroupModulesContext from "../Contexts/GroupModulesContext";
+import WeekContext from "../Contexts/WeekContext";
 import GroupManagement from "../Components/GroupManagement";
 import UserProfile from "../Components/UserProfile";
 import GroupTimetable from "../Pages/GroupTimetable";
@@ -33,44 +34,46 @@ export default () => {
     <Router>
       <div style={{ height: "100vh" }}>
         <Layout forceRefresh={forceRefresh} />
-        <MyGroupsContext>
-          <GroupModulesContext>
-            <MyModulesContext>
-              <Switch>
-                <Route path="/" exact>
-                  <MyTimetable
-                    triggerLayoutForceRefresh={() => {
-                      triggerLayoutForceRefresh();
-                    }}
+        <WeekContext>
+          <MyGroupsContext>
+            <GroupModulesContext>
+              <MyModulesContext>
+                <Switch>
+                  <Route path="/" exact>
+                    <MyTimetable
+                      triggerLayoutForceRefresh={() => {
+                        triggerLayoutForceRefresh();
+                      }}
+                    />
+                  </Route>
+                  <Route path="/GroupManagement" exact>
+                    <GroupManagement />
+                  </Route>
+                  <Route
+                    path="/GroupTimetable"
+                    exact
+                    component={GroupTimetable}
                   />
-                </Route>
-                <Route path="/GroupManagement" exact>
-                  <GroupManagement />
-                </Route>
-                <Route
-                  path="/GroupTimetable"
-                  exact
-                  component={GroupTimetable}
-                />
-                <Route path="/UserProfile" exact component={UserProfile} />
-                <Route path="/Timetable" exact component={MyTimetable} />
-                <Route path="/JoinGroup">
-                  <JoinGroup
-                    triggerLayoutForceRefresh={() => {
-                      triggerLayoutForceRefresh();
-                    }}
+                  <Route path="/UserProfile" exact component={UserProfile} />
+                  <Route path="/Timetable" exact component={MyTimetable} />
+                  <Route path="/JoinGroup">
+                    <JoinGroup
+                      triggerLayoutForceRefresh={() => {
+                        triggerLayoutForceRefresh();
+                      }}
+                    />
+                  </Route>
+                  <Route path="/TutorialPage" exact component={TutorialPage} />
+                  <Route
+                    path="/ViewArchivedGroups"
+                    exact
+                    component={ViewArchivedGroups}
                   />
-                </Route>
-                <Route path="/TutorialPage" exact component={TutorialPage} />
-                <Route
-                  path="/ViewArchivedGroups"
-                  exact
-                  component={ViewArchivedGroups}
-                />
-              </Switch>
-            </MyModulesContext>
-          </GroupModulesContext>
-        </MyGroupsContext>
+                </Switch>
+              </MyModulesContext>
+            </GroupModulesContext>
+          </MyGroupsContext>
+        </WeekContext>
       </div>
     </Router>
   );

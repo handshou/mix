@@ -4,8 +4,13 @@ const baseDate = toDate("Jan 11 2021 0:00 GMT+8").getTime();
 // this case
 function getCurrentWeek() {
   const today = new Date();
-  if (baseDate > today) return 0;
-  return Math.ceil((today - baseDate) / (1000 * 60 * 60 * 24 * 7));
+  return calculateWeek(today);
+}
+
+function calculateWeek(date) {
+  if (!date instanceof Date) return 0;
+  if (baseDate > date) return 0;
+  return Math.ceil((date - baseDate) / (1000 * 60 * 60 * 24 * 7));
 }
 
 function getModules(data) {
@@ -112,4 +117,5 @@ export {
   generateRows,
   filterModules,
   getCurrentWeek,
+  calculateWeek,
 };

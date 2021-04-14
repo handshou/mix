@@ -7,9 +7,14 @@ import ClearIcon from "@material-ui/icons/Clear";
 import AddIcon from "@material-ui/icons/Add";
 import moment from "moment";
 
+import { calculateWeek } from "./utils";
 import { useDatabase } from "../../Contexts/DatabaseContext";
 import { getStudentGroupEvents } from "../../Functions/apiFunctions";
-import { useMyGroups } from "../../Contexts/MyGroupsContext";
+import {
+  useMyGroups,
+  useUpdateGroupsWeek,
+} from "../../Contexts/MyGroupsContext";
+import { useUpdateMyWeek } from "../../Contexts/MyModulesContext";
 import { useUpdateGroupModules } from "../../Contexts/GroupModulesContext";
 
 import { toast } from "react-toastify";
@@ -33,6 +38,8 @@ export default function CreateEvent(props) {
   const database = useDatabase();
   const myGroups = useMyGroups();
   const updateGroupModules = useUpdateGroupModules();
+  const updateMyWeek = useUpdateMyWeek();
+  const updateGroupsWeek = useUpdateGroupsWeek();
   const { myGroup = null } = props;
 
   const [modalStyle] = useState(getModalStyle);
@@ -63,6 +70,15 @@ export default function CreateEvent(props) {
     const createEventsRef = database.ref(`Students/${studentId}/events`);
     const createEventsQuery = createEventsRef.orderByKey().limitToLast(1);
 
+    const setPageToEventWeek = (date, myGroup) => {
+      const newEventWeek = calculateWeek(new Date(date));
+      if (myGroup) {
+        updateGroupsWeek(newEventWeek);
+      } else {
+        updateMyWeek(newEventWeek);
+      }
+    };
+
     // create the module from data after the last event key
     const createStudentEventsListenerCallback = () =>
       createEventsQuery.on("child_added", function (lastEvent) {
@@ -72,7 +88,10 @@ export default function CreateEvent(props) {
         );
         let newEventKey = Number(lastEvent.key) + 1;
         createEventsQuery.off("child_added");
-        createEventsRef.child(newEventKey).set(data);
+        createEventsRef
+          .child(newEventKey)
+          .set(data)
+          .then(() => setPageToEventWeek(data.startTime, myGroup));
       });
 
     // check if any events exist
@@ -91,11 +110,12 @@ export default function CreateEvent(props) {
           createEventsRef
             .child("0")
             .set(data)
-            .then(
+            .then(() => {
               console.log(
                 "[CreateEvent] createEventsQuery: created first event"
-              )
-            )
+              );
+              setPageToEventWeek(data.startTime, myGroup);
+            })
             .catch((err) => {
               console.error(err);
               console.log(
