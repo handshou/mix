@@ -10,7 +10,7 @@ export function VisualTip(props) {
   return (
     <div>
       <PNGtooltip
-        tooltip={<u class="confirm_selection">What can I do here?</u>}
+        tooltip={<u className="confirm_selection">What can I do here?</u>}
       >
         <div>
           <p>
