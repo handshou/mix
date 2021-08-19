@@ -60,7 +60,7 @@ const EnterURL = (props) => {
   const [functionSelector, setFunctionSelector] = useState(1);
 
   // hard coded  value until we find a way to properly implement semester recording
-  const [currentSemester, setCurrentSemester] = useState(2);
+  const [currentSemester, setCurrentSemester] = useState(1);
 
   // tooltip mouseover
   const [mouseOver, setMouseOver] = useState(false);
