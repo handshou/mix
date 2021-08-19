@@ -1,4 +1,4 @@
-const baseDate = toDate("Jan 11 2021 0:00 GMT+8").getTime();
+const baseDate = toDate("Aug 9 2021 0:00 GMT+8").getTime();
 
 // TODO: since this can return beyond week 14, ensure weekSwitcher works in
 // this case
