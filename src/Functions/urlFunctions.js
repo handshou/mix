@@ -100,9 +100,9 @@ export const findCorrectTimeslot = (
   return correctTimeSlots;
 };
 
-// week 1 day 1: Mon 11 Jan 2021
+// week 1 day 1: Mon 9 Aug 2021
 export const convertWeekDayTimeToTimestamp = (weekNumber, day, time) => {
-  let basedate = new Date("Jan 11 2021 0:00 GMT+8");
+  let basedate = new Date("Aug 9 2021 0:00 GMT+8");
   // map accomodate for lowercase first letter as well incase of formatting issue on NUSMODs api
   let dayMap = {
     Monday: 0,

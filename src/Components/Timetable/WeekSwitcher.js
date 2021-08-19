@@ -25,7 +25,7 @@ const WeekSwitcher = (props) => {
         padding: "0.5em",
       }}
     >
-      <div>Semester 2 - Week {week}</div>
+      <div>Week {week}</div>
       {/* Week */}
       <Pagination
         classes={{ ul: classes.ul }}
