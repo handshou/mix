@@ -4,7 +4,7 @@ import axios from "axios";
 const apiEndPoint = "https://api.nusmods.com/v2";
 
 // will have to implement some way of updating this information
-const acadYear = "2020-2021";
+const acadYear = "2021-2022";
 
 function shallowEqual(object1, object2) {
   if (object1 == null && object2 == null) return true;
